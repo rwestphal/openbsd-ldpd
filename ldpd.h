@@ -228,6 +228,12 @@ struct map {
 	u_int32_t	messageid;
 };
 
+struct notify_msg {
+	u_int32_t	messageid;
+	u_int32_t	status;
+	u_int32_t	type;
+};
+
 struct iface {
 	LIST_ENTRY(iface)	 entry;
 	struct event		 hello_timer;

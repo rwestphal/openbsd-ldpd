@@ -98,7 +98,8 @@ void		 lde_send_delete_klabel(struct rt_node *);
 void		 lde_send_labelmapping(u_int32_t, struct map *);
 void		 lde_send_labelrequest(u_int32_t, struct map *);
 void		 lde_send_labelrelease(u_int32_t, struct map *);
-void		 lde_send_notification(u_int32_t, u_int32_t);
+void		 lde_send_notification(u_int32_t, u_int32_t, u_int32_t,
+		    u_int32_t);
 
 void		 lde_nbr_del(struct lde_nbr *);
 struct lde_nbr *lde_find_address(struct in_addr);

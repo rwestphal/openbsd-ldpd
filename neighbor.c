@@ -457,7 +457,7 @@ nbr_ktimeout(int fd, short event, void *arg)
 	log_debug("nbr_ktimeout: neighbor ID %s peerid %lu", inet_ntoa(nbr->id),
 	    nbr->peerid);
 
-	send_notification_nbr(nbr, S_KEEPALIVE_TMR);
+	send_notification_nbr(nbr, S_KEEPALIVE_TMR, 0, 0);
 	close(nbr->fd);
 }
 

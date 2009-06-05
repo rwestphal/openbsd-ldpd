@@ -69,18 +69,15 @@ int
 recv_keepalive(struct nbr *nbr, char *buf, u_int16_t len)
 {
 	struct ldp_msg *ka;
-	u_int32_t messageid;
 
 	log_debug("recv_keepalive: neighbor ID %s", inet_ntoa(nbr->id));
 
 	ka = (struct ldp_msg *)buf;
 
 	if ((len - TLV_HDR_LEN) < ntohs(ka->length)) {
-		/* XXX: send notification */
+		session_shutdown(nbr, S_BAD_MSG_LEN, ka->msgid, ka->type);
 		return (-1);
 	}
-
-	messageid = ka->msgid;
 
 	buf += sizeof(struct ldp_msg);
 	len -= sizeof(struct ldp_msg);

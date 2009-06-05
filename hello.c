@@ -98,10 +98,8 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 
 	hello = (struct ldp_msg *)buf;
 
-	if ((len - TLV_HDR_LEN) < ntohs(hello->length)) {
-		/* XXX: send notification */
+	if ((len - TLV_HDR_LEN) < ntohs(hello->length))
 		return;
-	}
 
 	messageid = hello->msgid;
 
