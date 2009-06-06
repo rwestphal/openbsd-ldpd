@@ -30,7 +30,7 @@
 #include <netinet/in.h>
 #include <event.h>
 
-#include "imsg.h"
+#include <imsg.h>
 #include "ldp.h"
 
 #define CONF_FILE		"/etc/ldpd.conf"
