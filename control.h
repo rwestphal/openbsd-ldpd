@@ -35,7 +35,7 @@ enum blockmodes {
 
 struct ctl_conn {
 	TAILQ_ENTRY(ctl_conn)	entry;
-	struct imsgbuf		ibuf;
+	struct imsgev		iev;
 };
 
 int	control_init(void);
