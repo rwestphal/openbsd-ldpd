@@ -85,6 +85,7 @@ struct rt_node {
 	u_int8_t		flags;
 	u_int8_t		prefixlen;
 	u_int8_t		invalid;
+	u_int8_t		present;	/* Is it present in fib? */
 };
 
 /* lde.c */
