@@ -381,7 +381,7 @@ lde_dispatch_parent(int fd, short event, void *bula)
 			}
 			memcpy(&rr, imsg.data, sizeof(rr));
 
-			lde_insert(&rr.kr);
+			lde_kernel_insert(&rr.kr);
 
 			break;
 		case IMSG_NETWORK_DEL:
