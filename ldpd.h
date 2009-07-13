@@ -396,7 +396,7 @@ u_int16_t	 iso_cksum(void *, u_int16_t, u_int16_t);
 /* kroute.c */
 int		 kif_init(void);
 int		 kr_init(int);
-int		 kr_change(struct kroute *, int);
+int		 kr_change(struct kroute *);
 int		 kr_delete(struct kroute *);
 void		 kr_shutdown(void);
 void		 kr_lfib_couple(void);

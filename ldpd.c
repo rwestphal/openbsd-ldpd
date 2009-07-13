@@ -427,7 +427,7 @@ main_dispatch_lde(int fd, short event, void *bula)
 	struct imsgbuf *ibuf = &iev->ibuf;
 	struct imsg	 imsg;
 	ssize_t		 n;
-	int		 count, shut = 0;
+	int		 shut = 0;
 
 	if (event & EV_READ) {
 		if ((n = imsg_read(ibuf)) == -1)
@@ -452,9 +452,7 @@ main_dispatch_lde(int fd, short event, void *bula)
 			kroute_insert_label(imsg.data);
 			break;
 		case IMSG_KLABEL_CHANGE:
-			count = (imsg.hdr.len - IMSG_HEADER_SIZE) /
-			    sizeof(struct kroute);
-			if (kr_change(imsg.data, count))
+			if (kr_change(imsg.data))
 				log_warn("main_dispatch_lde: error changing "
 				    "route");
 			break;
