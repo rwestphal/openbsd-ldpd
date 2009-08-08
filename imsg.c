@@ -263,6 +263,9 @@ imsg_flush(struct imsgbuf *ibuf)
 void
 imsg_clear(struct imsgbuf *ibuf)
 {
-	while (ibuf->w.queued)
-		msgbuf_clear(&ibuf->w);
+	int	fd;
+
+	msgbuf_clear(&ibuf->w);
+	while ((fd = imsg_get_fd(ibuf)) != -1)
+		close(fd);
 }
