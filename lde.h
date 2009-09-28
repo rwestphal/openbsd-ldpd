@@ -123,6 +123,7 @@ void		 route_start_garbage(struct rt_node *);
 void		 rt_dump(pid_t);
 void		 rt_snap(u_int32_t);
 void		 lde_kernel_insert(struct kroute *);
+void		 lde_kernel_remove(struct kroute *);
 void		 lde_check_mapping(struct map *, struct lde_nbr *);
 void		 lde_check_request(struct map *, struct lde_nbr *);
 

@@ -385,15 +385,6 @@ lde_dispatch_parent(int fd, short event, void *bula)
 
 			break;
 		case IMSG_NETWORK_DEL:
-			if (imsg.hdr.len != IMSG_HEADER_SIZE + sizeof(rr)) {
-				log_warnx("lde_dispatch_parent: "
-				    "wrong imsg len");
-				break;
-			}
-			memcpy(&rr, imsg.data, sizeof(rr));
-
-			break;
-		case IMSG_KROUTE_GET:
 			if (imsg.hdr.len != IMSG_HEADER_SIZE + sizeof(kr)) {
 				log_warnx("lde_dispatch_parent: "
 				    "wrong imsg len");
@@ -401,14 +392,8 @@ lde_dispatch_parent(int fd, short event, void *bula)
 			}
 			memcpy(&kr, imsg.data, sizeof(kr));
 
-/*			if ((rn = rt_find(kr.prefix.s_addr, kr.prefixlen,
-			    DT_NET)) != NULL)
-				lde_send_change_kroute(rn);
-			else*/
-				/* should not happen */
-				imsg_compose_event(iev_main,
-				    IMSG_KLABEL_DELETE, 0,
-				    0, -1, &kr, sizeof(kr));
+			lde_kernel_remove(&kr);
+
 			break;
 		case IMSG_RECONF_CONF:
 			if ((nconf = malloc(sizeof(struct ldpd_conf))) ==
