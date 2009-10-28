@@ -119,7 +119,7 @@ usage(void)
 {
 	extern char *__progname;
 
-	fprintf(stderr, "usage: %s [-cdnv] [-D macro=value] [-f file]\n",
+	fprintf(stderr, "usage: %s [-dnv] [-D macro=value] [-f file]\n",
 	    __progname);
 	exit(1);
 }
@@ -139,7 +139,7 @@ main(int argc, char *argv[])
 
 	log_init(1);	/* log to stderr until daemonized */
 
-	while ((ch = getopt(argc, argv, "cdD:f:nv")) != -1) {
+	while ((ch = getopt(argc, argv, "dD:f:nv")) != -1) {
 		switch (ch) {
 		case 'd':
 			debug = 1;
