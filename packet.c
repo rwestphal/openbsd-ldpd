@@ -270,7 +270,8 @@ session_recv_packet(int fd, short event, void *bula)
 	struct ldpd_conf	*xconf = bula;
 	struct iface		*iface;
 	struct nbr		*nbr = NULL;
-	int			 newfd, len;
+	int			 newfd;
+	socklen_t		 len = sizeof(src);
 
 	if (event != EV_READ)
 		return;
