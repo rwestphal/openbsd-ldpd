@@ -159,8 +159,8 @@ main(int argc, char *argv[])
 			if (opts & LDPD_OPT_VERBOSE)
 				opts |= LDPD_OPT_VERBOSE2;
 			opts |= LDPD_OPT_VERBOSE;
+			log_verbose(1);
 			break;
-
 		default:
 			usage();
 			/* NOTREACHED */
@@ -356,7 +356,7 @@ main_dispatch_ldpe(int fd, short event, void *bula)
 	struct imsgbuf		*ibuf = &iev->ibuf;
 	struct imsg		 imsg;
 	ssize_t			 n;
-	int			 shut = 0;
+	int			 shut = 0, verbose;
 
 	if (event & EV_READ) {
 		if ((n = imsg_read(ibuf)) == -1)
@@ -402,6 +402,11 @@ main_dispatch_ldpe(int fd, short event, void *bula)
 				kr_ifinfo(imsg.data, imsg.hdr.pid);
 			else
 				log_warnx("IFINFO request with wrong len");
+			break;
+		case IMSG_CTL_LOG_VERBOSE:
+			/* already checked by ldpe */
+			memcpy(&verbose, imsg.data, sizeof(verbose));
+			log_verbose(verbose);
 			break;
 		default:
 			log_debug("main_dispatch_ldpe: error handling imsg %d",
