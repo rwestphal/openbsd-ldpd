@@ -160,8 +160,8 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 		break;
 	case NBR_ACT_INIT_SEND:
 		/* XXX */
-		send_keepalive(nbr);
-		ret = send_init(nbr);
+		send_init(nbr);
+		ret = send_keepalive(nbr);
 		break;
 	case NBR_ACT_KEEPALIVE_SEND:
 		/* XXX */
