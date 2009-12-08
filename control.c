@@ -260,7 +260,7 @@ control_dispatch_imsg(int fd, short event, void *bula)
 			    sizeof(verbose))
 				break;
 
-			/* forward to other porcesses */
+			/* forward to other processes */
 			ldpe_imsg_compose_parent(imsg.hdr.type, imsg.hdr.pid,
 			    imsg.data, imsg.hdr.len - IMSG_HEADER_SIZE);
 			ldpe_imsg_compose_lde(imsg.hdr.type, 0, imsg.hdr.pid,
