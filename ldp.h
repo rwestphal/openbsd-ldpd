@@ -214,7 +214,14 @@ struct label_tlv {
 	u_int32_t	label;
 };
 
-#define LABEL_TLV_LEN	8
-#define	NO_LABEL	UINT_MAX
+#define LABEL_TLV_LEN		8
+
+struct hello_opt_parms_tlv {
+	u_int16_t	type;
+	u_int16_t	length;
+	u_int32_t	value;
+};
+
+#define	NO_LABEL		UINT_MAX
 
 #endif /* !_LDP_H_ */
