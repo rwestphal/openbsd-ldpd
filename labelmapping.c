@@ -481,12 +481,14 @@ gen_fec_tlv(struct buf *buf, u_int32_t prefix, u_int8_t prefixlen)
 
 	buf_add(buf, &ft, sizeof(ft));
 
-	if (prefixlen == 32)
+	if (prefixlen == 32) {
 		type = FEC_ADDRESS;
-	else
+		len = prefixlen/8;
+	} else {
 		type = FEC_PREFIX;
+		len = prefixlen;
+	}
 	family = htons(FEC_IPV4);
-	len = prefixlen;
 	addr = prefix;
 
 	buf_add(buf, &type, sizeof(type));
