@@ -364,6 +364,7 @@ struct ctl_rt {
 	u_int8_t		 flags;
 	u_int8_t		 prefixlen;
 	u_int8_t		 connected;
+	u_int8_t		 in_use;
 };
 
 struct ctl_sum {
