@@ -300,15 +300,13 @@ lde_kernel_remove(struct kroute *kr)
 		rl->label = rn->remote_label;
 
 		ln = lde_find_address(rn->nexthop);
-		if (ln == NULL)
-			fatalx("lde_kernel_remove: unable to find neighbor");
-
-		rl->nexthop = ln;
-
-		TAILQ_INSERT_TAIL(&rn->labels_list, rl, entry);
+		if (ln != NULL) {
+			rl->nexthop = ln;
+			TAILQ_INSERT_TAIL(&rn->labels_list, rl, entry);
+		} else
+			free (rl);
 	}
 
-	/* XXX */
 	rn->remote_label = 0;
 	rn->nexthop.s_addr = INADDR_ANY;
 	rn->present = 0;
