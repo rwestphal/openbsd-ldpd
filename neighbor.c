@@ -639,6 +639,7 @@ nbr_establish_connection(struct nbr *nbr)
 		log_debug("nbr_establish_connection: error while "
 		    "connecting to %s", inet_ntoa(nbr->addr));
 		nbr_act_start_idtimer(nbr);
+		close(nbr->fd);
 		return (-1);
 	}
 
