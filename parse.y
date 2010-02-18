@@ -697,7 +697,8 @@ parse_config(char *filename, int opts)
 	defs->holdtime = DEFAULT_HOLDTIME;
 	defs->keepalive = DEFAULT_KEEPALIVE;
 	defs->hello_interval = DEFAULT_HELLO_INTERVAL;
-	defs->mode = (MODE_DIST_INDEPENDENT | MODE_RET_LIBERAL |
+
+	conf->mode = (MODE_DIST_INDEPENDENT | MODE_RET_LIBERAL |
 	    MODE_ADV_UNSOLICITED);
 
 	if ((file = pushfile(filename, !(conf->opts & LDPD_OPT_NOACTION))) == NULL) {
