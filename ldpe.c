@@ -126,6 +126,9 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    IPPROTO_TCP)) == -1)
 		fatal("error creating session socket");
 
+	if (if_set_reuse(xconf->ldp_session_socket, 1) == -1)
+		fatal("if_set_reuse");
+
 	if (bind(xconf->ldp_session_socket, (struct sockaddr *)&sess_addr,
 	    sizeof(sess_addr)) == -1)
 		fatal("error binding session socket");
@@ -137,8 +140,6 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (if_set_tos(xconf->ldp_session_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	if (if_set_reuse(xconf->ldp_session_socket, 1) == -1)
-		fatal("if_set_reuse");
 	if (if_set_nonblock(xconf->ldp_session_socket) == -1)
 		fatal("if_set_nonblock");
 

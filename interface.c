@@ -431,9 +431,9 @@ if_set_recvbuf(int fd)
 int
 if_set_reuse(int fd, int enable)
 {
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &enable,
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable,
 	    sizeof(int)) < 0) {
-		log_warn("if_set_reuse: error setting SO_REUSEPORT");
+		log_warn("if_set_reuse: error setting SO_REUSEADDR");
 		return (-1);
 	}
 
