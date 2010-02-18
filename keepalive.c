@@ -46,8 +46,6 @@ send_keepalive(struct nbr *nbr)
 	if (nbr->iface->passive)
 		return (0);
 
-	log_debug("send_keepalive: neighbor ID %s", inet_ntoa(nbr->id));
-
 	if ((buf = buf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_keepalive");
 
@@ -69,8 +67,6 @@ int
 recv_keepalive(struct nbr *nbr, char *buf, u_int16_t len)
 {
 	struct ldp_msg *ka;
-
-	log_debug("recv_keepalive: neighbor ID %s", inet_ntoa(nbr->id));
 
 	ka = (struct ldp_msg *)buf;
 

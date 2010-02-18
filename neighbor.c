@@ -407,9 +407,6 @@ nbr_ktimer(int fd, short event, void *arg)
 	struct nbr	*nbr = arg;
 	struct timeval	 tv;
 
-	log_debug("nbr_ktimer: neighbor ID %s peerid %lu", inet_ntoa(nbr->id),
-	    nbr->peerid);
-
 	send_keepalive(nbr);
 
 	timerclear(&tv);
