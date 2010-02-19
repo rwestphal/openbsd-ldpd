@@ -221,7 +221,6 @@ kr_change_fib(struct kroute_node *kr, struct kroute *kroute, int action)
 		if (kroute_insert(kn) == -1) {
 			log_debug("kr_update_fib: cannot insert %s",
 			    inet_ntoa(kn->r.nexthop));
-			free(kn);
 		}
 	}
 
