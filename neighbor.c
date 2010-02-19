@@ -210,7 +210,6 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 void
 nbr_init(u_int32_t hashsize)
 {
-	struct nbr_head	*head;
 	u_int32_t        hs, i;
 
 	for (hs = 1; hs < hashsize; hs <<= 1)
