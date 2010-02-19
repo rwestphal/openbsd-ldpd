@@ -607,6 +607,7 @@ lde_nbr_new(u_int32_t peerid, struct lde_nbr *new)
 	TAILQ_INIT(&nbr->req_list);
 	TAILQ_INIT(&nbr->sent_map_list);
 	TAILQ_INIT(&nbr->recv_map_list);
+	TAILQ_INIT(&nbr->labels_list);
 
 	head = LDE_NBR_HASH(peerid);
 	LIST_INSERT_HEAD(head, nbr, hash);
@@ -619,6 +620,23 @@ lde_nbr_new(u_int32_t peerid, struct lde_nbr *new)
 	}
 
 	return (nbr);
+}
+
+void
+lde_nbr_del(struct lde_nbr *nbr)
+{
+	if (nbr == NULL)
+		return;
+
+	lde_req_list_free(nbr);
+	lde_map_list_free(nbr);
+	lde_address_list_free(nbr);
+	lde_label_list_free(nbr);
+
+	LIST_REMOVE(nbr, hash);
+	LIST_REMOVE(nbr, entry);
+
+	free(nbr);
 }
 
 int
@@ -708,22 +726,6 @@ lde_map_list_free(struct lde_nbr *nbr)
 		TAILQ_REMOVE(&nbr->sent_map_list, map, entry);
 		free(map);
 	}
-}
-
-void
-lde_nbr_del(struct lde_nbr *nbr)
-{
-	if (nbr == NULL)
-		return;
-
-	lde_req_list_free(nbr);
-	lde_map_list_free(nbr);
-	lde_address_list_free(nbr);
-
-	LIST_REMOVE(nbr, hash);
-	LIST_REMOVE(nbr, entry);
-
-	free(nbr);
 }
 
 struct lde_nbr *
