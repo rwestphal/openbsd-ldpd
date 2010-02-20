@@ -37,14 +37,14 @@
 #include "log.h"
 #include "ldpe.h"
 
-int
+void
 send_keepalive(struct nbr *nbr)
 {
 	struct buf	*buf;
 	u_int16_t	 size;
 
 	if (nbr->iface->passive)
-		return (0);
+		return;
 
 	if ((buf = buf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_keepalive");
@@ -59,8 +59,6 @@ send_keepalive(struct nbr *nbr)
 
 	bufferevent_write(nbr->bev, buf->buf, buf->wpos);
 	buf_free(buf);
-
-	return (0);
 }
 
 int
