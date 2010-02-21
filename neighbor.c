@@ -586,6 +586,11 @@ nbr_act_session_establish(struct nbr *nbr, int active)
 	}
 
 	nbr->bev = bufferevent_new(nbr->fd, readfn, NULL, errorfn, nbr);
+	if (nbr->bev == NULL) {
+		log_warn("nbr_act_session_establish: bufferevent_new");
+		return (-1);
+	}
+
 	bufferevent_settimeout(nbr->bev, 0, 0);
 	bufferevent_enable(nbr->bev, EV_READ|EV_WRITE);
 
