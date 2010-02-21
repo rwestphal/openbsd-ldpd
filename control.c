@@ -34,8 +34,6 @@
 
 #define	CONTROL_BACKLOG	5
 
-int control_imsg_relay(struct imsg *imsg);
-
 struct ctl_conn	*control_connbyfd(int);
 struct ctl_conn	*control_connbypid(pid_t);
 void		 control_close(int);
