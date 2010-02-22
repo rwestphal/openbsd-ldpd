@@ -100,6 +100,7 @@ void	 send_address_withdraw(struct nbr *, struct iface *);
 int	 recv_address_withdraw(struct nbr *, char *, u_int16_t);
 
 /* labelmapping.c */
+#define PREFIX_SIZE(x)	(((x) + 7) / 8)
 void	 send_labelmapping(struct nbr *);
 int	 recv_labelmapping(struct nbr *, char *, u_int16_t);
 void	 send_labelrequest(struct nbr *);
