@@ -275,7 +275,7 @@ lde_kernel_insert(struct kroute *kr)
 			    ldeconf->mode & MODE_DIST_ORDERED) {
 			       /* XXX */
 				if (rn->nexthop.s_addr == INADDR_ANY ||
-				    rn->remote_label != 0)
+				    rn->remote_label != NO_LABEL)
 					lde_send_labelmapping(ln->peerid,
 					    &localmap);
 			}
