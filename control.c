@@ -266,7 +266,7 @@ control_dispatch_imsg(int fd, short event, void *bula)
 
 			memcpy(&verbose, imsg.data, sizeof(verbose));
 			log_verbose(verbose);
-			break;		
+			break;
 		default:
 			log_debug("control_dispatch_imsg: "
 			    "error handling imsg %d", imsg.hdr.type);

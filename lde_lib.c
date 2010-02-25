@@ -258,28 +258,28 @@ lde_kernel_insert(struct kroute *kr)
 
 	/* Redistribute the current mapping to every nbr */
 	localmap.label = (ntohl(rn->local_label) & MPLS_LABEL_MASK) >>
-	   MPLS_LABEL_OFFSET;
+	    MPLS_LABEL_OFFSET;
 	localmap.prefix = rn->prefix.s_addr;
 	localmap.prefixlen = rn->prefixlen;
 
 	LIST_FOREACH(iface, &ldeconf->iface_list, entry) {
-	       LIST_FOREACH(ln, &iface->lde_nbr_list, entry) {
-		       if (ln->self)
-			       continue;
+		LIST_FOREACH(ln, &iface->lde_nbr_list, entry) {
+			if (ln->self)
+				continue;
 
-		       if (ldeconf->mode & MODE_ADV_UNSOLICITED &&
-			   ldeconf->mode & MODE_DIST_INDEPENDENT)
-			       lde_send_labelmapping(ln->peerid, &localmap);
+			if (ldeconf->mode & MODE_ADV_UNSOLICITED &&
+			    ldeconf->mode & MODE_DIST_INDEPENDENT)
+				lde_send_labelmapping(ln->peerid, &localmap);
 
-		       if (ldeconf->mode & MODE_ADV_UNSOLICITED &&
-			   ldeconf->mode & MODE_DIST_ORDERED) {
+			if (ldeconf->mode & MODE_ADV_UNSOLICITED &&
+			    ldeconf->mode & MODE_DIST_ORDERED) {
 			       /* XXX */
-			       if (rn->nexthop.s_addr == INADDR_ANY ||
-				   rn->remote_label != 0)
-				       lde_send_labelmapping(ln->peerid,
-					   &localmap);
-		       }
-	       }
+				if (rn->nexthop.s_addr == INADDR_ANY ||
+				    rn->remote_label != 0)
+					lde_send_labelmapping(ln->peerid,
+					    &localmap);
+			}
+		}
 	}
 }
 
