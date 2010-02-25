@@ -65,8 +65,7 @@ send_init(struct nbr *nbr)
 
 	gen_init_prms_tlv(buf, nbr, size);
 
-	bufferevent_write(nbr->bev, buf->buf, buf->wpos);
-	buf_free(buf);
+	evbuf_enqueue(&nbr->wbuf, buf);
 }
 
 int

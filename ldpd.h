@@ -57,6 +57,11 @@
 #define	F_DYNAMIC		0x0040
 #define	F_REDISTRIBUTED		0x0100
 
+struct evbuf {
+	struct msgbuf		wbuf;
+	struct event		ev;
+};
+
 struct imsgev {
 	struct imsgbuf		 ibuf;
 	void			(*handler)(int, short, void *);
@@ -433,7 +438,10 @@ void	merge_config(struct ldpd_conf *, struct ldpd_conf *);
 int	imsg_compose_event(struct imsgev *, u_int16_t, u_int32_t, pid_t,
 	    int, void *, u_int16_t);
 void	imsg_event_add(struct imsgev *);
-
+void	evbuf_enqueue(struct evbuf *, struct buf *);
+void	evbuf_event_add(struct evbuf *);
+void	evbuf_init(struct evbuf *, int, void (*)(int, short, void *), void *);
+void	evbuf_clear(struct evbuf *);
 
 /* printconf.c */
 void	print_config(struct ldpd_conf *);

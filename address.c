@@ -77,8 +77,7 @@ send_address(struct nbr *nbr, struct iface *iface)
 
 	gen_address_list_tlv(buf, iface, size);
 
-	bufferevent_write(nbr->bev, buf->buf, buf->wpos);
-	buf_free(buf);
+	evbuf_enqueue(&nbr->wbuf, buf);
 }
 
 int
@@ -192,8 +191,7 @@ send_address_withdraw(struct nbr *nbr, struct iface *iface)
 
 	gen_address_list_tlv(buf, iface, size);
 
-	bufferevent_write(nbr->bev, buf->buf, buf->wpos);
-	buf_free(buf);
+	evbuf_enqueue(&nbr->wbuf, buf);
 }
 
 int

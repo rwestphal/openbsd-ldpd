@@ -38,7 +38,8 @@ struct mapping_entry {
 
 struct nbr {
 	LIST_ENTRY(nbr)		 entry, hash;
-	struct bufferevent	*bev;
+	struct evbuf		 wbuf;
+	struct event		 rev;
 	struct event		 inactivity_timer;
 	struct event		 keepalive_timer;
 	struct event		 keepalive_timeout;
@@ -50,17 +51,16 @@ struct nbr {
 	struct mapping_head	 release_list;
 	struct mapping_head	 abortreq_list;
 
-	int			 fd;
-
 	struct in_addr		 addr;
 	struct in_addr		 id;
 
+	struct buf_read		*rbuf;
 	struct iface		*iface;
 
 	time_t			 uptime;
-
 	u_int32_t		 peerid;	/* unique ID in DB */
 
+	int			 fd;
 	int			 state;
 
 	u_int16_t		 lspace;
@@ -177,7 +177,6 @@ void	 nbr_reset_idtimer(struct nbr *);
 int	 nbr_pending_idtimer(struct nbr *);
 
 int	 nbr_act_session_establish(struct nbr *, int);
-int	 nbr_close_connection(struct nbr *);
 
 void			 nbr_mapping_add(struct nbr *, struct mapping_head *,
 			    struct map *);
@@ -195,10 +194,10 @@ int	 gen_ldp_hdr(struct buf *, struct iface *, u_int16_t);
 int	 gen_msg_tlv(struct buf *, u_int32_t, u_int16_t);
 int	 send_packet(struct iface *, void *, size_t, struct sockaddr_in *);
 void	 disc_recv_packet(int, short, void *);
-void	 session_recv_packet(int, short, void *);
+void	 session_accept(int, short, void *);
 
-void	 session_read(struct bufferevent *, void *);
-void	 session_error(struct bufferevent *, short, void *);
+void	 session_read(int, short, void *);
+void	 session_write(int, short, void *);
 void	 session_close(struct nbr *);
 void	 session_shutdown(struct nbr *, u_int32_t, u_int32_t, u_int32_t);
 

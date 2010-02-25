@@ -57,8 +57,7 @@ send_keepalive(struct nbr *nbr)
 
 	gen_msg_tlv(buf, MSG_TYPE_KEEPALIVE, size);
 
-	bufferevent_write(nbr->bev, buf->buf, buf->wpos);
-	buf_free(buf);
+	evbuf_enqueue(&nbr->wbuf, buf);
 }
 
 int
