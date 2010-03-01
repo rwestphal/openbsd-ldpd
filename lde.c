@@ -242,7 +242,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			rt_snap(imsg.hdr.peerid);
 
 			lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END,
-			    imsg.hdr.peerid, 0, 0, 0);
+			    imsg.hdr.peerid, 0, NULL, 0);
 
 			break;
 		case IMSG_LABEL_REQUEST:
