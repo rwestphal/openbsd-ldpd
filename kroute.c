@@ -1045,7 +1045,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, u_int32_t family)
 		dst.sin_family = AF_INET;
 		dst.sin_addr.s_addr = kroute->prefix.s_addr;
 		/* adjust header */
-		hdr.rtm_priority = 0;
+		hdr.rtm_priority = kroute->priority;
 		hdr.rtm_addrs |= RTA_DST;
 		hdr.rtm_msglen += sizeof(dst);
 		/* adjust iovec */
