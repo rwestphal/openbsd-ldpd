@@ -328,6 +328,7 @@ session_read(int fd, short event, void *arg)
 	    sizeof(nbr->rbuf->buf) - nbr->rbuf->wpos)) == -1) {
 		if (errno != EINTR && errno != EAGAIN) {
 			/* XXX find better error */
+			event_del(&nbr->rev);
 			session_shutdown(nbr, S_SHUTDOWN, 0, 0);
 			return;
 		}
@@ -464,6 +465,7 @@ session_close(struct nbr *nbr)
 	    inet_ntoa(nbr->id));
 
 	evbuf_clear(&nbr->wbuf);
+	event_del(&nbr->rev);
 
 	if (evtimer_pending(&nbr->keepalive_timer, NULL))
 		evtimer_del(&nbr->keepalive_timer);
