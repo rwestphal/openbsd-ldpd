@@ -455,7 +455,8 @@ nbr_ktimeout(int fd, short event, void *arg)
 	    nbr->peerid);
 
 	send_notification_nbr(nbr, S_KEEPALIVE_TMR, 0, 0);
-	close(nbr->fd);
+	/* XXX race, send_notification_nbr() has no chance to be sent */
+	session_close(nbr);
 }
 
 void
