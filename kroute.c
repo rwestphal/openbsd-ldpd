@@ -1118,10 +1118,18 @@ send_rtmsg(int fd, int action, struct kroute *kroute, u_int32_t family)
 		iov[iovcnt].iov_base = &label_out;
 		iov[iovcnt++].iov_len = sizeof(label_out);
 
-		if (family == AF_MPLS)
-			hdr.rtm_mpls = MPLS_OP_SWAP;
-		else
-			hdr.rtm_mpls = MPLS_OP_PUSH;
+		if (ntohl(kroute->remote_label) >> MPLS_LABEL_OFFSET ==
+		    MPLS_LABEL_IMPLNULL) {
+			if (family == AF_MPLS)
+				hdr.rtm_mpls = MPLS_OP_POP;
+			else
+				return (0);
+		} else {
+			if (family == AF_MPLS)
+				hdr.rtm_mpls = MPLS_OP_SWAP;
+			else
+				hdr.rtm_mpls = MPLS_OP_PUSH;
+		}
 	}
 
 

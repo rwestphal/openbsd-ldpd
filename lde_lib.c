@@ -118,7 +118,7 @@ rt_dump(pid_t pid)
 		rtctl.local_label = r->local_label;
 		rtctl.remote_label = r->remote_label;
 
-		if (!r->present || r->remote_label == NO_LABEL)
+		if (!r->present)
 			rtctl.in_use = 0;
 		else
 			rtctl.in_use = 1;
