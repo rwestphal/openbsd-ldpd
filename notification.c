@@ -103,6 +103,15 @@ recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
 		return (-1);
 	}
 
+	if (st->status_code & htonl(STATUS_FATAL))
+		log_warnx("recieved notification from neighbor %s: %s",
+		    inet_ntoa(nbr->id),
+		    notification_name(ntohl(st->status_code)));
+	else
+		log_debug("recieved notification from neighbor %s: %s",
+		    inet_ntoa(nbr->id),
+		    notification_name(ntohl(st->status_code)));
+
 	if (st->status_code & htonl(STATUS_FATAL)) {
 		nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
 		return (-1);

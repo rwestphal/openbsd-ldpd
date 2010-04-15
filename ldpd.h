@@ -424,6 +424,7 @@ in_addr_t	prefixlen2mask(u_int8_t);
 const char	*nbr_state_name(int);
 const char	*if_state_name(int);
 const char	*if_type_name(enum iface_type);
+const char	*notification_name(u_int32_t);
 
 /* name2id.c */
 u_int16_t	 rtlabel_name2id(const char *);
