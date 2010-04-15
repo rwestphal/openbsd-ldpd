@@ -145,7 +145,6 @@ int	 if_set_mcast_loop(int);
 int	 if_set_mcast_ttl(int, u_int8_t);
 int	 if_set_tos(int, int);
 int	 if_set_reuse(int, int);
-int	 if_set_nonblock(int);
 
 /* neighbor.c */
 void		 nbr_init(u_int32_t);

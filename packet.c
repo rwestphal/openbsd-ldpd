@@ -283,10 +283,7 @@ session_accept(int fd, short event, void *bula)
 		return;
 	}
 
-	if (fcntl(newfd, F_SETFL, O_NONBLOCK) == -1) {
-		log_debug("sess_recv_packet: unable to set non blocking flag");
-		return;
-	}
+	session_socket_blockmode(newfd, BM_NONBLOCK);
 
 	if ((iface = session_find_iface(xconf, src.sin_addr)) == NULL) {
 		log_debug("sess_recv_packet: cannot find a matching interface");
