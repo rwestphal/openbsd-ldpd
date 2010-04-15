@@ -202,10 +202,6 @@ if_state_name(int state)
 		return ("DOWN");
 	case IF_STA_LOOPBACK:
 		return ("LOOP");
-	case IF_STA_POINTTOPOINT:
-		return ("P2P");
-	case IF_STA_DROTHER:
-		return ("OTHER");
 	case IF_STA_ACTIVE:
 		return ("ACTIVE");
 	default:
