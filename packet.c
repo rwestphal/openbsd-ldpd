@@ -325,8 +325,6 @@ session_read(int fd, short event, void *arg)
 	if ((n = read(fd, nbr->rbuf->buf + nbr->rbuf->wpos,
 	    sizeof(nbr->rbuf->buf) - nbr->rbuf->wpos)) == -1) {
 		if (errno != EINTR && errno != EAGAIN) {
-			/* XXX find better error */
-			event_del(&nbr->rev);
 			session_shutdown(nbr, S_SHUTDOWN, 0, 0);
 			return;
 		}
@@ -335,7 +333,6 @@ session_read(int fd, short event, void *arg)
 	}
 	if (n == 0) {
 		/* connection closed */
-		event_del(&nbr->rev);
 		session_shutdown(nbr, S_SHUTDOWN, 0, 0);
 		return;
 	}
@@ -450,8 +447,12 @@ void
 session_shutdown(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
     u_int32_t type)
 {
+	log_debug("session_shutdown: nbr ID %s, status %x",
+	    inet_ntoa(nbr->id), status);
+
 	send_notification_nbr(nbr, status, msgid, type);
-	send_notification_nbr(nbr, S_SHUTDOWN, msgid, type);
+	if (status != S_SHUTDOWN)
+		send_notification_nbr(nbr, S_SHUTDOWN, msgid, type);
 
 	nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
 }
