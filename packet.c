@@ -287,6 +287,7 @@ session_accept(int fd, short event, void *bula)
 
 	if ((iface = session_find_iface(xconf, src.sin_addr)) == NULL) {
 		log_debug("sess_recv_packet: cannot find a matching interface");
+		close(newfd);
 		return;
 	}
 
