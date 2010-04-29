@@ -217,12 +217,6 @@ if_type_name(enum iface_type type)
 		return ("POINTOPOINT");
 	case IF_TYPE_BROADCAST:
 		return ("BROADCAST");
-	case IF_TYPE_NBMA:
-		return ("NBMA");
-	case IF_TYPE_POINTOMULTIPOINT:
-		return ("POINTOMULTIPOINT");
-	case IF_TYPE_VIRTUALLINK:
-		return ("VIRTUALLINK");
 	}
 	/* NOTREACHED */
 	return ("UNKNOWN");

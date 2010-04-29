@@ -135,10 +135,7 @@ enum iface_action {
 /* interface types */
 enum iface_type {
 	IF_TYPE_POINTOPOINT,
-	IF_TYPE_BROADCAST,
-	IF_TYPE_NBMA,
-	IF_TYPE_POINTOMULTIPOINT,
-	IF_TYPE_VIRTUALLINK
+	IF_TYPE_BROADCAST
 };
 
 /* neighbor states */
