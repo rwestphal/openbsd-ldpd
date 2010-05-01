@@ -324,7 +324,8 @@ session_read(int fd, short event, void *arg)
 	nbr->rbuf->wpos += n;
 
 	while ((len = session_get_pdu(nbr->rbuf, &buf)) > 0) {
-		ldp_hdr = (struct ldp_hdr *)pdu = buf;
+		pdu = buf;
+		ldp_hdr = (struct ldp_hdr *)pdu;
 		if (ntohs(ldp_hdr->version) != LDP_VERSION) {
 			session_shutdown(nbr, S_BAD_PROTO_VER, 0, 0);
 			free(buf);
