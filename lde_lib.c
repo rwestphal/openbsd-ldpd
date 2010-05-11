@@ -292,7 +292,6 @@ lde_kernel_remove(struct kroute *kr)
 	struct lde_nbr		*ln;
 
 	rn = rt_find(kr->prefix.s_addr, kr->prefixlen);
-	rn = rt_find(kr->prefix.s_addr, kr->prefixlen);
 	if (rn == NULL)
 		return;
 
