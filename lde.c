@@ -404,8 +404,6 @@ lde_dispatch_parent(int fd, short event, void *bula)
 			memcpy(nconf, imsg.data, sizeof(struct ldpd_conf));
 
 			break;
-		case IMSG_RECONF_AREA:
-			break;
 		case IMSG_RECONF_IFACE:
 			break;
 		case IMSG_RECONF_END:

@@ -334,8 +334,6 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			break;
 		case IMSG_RECONF_CONF:
 			break;
-		case IMSG_RECONF_AREA:
-			break;
 		case IMSG_RECONF_IFACE:
 			break;
 		case IMSG_RECONF_END:
