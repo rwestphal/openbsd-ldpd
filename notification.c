@@ -108,8 +108,8 @@ recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
 		    inet_ntoa(nbr->id),
 		    notification_name(ntohl(st->status_code)));
 	else
-		log_debug("recieved notification from neighbor %s: %s",
-		    inet_ntoa(nbr->id),
+		log_debug("recieved non-fatal notification from neighbor "
+		    "%s: %s", inet_ntoa(nbr->id),
 		    notification_name(ntohl(st->status_code)));
 
 	if (st->status_code & htonl(STATUS_FATAL)) {
