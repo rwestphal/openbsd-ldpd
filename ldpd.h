@@ -181,10 +181,10 @@ enum nbr_action {
 TAILQ_HEAD(mapping_head, mapping_entry);
 
 struct map {
-	u_int32_t	label;
 	u_int32_t	prefix;
-	u_int8_t	prefixlen;
+	u_int32_t	label;
 	u_int32_t	messageid;
+	u_int8_t	prefixlen;
 };
 
 struct notify_msg {
