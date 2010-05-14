@@ -88,9 +88,9 @@ void	 send_keepalive(struct nbr *);
 int	 recv_keepalive(struct nbr *, char *, u_int16_t);
 
 /* notification.c */
-void	 send_notification(u_int32_t, struct iface *, int, u_int32_t,
-	    u_int32_t);
 void	 send_notification_nbr(struct nbr *, u_int32_t, u_int32_t, u_int32_t);
+struct buf	*send_notification(u_int32_t, struct iface *, u_int32_t,
+	    u_int32_t);
 int	 recv_notification(struct nbr *, char *, u_int16_t);
 
 /* address.c */
