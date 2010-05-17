@@ -517,8 +517,7 @@ validate_fec_elm(char *buf)
 
 	type = *buf;
 
-	if (type != FEC_WILDCARD && type != FEC_PREFIX &&
-	    type != FEC_ADDRESS)
+	if (type != FEC_WILDCARD && type != FEC_PREFIX)
 		return (-1);
 
 	buf += sizeof(u_int8_t);
@@ -552,15 +551,11 @@ decode_fec_len_elm(char *buf, u_int8_t type)
 	switch (type) {
 	case FEC_PREFIX:
 		return (len);
-	case FEC_ADDRESS:
-		return (len * 8);
 	case FEC_WILDCARD:
-		/* XXX: not handled for now */
+		return (0);
 	default:
 		/* Should not happen */
 		return (-1);
 	}
-
 	/* NOTREACHED */
-	return (-1);
 }
