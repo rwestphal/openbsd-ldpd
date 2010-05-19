@@ -60,7 +60,6 @@ struct lde_nbr {
 
 	u_int32_t			 peerid;
 	unsigned int			 ifindex;
-	int				 self;
 	int				 state;
 
 	u_int16_t			 lspace;

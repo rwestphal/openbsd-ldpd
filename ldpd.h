@@ -204,7 +204,6 @@ struct iface {
 	struct in_addr		 addr;
 	struct in_addr		 dst;
 	struct in_addr		 mask;
-	struct nbr		*self;
 
 	u_int16_t		 lspace_id;
 

@@ -187,9 +187,6 @@ if_del(struct iface *iface)
 void
 if_init(struct ldpd_conf *xconf, struct iface *iface)
 {
-	/* init the dummy local neighbor */
-	iface->self = nbr_new(ldpe_router_id(), iface->ifindex, iface, 1);
-
 	/* set event handlers for interface */
 	evtimer_set(&iface->hello_timer, if_hello_timer, iface);
 
@@ -327,11 +324,8 @@ if_to_ctl(struct iface *iface)
 	} else
 		ictl.uptime = 0;
 
-	LIST_FOREACH(nbr, &iface->nbr_list, entry) {
-		if (nbr == iface->self)
-			continue;
+	LIST_FOREACH(nbr, &iface->nbr_list, entry)
 		ictl.nbr_cnt++;
-	}
 
 	return (&ictl);
 }

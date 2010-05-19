@@ -265,9 +265,6 @@ lde_kernel_insert(struct kroute *kr)
 
 	LIST_FOREACH(iface, &ldeconf->iface_list, entry) {
 		LIST_FOREACH(ln, &iface->lde_nbr_list, entry) {
-			if (ln->self)
-				continue;
-
 			if (ldeconf->mode & MODE_ADV_UNSOLICITED &&
 			    ldeconf->mode & MODE_DIST_INDEPENDENT)
 				lde_send_labelmapping(ln->peerid, &localmap);

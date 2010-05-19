@@ -116,7 +116,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 
 	nbr = nbr_find_ldpid(iface, ldp->lsr_id, ldp->lspace_id);
 	if (!nbr) {
-		nbr = nbr_new(ldp->lsr_id, ldp->lspace_id, iface, 0);
+		nbr = nbr_new(ldp->lsr_id, ldp->lspace_id, iface);
 
 		/* set neighbor parameters */
 		if (address.s_addr == INADDR_ANY)
