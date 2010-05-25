@@ -462,8 +462,6 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 	struct lde_nbr		*lnn;
 	struct map		 localmap;
 
-	bzero(&newlre, sizeof(newlre));
-
 	rn = rt_find(map->prefix, map->prefixlen);
 	if (rn == NULL || rn->remote_label == NO_LABEL) {
 		lde_send_notification(ln->peerid, S_NO_ROUTE, map->messageid,
@@ -507,6 +505,11 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 
 		TAILQ_INSERT_HEAD(&ln->req_list, newlre, entry);
 	}
+}
+
+void
+lde_check_release(struct map *map, struct lde_nbr *ln)
+{
 }
 
 void
