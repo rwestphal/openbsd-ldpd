@@ -441,7 +441,6 @@ lde_send_insert_klabel(struct rt_node *r)
 	kr.local_label = r->local_label;
 	kr.remote_label = r->remote_label;
 	kr.prefixlen = r->prefixlen;
-	kr.ext_tag = r->ext_tag;
 
 	imsg_compose_event(iev_main, IMSG_KLABEL_INSERT, 0, 0, -1,
 	     &kr, sizeof(kr));
@@ -458,7 +457,6 @@ lde_send_change_klabel(struct rt_node *r)
 	kr.local_label = r->local_label;
 	kr.remote_label = r->remote_label;
 	kr.prefixlen = r->prefixlen;
-	kr.ext_tag = r->ext_tag;
 
 	imsg_compose_event(iev_main, IMSG_KLABEL_CHANGE, 0, 0, -1,
 	     &kr, sizeof(kr));

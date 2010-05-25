@@ -83,7 +83,6 @@ struct rt_node {
 	u_int32_t		local_label;
 	u_int32_t		remote_label;
 
-	u_int32_t		ext_tag;
 	u_int16_t		lspace;
 	u_int8_t		flags;
 	u_int8_t		prefixlen;

@@ -107,7 +107,7 @@ typedef struct {
 
 %}
 
-%token	LSPACE INTERFACE ROUTERID LFIBUPDATE RTLABEL
+%token	LSPACE INTERFACE ROUTERID LFIBUPDATE
 %token	HOLDTIME HELLOINTERVAL KEEPALIVE
 %token	DISTRIBUTION RETENTION ADVERTISEMENT
 %token	EXTTAG PASSIVE
@@ -211,15 +211,6 @@ conf_main	: ROUTERID STRING {
 				free($2);
 				YYERROR;
 			}
-		}
-		| RTLABEL STRING EXTTAG NUMBER {
-			if ($4 < 0 || $4 > UINT_MAX) {
-				yyerror("invalid external route tag");
-				free($2);
-				YYERROR;
-			}
-			rtlabel_tag(rtlabel_name2id($2), $4);
-			free($2);
 		}
 		| defaults
 		;
@@ -365,7 +356,6 @@ lookup(char *s)
 		{"passive",		PASSIVE},
 		{"retention",		RETENTION},
 		{"router-id",		ROUTERID},
-		{"rtlabel",		RTLABEL},
 		{"yes",			YES}
 	};
 	const struct keywords	*p;
