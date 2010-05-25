@@ -229,6 +229,8 @@ nbr_new(u_int32_t nbr_id, u_int16_t lspace, struct iface *iface)
 
 	if ((nbr = calloc(1, sizeof(*nbr))) == NULL)
 		fatal("nbr_new");
+	if ((nbr->rbuf = calloc(1, sizeof(struct buf_read))) == NULL)
+		fatal("nbr_new");
 
 	nbr->state = NBR_STA_DOWN;
 	nbr->id.s_addr = nbr_id;
