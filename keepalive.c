@@ -40,13 +40,13 @@
 void
 send_keepalive(struct nbr *nbr)
 {
-	struct buf	*buf;
+	struct ibuf	*buf;
 	u_int16_t	 size;
 
 	if (nbr->iface->passive)
 		return;
 
-	if ((buf = buf_open(LDP_MAX_LEN)) == NULL)
+	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_keepalive");
 
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg);

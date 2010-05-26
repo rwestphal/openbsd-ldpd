@@ -528,9 +528,9 @@ imsg_compose_event(struct imsgev *iev, u_int16_t type,
 }
 
 void
-evbuf_enqueue(struct evbuf *eb, struct buf *buf)
+evbuf_enqueue(struct evbuf *eb, struct ibuf *buf)
 {
-	buf_close(&eb->wbuf, buf);
+	ibuf_close(&eb->wbuf, buf);
 	evbuf_event_add(eb);
 }
 
