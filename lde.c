@@ -426,7 +426,7 @@ lde_assign_label(void)
 
 	/* XXX some checks needed */
 	label++;
-	return (htonl(label << MPLS_LABEL_OFFSET));
+	return label;
 }
 
 void
@@ -605,8 +605,7 @@ lde_nbr_do_mappings(struct rt_node *rn)
 	struct lde_req	*lr;
 	struct map	 map;
 
-	map.label = (ntohl(rn->local_label) & MPLS_LABEL_MASK) >>
-	    MPLS_LABEL_OFFSET;
+	map.label = rn->local_label;
 	map.prefix = rn->fec.prefix.s_addr;
 	map.prefixlen = rn->fec.prefixlen;
 
