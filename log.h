@@ -30,5 +30,6 @@ void	log_info(const char *, ...);
 void	log_debug(const char *, ...);
 void	fatal(const char *) __dead;
 void	fatalx(const char *) __dead;
+const char *log_fec(struct map *);
 
 #endif /* _LOG_H_ */
