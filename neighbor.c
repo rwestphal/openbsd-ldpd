@@ -171,6 +171,8 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 		nbr_send_labelmappings(nbr);
 		break;
 	case NBR_ACT_CLOSE_SESSION:
+		ldpe_imsg_compose_lde(IMSG_NEIGHBOR_DOWN, nbr->peerid, 0,
+		    NULL, 0);
 		session_close(nbr);
 		nbr_start_idtimer(nbr);
 		break;
@@ -267,8 +269,6 @@ nbr_new(u_int32_t nbr_id, u_int16_t lspace, struct iface *iface)
 void
 nbr_del(struct nbr *nbr)
 {
-	ldpe_imsg_compose_lde(IMSG_NEIGHBOR_DOWN, nbr->peerid, 0, NULL, 0);
-
 	session_close(nbr);
 
 	if (evtimer_pending(&nbr->inactivity_timer, NULL))
