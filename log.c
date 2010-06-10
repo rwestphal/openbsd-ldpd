@@ -297,10 +297,10 @@ log_fec(struct map *map)
 	static char	buf[32];
 	char		pstr[32];
 
-	if (snprintf(buf, sizeof(buf), "FEC %s/%u",
+	if (snprintf(buf, sizeof(buf), "%s/%u",
 	    inet_ntop(AF_INET, &map->prefix, pstr, sizeof(pstr)),
 	    map->prefixlen) == -1)
-		return ("FEC ???");
+		return ("???");
 
 	return (buf);
 }
