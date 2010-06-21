@@ -373,7 +373,7 @@ kr_show_route(struct imsg *imsg)
 				do {
 					main_imsg_compose_ldpe(IMSG_CTL_KROUTE,
 					    imsg->hdr.pid,
-					    &kr->r, sizeof(kr->r));
+					    &kn->r, sizeof(kn->r));
 				} while ((kn = kn->next) != NULL);
 			}
 		break;
