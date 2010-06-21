@@ -302,6 +302,7 @@ interface	: INTERFACE STRING	{
 
 interface_block	: '{' optnl interfaceopts_l '}'
 		| '{' optnl '}'
+		| /* nothing */
 		;
 
 interfaceopts_l	: interfaceopts_l interfaceoptsl nl
