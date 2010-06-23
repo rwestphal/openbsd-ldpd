@@ -88,7 +88,6 @@ struct rt_node {
 	u_int32_t		remote_label;
 	u_int16_t		lspace;
 	u_int8_t		flags;
-	u_int8_t		invalid;
 	u_int8_t		present;	/* Is it present in fib? */
 };
 
