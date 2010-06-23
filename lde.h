@@ -81,8 +81,8 @@ struct rt_node {
 	struct fec		fec;
 	struct in_addr		nexthop;
 
-	LIST_HEAD(, lde_map)	upstream;	/* recv mappings */
-	LIST_HEAD(, lde_map)	downstream;	/* sent mappings */
+	LIST_HEAD(, lde_map)	downstream;	/* recv mappings */
+	LIST_HEAD(, lde_map)	upstream;	/* sent mappings */
 
 	u_int32_t		local_label;
 	u_int32_t		remote_label;
