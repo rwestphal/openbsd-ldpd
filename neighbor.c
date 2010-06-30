@@ -608,7 +608,7 @@ nbr_mapping_add(struct nbr *nbr, struct mapping_head *mh, struct map *map)
 	if (me == NULL)
 		fatal("nbr_mapping_add");
 
-	me->prefix = map->prefix;
+	me->prefix = map->prefix.s_addr;
 	me->prefixlen = map->prefixlen;
 	me->label = map->label;
 
@@ -621,7 +621,7 @@ nbr_mapping_find(struct nbr *nbr, struct mapping_head *mh, struct map *map)
 	struct mapping_entry	*me = NULL;
 
 	TAILQ_FOREACH(me, mh, entry) {
-		if (me->prefix == map->prefix &&
+		if (me->prefix == map->prefix.s_addr &&
 		    me->prefixlen == map->prefixlen)
 			return (me);
 	}

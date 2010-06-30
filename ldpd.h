@@ -184,7 +184,7 @@ enum nbr_action {
 TAILQ_HEAD(mapping_head, mapping_entry);
 
 struct map {
-	u_int32_t	prefix;
+	struct in_addr	prefix;
 	u_int32_t	label;
 	u_int32_t	messageid;
 	u_int32_t	requestid;

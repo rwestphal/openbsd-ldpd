@@ -607,7 +607,7 @@ lde_nbr_do_mappings(struct rt_node *rn)
 	struct map	 map;
 
 	map.label = rn->local_label;
-	map.prefix = rn->fec.prefix.s_addr;
+	map.prefix = rn->fec.prefix;
 	map.prefixlen = rn->fec.prefixlen;
 
 	RB_FOREACH(ln, nbr_tree, &lde_nbrs) {
