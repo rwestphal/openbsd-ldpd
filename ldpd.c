@@ -428,12 +428,6 @@ main_dispatch_lde(int fd, short event, void *bula)
 			break;
 
 		switch (imsg.hdr.type) {
-		case IMSG_KLABEL_INSERT:
-			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
-			    sizeof(struct kroute))
-				fatalx("invalid size of IMSG_KLABEL_INSERT");
-			kroute_insert_label(imsg.data);
-			break;
 		case IMSG_KLABEL_CHANGE:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
 			    sizeof(struct kroute))

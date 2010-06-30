@@ -260,7 +260,7 @@ lde_kernel_insert(struct kroute *kr)
 			rn->local_label = lde_assign_label();
 	}
 
-	lde_send_insert_klabel(rn);
+	lde_send_change_klabel(rn);
 
 	/* Redistribute the current mapping to every nbr */
 	lde_nbr_do_mappings(rn);

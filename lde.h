@@ -95,7 +95,6 @@ struct rt_node {
 pid_t		lde(struct ldpd_conf *, int [2], int [2], int [2]);
 int		lde_imsg_compose_ldpe(int, u_int32_t, pid_t, void *, u_int16_t);
 u_int32_t	lde_assign_label(void);
-void		lde_send_insert_klabel(struct rt_node *);
 void		lde_send_change_klabel(struct rt_node *);
 void		lde_send_delete_klabel(struct rt_node *);
 void		lde_send_labelmapping(u_int32_t, struct map *);
