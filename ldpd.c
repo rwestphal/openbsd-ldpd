@@ -463,6 +463,8 @@ main_dispatch_lde(int fd, short event, void *bula)
 void
 main_imsg_compose_ldpe(int type, pid_t pid, void *data, u_int16_t datalen)
 {
+	if (iev_ldpe == NULL)
+		return;
 	imsg_compose_event(iev_ldpe, type, 0, pid, -1, data, datalen);
 }
 
