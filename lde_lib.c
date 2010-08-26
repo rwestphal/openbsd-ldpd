@@ -480,9 +480,11 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 		lre->fec = rn->fec;
 		lre->msgid = map->messageid;
 
-		if (fec_insert(&ln->recv_req, &lre->fec))
+		if (fec_insert(&ln->recv_req, &lre->fec)) {
 			log_warnx("failed to add %s/%u to recv req",
 			    inet_ntoa(lre->fec.prefix), lre->fec.prefixlen);
+			free(lre);
+		}
 	}
 }
 
