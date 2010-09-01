@@ -256,7 +256,7 @@ main(int argc, char *argv[])
 	    iev_lde->handler, iev_lde);
 	event_add(&iev_lde->ev, NULL);
 
-	if (kr_init(!(ldpd_conf->flags & LDPD_FLAG_NO_LFIB_UPDATE)) == -1)
+	if (kr_init(!(ldpd_conf->flags & LDPD_FLAG_NO_FIB_UPDATE)) == -1)
 		fatalx("kr_init failed");
 
 	/* remove unneded stuff from config */
@@ -360,11 +360,11 @@ main_dispatch_ldpe(int fd, short event, void *bula)
 				log_debug("configuration reloaded");
 			break;
 */
-		case IMSG_CTL_LFIB_COUPLE:
-			kr_lfib_couple();
+		case IMSG_CTL_FIB_COUPLE:
+			kr_fib_couple();
 			break;
-		case IMSG_CTL_LFIB_DECOUPLE:
-			kr_lfib_decouple();
+		case IMSG_CTL_FIB_DECOUPLE:
+			kr_fib_decouple();
 			break;
 		case IMSG_CTL_KROUTE:
 		case IMSG_CTL_KROUTE_ADDR:

@@ -220,10 +220,8 @@ control_dispatch_imsg(int fd, short event, void *bula)
 			break;
 
 		switch (imsg.hdr.type) {
-		case IMSG_CTL_LFIB_COUPLE:
-		case IMSG_CTL_LFIB_DECOUPLE:
-			ldpe_fib_update(imsg.hdr.type);
-			/* FALLTHROUGH */
+		case IMSG_CTL_FIB_COUPLE:
+		case IMSG_CTL_FIB_DECOUPLE:
 		case IMSG_CTL_RELOAD:
 			c->iev.ibuf.pid = imsg.hdr.pid;
 			ldpe_imsg_compose_parent(imsg.hdr.type, 0, NULL, 0);
