@@ -192,8 +192,6 @@ nbr_state_name(int state)
 		return ("OPENSENT");
 	case NBR_STA_OPER:
 		return ("OPERATIONAL");
-	case NBR_STA_ACTIVE:
-		return ("ACTIVE");
 	default:
 		return ("UNKNW");
 	}
