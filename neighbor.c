@@ -441,6 +441,9 @@ nbr_idtimer(int fd, short event, void *arg)
 {
 	struct nbr *nbr = arg;
 
+	if (ntohl(nbr->addr.s_addr) >= ntohl(nbr->iface->addr.s_addr))
+		return;
+
 	log_debug("nbr_idtimer: neighbor ID %s peerid %lu", inet_ntoa(nbr->id),
 	    nbr->peerid);
 
