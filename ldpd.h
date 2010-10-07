@@ -353,24 +353,6 @@ struct ctl_rt {
 	u_int8_t		 in_use;
 };
 
-struct ctl_sum {
-	struct in_addr		 rtr_id;
-	u_int32_t		 spf_delay;
-	u_int32_t		 spf_hold_time;
-	u_int32_t		 num_ext_lsa;
-	u_int32_t		 num_lspace;
-	time_t			 uptime;
-	u_int8_t		 rfc1583compat;
-};
-
-struct ctl_sum_lspace {
-	struct in_addr		 lspace;
-	u_int32_t		 num_iface;
-	u_int32_t		 num_adj_nbr;
-	u_int32_t		 num_spf_calc;
-	u_int32_t		 num_lsa;
-};
-
 /* parse.y */
 struct ldpd_conf	*parse_config(char *, int);
 int			 cmdline_symset(char *);
