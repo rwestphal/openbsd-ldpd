@@ -941,21 +941,14 @@ send_rtmsg(int fd, int action, struct kroute *kroute, u_int32_t family)
 	struct rt_msghdr	hdr;
 	struct sockaddr_mpls	label_in, label_out;
 	struct sockaddr_in	dst, mask, nexthop;
-	u_int32_t		hr_label;
 	int			iovcnt = 0;
 
 	if (kr_state.fib_sync == 0)
 		return (0);
 
-	/* Implicit NULL label should be added/remove just one time */
-	hr_label = kroute->local_label;
-	if (hr_label == MPLS_LABEL_IMPLNULL) {
-		if (action == RTM_ADD && flag_implicit_null)
-			return (0);
-
-		if (action == RTM_DELETE && !flag_implicit_null)
-			return (0);
-	}
+	/* Implicit NULL label should not be added to the FIB */
+	if (family == AF_MPLS && kroute->local_label == MPLS_LABEL_IMPLNULL)
+		return (0);
 
 	/* initialize header */
 	bzero(&hdr, sizeof(hdr));
@@ -1070,14 +1063,6 @@ retry:
 		    hdr.rtm_type, family, inet_ntoa(kroute->prefix),
 		    kroute->prefixlen);
 		return (0);
-	}
-
-	if (hr_label == MPLS_LABEL_IMPLNULL) {
-		if (action == RTM_ADD)
-			flag_implicit_null = 1;
-
-		if (action == RTM_DELETE)
-			flag_implicit_null = 0;
 	}
 
 	return (0);
