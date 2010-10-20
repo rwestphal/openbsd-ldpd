@@ -260,6 +260,7 @@ kr_shutdown(void)
 		kr_state.fib_sync = 1;	/* force removal of mulitcast route */
 		(void)send_rtmsg(kr_state.fd, RTM_DELETE, &kr_all_routers,
 		    AF_INET);
+		kr_state.fib_sync = 0;	/* back to decoupled state */
 	}
 
 	kroute_clear();
