@@ -31,9 +31,7 @@ TAILQ_HEAD(ctl_conns, ctl_conn)	ctl_conns;
 
 struct mapping_entry {
 	TAILQ_ENTRY(mapping_entry)	entry;
-	u_int32_t			label;
-	u_int32_t			prefix;
-	u_int8_t			prefixlen;
+	struct map			map;
 };
 
 struct nbr {
