@@ -95,7 +95,6 @@ int	 recv_notification(struct nbr *, char *, u_int16_t);
 void	 send_address(struct nbr *, struct iface *);
 int	 recv_address(struct nbr *, char *, u_int16_t);
 void	 send_address_withdraw(struct nbr *, struct iface *);
-int	 recv_address_withdraw(struct nbr *, char *, u_int16_t);
 
 /* labelmapping.c */
 #define PREFIX_SIZE(x)	(((x) + 7) / 8)
