@@ -227,7 +227,7 @@ tlv_decode_opt_hello_prms(char *buf, u_int16_t len, struct in_addr *addr,
 
 		len -= sizeof(tlv);
 		buf += sizeof(tlv);
-		cons += sizeof(cons);
+		cons += sizeof(tlv);
 	}
 
 	return (cons);
