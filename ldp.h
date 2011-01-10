@@ -221,12 +221,6 @@ struct reqid_tlv {
 
 #define REQID_TLV_LEN		8
 
-struct hello_opt_parms_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	value;
-};
-
 #define	NO_LABEL		UINT_MAX
 
 #endif /* !_LDP_H_ */
