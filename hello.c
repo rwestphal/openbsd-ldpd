@@ -214,12 +214,12 @@ tlv_decode_opt_hello_prms(char *buf, u_int16_t len, struct in_addr *addr,
 		tlv_len = ntohs(tlv.length);
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_IPV4TRANSADDR:
-			if (tlv_len < sizeof(u_int32_t))
+			if (tlv_len != sizeof(u_int32_t))
 				return (-1);
 			bcopy(buf + TLV_HDR_LEN, addr, sizeof(u_int32_t));
 			break;
 		case TLV_TYPE_CONFIG:
-			if (tlv_len < sizeof(u_int32_t))
+			if (tlv_len != sizeof(u_int32_t))
 				return (-1);
 			bcopy(buf + TLV_HDR_LEN, conf_number,
 			    sizeof(u_int32_t));
