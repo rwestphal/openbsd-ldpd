@@ -122,7 +122,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 		return;
 	}
 
-	nbr = nbr_find_ldpid(iface, ldp.lsr_id, ldp.lspace_id);
+	nbr = nbr_find_ldpid(ldp.lsr_id, ldp.lspace_id);
 	if (!nbr) {
 		nbr = nbr_new(ldp.lsr_id, ldp.lspace_id, iface);
 

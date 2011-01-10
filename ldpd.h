@@ -199,7 +199,6 @@ struct iface {
 	LIST_ENTRY(iface)	 entry;
 	struct event		 hello_timer;
 
-	LIST_HEAD(, nbr)	 nbr_list;
 	LIST_HEAD(, lde_nbr)	 lde_nbr_list;
 
 	char			 name[IF_NAMESIZE];
