@@ -274,6 +274,8 @@ session_accept(int fd, short event, void *bula)
 		struct ibuf	*buf;
 		/* If there is no neighbor matching there is no
 		   Hello adjacency: try to send notification */
+		log_warnx("Connection attempt from unknown neighbor %s: %s",
+		    inet_ntoa(src.sin_addr), "NO HELLO");
 		buf = send_notification(S_NO_HELLO, NULL, 0, 0);
 		write(newfd, buf->buf, buf->wpos);
 		ibuf_free(buf);
