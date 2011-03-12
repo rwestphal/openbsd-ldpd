@@ -143,7 +143,7 @@ int	 if_set_tos(int, int);
 int	 if_set_reuse(int, int);
 
 /* neighbor.c */
-struct nbr	*nbr_new(u_int32_t, u_int16_t, struct iface *);
+struct nbr	*nbr_new(u_int32_t, u_int16_t, struct iface *, struct in_addr);
 void		 nbr_del(struct nbr *);
 
 struct nbr	*nbr_find_ip(u_int32_t);

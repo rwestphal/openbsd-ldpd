@@ -124,14 +124,16 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 
 	nbr = nbr_find_ldpid(ldp.lsr_id, ldp.lspace_id);
 	if (!nbr) {
-		nbr = nbr_new(ldp.lsr_id, ldp.lspace_id, iface);
+		struct in_addr	a;
+
+		if (address.s_addr == INADDR_ANY)
+			a = src;
+		else
+			a = address;
+
+		nbr = nbr_new(ldp.lsr_id, ldp.lspace_id, iface, a);
 
 		/* set neighbor parameters */
-		if (address.s_addr == INADDR_ANY)
-			nbr->addr.s_addr = src.s_addr;
-		else
-			nbr->addr.s_addr = address.s_addr;
-
 		nbr->hello_type = flags;
 
 		if (holdtime == 0) {
