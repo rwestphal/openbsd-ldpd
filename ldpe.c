@@ -304,17 +304,12 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 				fatalx("IFINFO imsg with wrong len");
 			kif = imsg.data;
 			link_new = (kif->flags & IFF_UP) &&
-			    (LINK_STATE_IS_UP(kif->link_state) ||
-			    (kif->link_state == LINK_STATE_UNKNOWN &&
-			    kif->media_type != IFT_CARP));
+			    LINK_STATE_IS_UP(kif->link_state);
 
 			LIST_FOREACH(iface, &leconf->iface_list, entry) {
 				if (kif->ifindex == iface->ifindex) {
 					link_old = (iface->flags & IFF_UP) &&
-					    (LINK_STATE_IS_UP(iface->linkstate)
-					    || (iface->linkstate ==
-					    LINK_STATE_UNKNOWN &&
-					    iface->media_type != IFT_CARP));
+					    LINK_STATE_IS_UP(iface->linkstate);
 					iface->flags = kif->flags;
 					iface->linkstate = kif->link_state;
 
