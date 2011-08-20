@@ -49,7 +49,6 @@ log_init(int n_debug)
 	extern char	*__progname;
 
 	debug = n_debug;
-	verbose = n_debug;
 
 	if (!debug)
 		openlog(__progname, LOG_PID | LOG_NDELAY, LOG_DAEMON);
