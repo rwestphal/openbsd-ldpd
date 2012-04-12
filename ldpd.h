@@ -246,7 +246,7 @@ enum blockmodes {
 #define	MODE_ADV_UNSOLICITED	0x20
 
 struct ldpd_conf {
-	struct event		disc_ev, sess_ev;
+	struct event		disc_ev;
 	struct in_addr		rtr_id;
 	LIST_HEAD(, iface)	iface_list;
 

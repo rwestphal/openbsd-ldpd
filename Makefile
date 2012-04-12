@@ -1,7 +1,7 @@
 #	$OpenBSD$
 
 PROG=	ldpd
-SRCS=	address.c control.c hello.c init.c interface.c \
+SRCS=	accept.c address.c control.c hello.c init.c interface.c \
 	keepalive.c kroute.c labelmapping.c lde.c lde_lib.c ldpd.c ldpe.c \
 	log.c neighbor.c notification.c packet.c parse.y printconf.c
 

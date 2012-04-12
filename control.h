@@ -23,11 +23,6 @@
 #include <sys/time.h>
 #include <event.h>
 
-struct {
-	struct event	ev;
-	int		fd;
-} control_state;
-
 struct ctl_conn {
 	TAILQ_ENTRY(ctl_conn)	entry;
 	struct imsgev		iev;

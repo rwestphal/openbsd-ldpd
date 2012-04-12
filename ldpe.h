@@ -73,6 +73,13 @@ struct nbr {
 
 };
 
+/* accept.c */
+void	accept_init(void);
+int	accept_add(int, void (*)(int, short, void *), void *);
+void	accept_del(int);
+void	accept_pause(void);
+void	accept_unpause(void);
+
 /* hello.c */
 int	 send_hello(struct iface *);
 void	 recv_hello(struct iface *,  struct in_addr, char *, u_int16_t);
