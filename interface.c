@@ -298,7 +298,8 @@ if_to_ctl(struct iface *iface)
 	} else
 		ictl.hello_timer = -1;
 
-	if (iface->state != IF_STA_DOWN) {
+	if (iface->state != IF_STA_DOWN &&
+	    iface->uptime != 0) {
 		ictl.uptime = now.tv_sec - iface->uptime;
 	} else
 		ictl.uptime = 0;
