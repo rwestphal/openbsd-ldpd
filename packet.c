@@ -268,7 +268,8 @@ session_accept(int fd, short event, void *bula)
 		 */
 		if (errno == ENFILE || errno == EMFILE) {
 			accept_pause();
-		} else if (errno != EWOULDBLOCK && errno != EINTR)
+		} else if (errno != EWOULDBLOCK && errno != EINTR &&
+		    errno != ECONNABORTED)
 			log_debug("sess_recv_packet: accept error: %s",
 			    strerror(errno));
 		return;

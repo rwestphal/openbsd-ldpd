@@ -120,7 +120,8 @@ control_accept(int listenfd, short event, void *bula)
 		 */
 		if (errno == ENFILE || errno == EMFILE)
 			accept_pause();
-		else if (errno != EWOULDBLOCK && errno != EINTR)
+		else if (errno != EWOULDBLOCK && errno != EINTR &&
+		    errno != ECONNABORTED)
 			log_warn("control_accept: accept");
 		return;
 	}
