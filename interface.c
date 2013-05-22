@@ -260,6 +260,8 @@ if_act_reset(struct iface *iface)
 {
 	struct in_addr		 addr;
 
+	if_stop_hello_timer(iface);
+
 	inet_aton(AllRouters, &addr);
 	if (if_leave_group(iface, &addr)) {
 		log_warnx("if_act_reset: error leaving group %s, "
