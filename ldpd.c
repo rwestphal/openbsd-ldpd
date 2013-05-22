@@ -170,8 +170,6 @@ main(int argc, char *argv[])
 	if ((ldpd_conf = parse_config(conffile, opts)) == NULL )
 		exit(1);
 
-	/* parse config file */
-
 	if (ldpd_conf->opts & LDPD_OPT_NOACTION) {
 		if (ldpd_conf->opts & LDPD_OPT_VERBOSE)
 			print_config(ldpd_conf);
@@ -189,7 +187,7 @@ main(int argc, char *argv[])
 		errx(1, "unknown user %s", LDPD_USER);
 
 	log_init(debug);
-	log_verbose(opts & LDPD_OPT_VERBOSE);
+	log_verbose(opts & (LDPD_OPT_VERBOSE | LDPD_OPT_VERBOSE2));
 
 	if (!debug)
 		daemon(1, 0);
