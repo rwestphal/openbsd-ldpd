@@ -54,7 +54,7 @@ send_keepalive(struct nbr *nbr)
 
 	gen_msg_tlv(buf, MSG_TYPE_KEEPALIVE, size);
 
-	evbuf_enqueue(&nbr->wbuf, buf);
+	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 }
 
 int
