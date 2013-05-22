@@ -149,8 +149,9 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 	nbr_fsm(nbr, NBR_EVT_HELLO_RCVD);
 
 	if (ntohl(nbr->addr.s_addr) < ntohl(nbr->iface->addr.s_addr) &&
-	    nbr->state == NBR_STA_PRESENT && !nbr_pending_idtimer(nbr))
-		nbr_act_session_establish(nbr, 1);
+	    nbr->state == NBR_STA_PRESENT && !nbr_pending_connect(nbr) &&
+	    !nbr_pending_idtimer(nbr))
+		nbr_establish_connection(nbr);
 }
 
 int
