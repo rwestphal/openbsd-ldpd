@@ -1298,6 +1298,10 @@ rtmsg_process(char *buf, int len)
 				continue;
 			}
 
+			/* routes attached to loopback interfaces */
+			if (prefix.s_addr == nexthop.s_addr)
+				flags |= F_CONNECTED;
+
 			if ((okr = kroute_find_fec(prefix.s_addr, prefixlen,
 			    nexthop))
 			    != NULL) {
