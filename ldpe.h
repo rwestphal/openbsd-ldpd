@@ -57,6 +57,7 @@ struct nbr {
 
 	time_t			 uptime;
 	u_int32_t		 peerid;	/* unique ID in DB */
+	u_int8_t		 idtimer_cnt;
 
 	int			 fd;
 	int			 state;
