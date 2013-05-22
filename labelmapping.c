@@ -56,9 +56,6 @@ send_labelmapping(struct nbr *nbr)
 	struct ldp_hdr		*ldp_hdr;
 	u_int16_t		 tlv_size, size;
 
-	if (nbr->iface->passive)
-		return;
-
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_labelmapping");
 
@@ -170,9 +167,6 @@ send_labelrequest(struct nbr *nbr)
 	struct ldp_hdr		*ldp_hdr;
 	u_int16_t		 tlv_size, size;
 
-	if (nbr->iface->passive)
-		return;
-
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_labelrequest");
 
@@ -266,9 +260,6 @@ send_labelwithdraw(struct nbr *nbr)
 	struct mapping_entry	*me;
 	struct ldp_hdr		*ldp_hdr;
 	u_int16_t		 tlv_size, size;
-
-	if (nbr->iface->passive)
-		return;
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_labelwithdraw");
@@ -408,9 +399,6 @@ send_labelrelease(struct nbr *nbr)
 	struct ldp_hdr		*ldp_hdr;
 	u_int16_t		 tlv_size, size;
 
-	if (nbr->iface->passive)
-		return;
-
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_labelrelease");
 
@@ -545,9 +533,6 @@ send_labelabortreq(struct nbr *nbr)
 {
 	struct ibuf	*buf;
 	u_int16_t	 size;
-
-	if (nbr->iface->passive)
-		return;
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_labelabortreq");

@@ -279,7 +279,6 @@ if_to_ctl(struct iface *iface)
 	ictl.linkstate = iface->linkstate;
 	ictl.mediatype = iface->media_type;
 	ictl.priority = iface->priority;
-	ictl.passive = iface->passive;
 
 	gettimeofday(&now, NULL);
 	if (evtimer_pending(&iface->hello_timer, &tv)) {

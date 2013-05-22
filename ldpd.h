@@ -220,7 +220,6 @@ struct iface {
 	u_int8_t		 media_type;
 	u_int8_t		 linkstate;
 	u_int8_t		 priority;
-	u_int8_t		 passive;
 };
 
 /* ldp_conf */
@@ -313,7 +312,6 @@ struct ctl_iface {
 	u_int8_t		 linkstate;
 	u_int8_t		 mediatype;
 	u_int8_t		 priority;
-	u_int8_t		 passive;
 };
 
 struct ctl_nbr {

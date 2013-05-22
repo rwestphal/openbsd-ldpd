@@ -54,9 +54,6 @@ send_hello(struct iface *iface)
 	dst.sin_len = sizeof(struct sockaddr_in);
 	inet_aton(AllRouters, &dst.sin_addr);
 
-	if (iface->passive)
-		return (0);
-
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_hello");
 
