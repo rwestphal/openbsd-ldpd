@@ -331,6 +331,7 @@ lookup(char *s)
 		{"holdtime",		HOLDTIME},
 		{"interface",		INTERFACE},
 		{"keepalive",		KEEPALIVE},
+		{"no",			NO},
 		{"retention",		RETENTION},
 		{"router-id",		ROUTERID},
 		{"yes",			YES}

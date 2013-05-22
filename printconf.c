@@ -36,6 +36,11 @@ print_mainconf(struct ldpd_conf *conf)
 {
 	printf("router-id %s\n\n", inet_ntoa(conf->rtr_id));
 
+	if (conf->flags & LDPD_FLAG_NO_FIB_UPDATE)
+		printf("fib-update no\n");
+	else
+		printf("fib-update yes\n");
+
 	if (conf->mode & MODE_DIST_INDEPENDENT)
 		printf("distribution independent\n");
 	else
