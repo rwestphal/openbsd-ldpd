@@ -47,6 +47,7 @@ send_notification_nbr(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
 
 	buf = send_notification(status, msgid, type);
 	evbuf_enqueue(&nbr->wbuf, buf);
+	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
 struct ibuf *
