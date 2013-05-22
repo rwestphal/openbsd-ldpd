@@ -167,12 +167,17 @@ if_new(struct kif *kif)
 void
 if_del(struct iface *iface)
 {
+	struct adj		*adj;
 	struct if_addr		*if_addr;
 
 	log_debug("if_del: interface %s", iface->name);
 
 	if_stop_hello_timer(iface);
 
+	while ((adj = LIST_FIRST(&iface->adj_list)) != NULL) {
+		LIST_REMOVE(adj, iface_entry);
+		adj_del(adj);
+	}
 	while ((if_addr = LIST_FIRST(&iface->addr_list)) != NULL)
 		LIST_REMOVE(if_addr, iface_entry);
 
@@ -208,7 +213,7 @@ if_hello_timer(int fd, short event, void *arg)
 	struct iface *iface = arg;
 	struct timeval tv;
 
-	send_hello(iface);
+	send_hello(HELLO_LINK, iface, NULL);
 
 	/* reschedule hello_timer */
 	timerclear(&tv);
@@ -307,7 +312,7 @@ if_to_ctl(struct iface *iface)
 	ictl.state = iface->state;
 	ictl.mtu = iface->mtu;
 	ictl.baudrate = iface->baudrate;
-	ictl.holdtime = iface->holdtime;
+	ictl.holdtime = iface->hello_holdtime;
 	ictl.hello_interval = iface->hello_interval;
 	ictl.flags = iface->flags;
 	ictl.type = iface->type;

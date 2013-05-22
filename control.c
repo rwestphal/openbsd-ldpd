@@ -248,6 +248,9 @@ control_dispatch_imsg(int fd, short event, void *bula)
 				    0, -1, NULL, 0);
 			}
 			break;
+		case IMSG_CTL_SHOW_DISCOVERY:
+			ldpe_adj_ctl(c);
+			break;
 		case IMSG_CTL_SHOW_LIB:
 			c->iev.ibuf.pid = imsg.hdr.pid;
 			ldpe_imsg_compose_lde(imsg.hdr.type, 0, imsg.hdr.pid,

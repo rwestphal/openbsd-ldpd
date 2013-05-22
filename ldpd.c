@@ -296,8 +296,6 @@ ldpd_shutdown(void)
 	free(iev_ldpe);
 	msgbuf_clear(&iev_lde->ibuf.w);
 	free(iev_lde);
-
-	close(ldpd_conf->ldp_session_socket);
 	free(ldpd_conf);
 
 	log_info("terminating");
