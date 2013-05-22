@@ -32,6 +32,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <ifaddrs.h>
+#include <net/if_types.h>
 #include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -287,6 +288,12 @@ interface	: INTERFACE STRING	{
 			iface = conf_get_if(kif, ka);
 			if (iface == NULL)
 				YYERROR;
+			if (iface->media_type == IFT_LOOP ||
+			    iface->media_type == IFT_CARP) {
+				yyerror("unsupported interface type %s",
+				    iface->name);
+				YYERROR;
+			}
 			LIST_INSERT_HEAD(&conf->iface_list, iface, entry);
 
 			memcpy(&ifacedefs, defs, sizeof(ifacedefs));

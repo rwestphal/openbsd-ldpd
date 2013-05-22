@@ -52,7 +52,6 @@ struct {
 } iface_fsm[] = {
     /* current state	event that happened	action to take	resulting state */
     {IF_STA_DOWN,	IF_EVT_UP,		IF_ACT_STRT,	0},
-    {IF_STA_LOOPBACK,	IF_EVT_DOWN,		IF_ACT_NOTHING,	IF_STA_DOWN},
     {IF_STA_ANY,	IF_EVT_DOWN,		IF_ACT_RST,	IF_STA_DOWN},
     {-1,		IF_EVT_NOTHING,		IF_ACT_NOTHING,	0},
 };
@@ -143,10 +142,6 @@ if_new(struct kif *kif, struct kif_addr *ka)
 	if (kif->flags & IFF_BROADCAST &&
 	    kif->flags & IFF_MULTICAST)
 		iface->type = IF_TYPE_BROADCAST;
-	if (kif->flags & IFF_LOOPBACK) {
-		iface->type = IF_TYPE_POINTOPOINT;
-		iface->state = IF_STA_LOOPBACK;
-	}
 
 	/* get mtu, index and flags */
 	iface->mtu = kif->mtu;
@@ -233,13 +228,6 @@ if_act_start(struct iface *iface)
 		log_debug("if_act_start: interface %s link down",
 		    iface->name);
 		return (0);
-	}
-
-	if (iface->media_type == IFT_CARP && iface->passive == 0) {
-		/* force passive mode on carp interfaces */
-		log_warnx("if_act_start: forcing interface %s to passive",
-		    iface->name);
-		iface->passive = 1;
 	}
 
 	gettimeofday(&now, NULL);

@@ -111,9 +111,8 @@ enum imsg_type {
 /* interface states */
 #define	IF_STA_NEW		0x00	/* dummy state for reload */
 #define	IF_STA_DOWN		0x01
-#define	IF_STA_LOOPBACK		0x02
-#define	IF_STA_ACTIVE		0x04
-#define	IF_STA_ANY		0x07
+#define	IF_STA_ACTIVE		0x02
+#define	IF_STA_ANY		(IF_STA_DOWN | IF_STA_ACTIVE)
 
 /* interface events */
 enum iface_event {
