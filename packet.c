@@ -76,7 +76,8 @@ gen_msg_tlv(struct ibuf *buf, u_int32_t type, u_int16_t size)
 	bzero(&msg, sizeof(msg));
 	msg.type = htons(type);
 	msg.length = htons(size);
-	msg.msgid = htonl(++msgcnt);
+	if (type != MSG_TYPE_HELLO)
+		msg.msgid = htonl(++msgcnt);
 
 	return (ibuf_add(buf, &msg, sizeof(msg)));
 }
