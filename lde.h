@@ -73,8 +73,6 @@ struct lde_nbr {
 	u_int32_t			 peerid;
 	unsigned int			 ifindex;
 	int				 state;
-
-	u_int16_t			 lspace;
 };
 
 struct rt_lsp {
@@ -93,7 +91,6 @@ struct rt_node {
 	LIST_HEAD(, lde_map)	upstream;	/* sent mappings */
 
 	u_int32_t		local_label;
-	u_int16_t		lspace;
 	u_int8_t		flags;
 };
 

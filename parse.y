@@ -93,7 +93,6 @@ struct config_defaults {
 };
 
 struct config_defaults	 globaldefs;
-struct config_defaults	 lspacedefs;
 struct config_defaults	 ifacedefs;
 struct config_defaults	*defs;
 
@@ -109,7 +108,7 @@ typedef struct {
 
 %}
 
-%token	LSPACE INTERFACE ROUTERID FIBUPDATE
+%token	INTERFACE ROUTERID FIBUPDATE
 %token	HOLDTIME HELLOINTERVAL KEEPALIVE
 %token	DISTRIBUTION RETENTION ADVERTISEMENT
 %token	EXTTAG
@@ -359,7 +358,6 @@ lookup(char *s)
 		{"holdtime",		HOLDTIME},
 		{"interface",		INTERFACE},
 		{"keepalive",		KEEPALIVE},
-		{"labelspace",		LSPACE},
 		{"retention",		RETENTION},
 		{"router-id",		ROUTERID},
 		{"yes",			YES}
