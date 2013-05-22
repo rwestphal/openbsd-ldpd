@@ -153,13 +153,11 @@ if_new(struct kif *kif)
 	    kif->flags & IFF_MULTICAST)
 		iface->type = IF_TYPE_BROADCAST;
 
-	/* get mtu, index and flags */
-	iface->mtu = kif->mtu;
+	/* get index and flags */
 	iface->ifindex = kif->ifindex;
 	iface->flags = kif->flags;
 	iface->linkstate = kif->link_state;
 	iface->media_type = kif->media_type;
-	iface->baudrate = kif->baudrate;
 
 	return (iface);
 }
@@ -304,34 +302,29 @@ struct ctl_iface *
 if_to_ctl(struct iface *iface)
 {
 	static struct ctl_iface	 ictl;
-	struct timeval		 tv, now, res;
+	struct timeval		 now;
+	struct adj		*adj;
 
 	memcpy(ictl.name, iface->name, sizeof(ictl.name));
-	ictl.rtr_id.s_addr = ldpe_router_id();
 	ictl.ifindex = iface->ifindex;
 	ictl.state = iface->state;
-	ictl.mtu = iface->mtu;
-	ictl.baudrate = iface->baudrate;
-	ictl.holdtime = iface->hello_holdtime;
+	ictl.hello_holdtime = iface->hello_holdtime;
 	ictl.hello_interval = iface->hello_interval;
 	ictl.flags = iface->flags;
 	ictl.type = iface->type;
 	ictl.linkstate = iface->linkstate;
 	ictl.mediatype = iface->media_type;
-	ictl.priority = iface->priority;
 
 	gettimeofday(&now, NULL);
-	if (evtimer_pending(&iface->hello_timer, &tv)) {
-		timersub(&tv, &now, &res);
-		ictl.hello_timer = res.tv_sec;
-	} else
-		ictl.hello_timer = -1;
-
 	if (iface->state != IF_STA_DOWN &&
 	    iface->uptime != 0) {
 		ictl.uptime = now.tv_sec - iface->uptime;
 	} else
 		ictl.uptime = 0;
+
+	ictl.adj_cnt = 0;
+	LIST_FOREACH(adj, &iface->adj_list, iface_entry)
+		ictl.adj_cnt++;
 
 	return (&ictl);
 }

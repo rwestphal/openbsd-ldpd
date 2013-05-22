@@ -77,11 +77,6 @@ struct nbr {
 	int			 state;
 
 	u_int16_t		 keepalive;
-
-	u_int8_t		 priority;
-	u_int8_t		 options;
-
-	u_int8_t		 flags;
 };
 
 struct mapping_entry {
