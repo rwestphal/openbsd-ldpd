@@ -457,10 +457,8 @@ session_close(struct nbr *nbr)
 	evbuf_clear(&nbr->wbuf);
 	event_del(&nbr->rev);
 
-	if (evtimer_pending(&nbr->keepalive_timer, NULL))
-		evtimer_del(&nbr->keepalive_timer);
-	if (evtimer_pending(&nbr->keepalive_timeout, NULL))
-		evtimer_del(&nbr->keepalive_timeout);
+	nbr_stop_ktimer(nbr);
+	nbr_stop_ktimeout(nbr);
 
 	close(nbr->fd);
 	accept_unpause();
