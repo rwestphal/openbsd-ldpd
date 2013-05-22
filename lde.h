@@ -71,8 +71,6 @@ struct lde_nbr {
 	TAILQ_HEAD(, lde_nbr_address)	 addr_list;
 
 	u_int32_t			 peerid;
-	unsigned int			 ifindex;
-	int				 state;
 };
 
 struct rt_lsp {
