@@ -100,10 +100,10 @@ struct {
 /* Passive Role */
     {NBR_STA_PRESENT,	NBR_EVT_CONNECT_UP,	NBR_ACT_CONNECT_SETUP,	NBR_STA_INITIAL},
     {NBR_STA_INITIAL,	NBR_EVT_INIT_RCVD,	NBR_ACT_PASSIVE_INIT,	NBR_STA_OPENREC},
-    {NBR_STA_OPENREC,	NBR_EVT_KEEPALIVE_RCVD,	NBR_ACT_STRT_KTIMER,	NBR_STA_OPER},
+    {NBR_STA_OPENREC,	NBR_EVT_KEEPALIVE_RCVD,	NBR_ACT_SESSION_EST,	NBR_STA_OPER},
 /* Active Role */
     {NBR_STA_PRESENT,	NBR_EVT_INIT_SENT,	NBR_ACT_NOTHING,	NBR_STA_OPENSENT},
-    {NBR_STA_OPENSENT,	NBR_EVT_INIT_RCVD,	NBR_ACT_KEEPALIVE_SEND,	NBR_STA_OPER},
+    {NBR_STA_OPENSENT,	NBR_EVT_INIT_RCVD,	NBR_ACT_KEEPALIVE_SEND,	NBR_STA_OPENREC},
 /* Session Maintenance */
     {NBR_STA_OPER,	NBR_EVT_PDU_RCVD,	NBR_ACT_RST_KTIMEOUT,	0},
 /* Session Close */
@@ -129,7 +129,7 @@ const char * const nbr_action_names[] = {
 	"START INACTIVITY TIMER",
 	"RESET INACTIVITY TIMER",
 	"RESET KEEPALIVE TIMEOUT",
-	"START KEEPALIVE TIMER",
+	"START NEIGHBOR SESSION",
 	"RESET KEEPALIVE TIMER",
 	"SETUP NEIGHBOR CONNECTION",
 	"SEND INIT AND KEEPALIVE",
@@ -178,7 +178,7 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 	case NBR_ACT_RST_KTIMER:
 		nbr_start_ktimer(nbr);
 		break;
-	case NBR_ACT_STRT_KTIMER:
+	case NBR_ACT_SESSION_EST:
 		nbr_act_session_operational(nbr);
 		nbr_start_ktimer(nbr);
 		nbr_start_ktimeout(nbr);
@@ -193,12 +193,8 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 		send_keepalive(nbr);
 		break;
 	case NBR_ACT_KEEPALIVE_SEND:
-		nbr_act_session_operational(nbr);
-		nbr_start_ktimer(nbr);
 		nbr_start_ktimeout(nbr);
 		send_keepalive(nbr);
-		send_address(nbr, NULL);
-		nbr_send_labelmappings(nbr);
 		break;
 	case NBR_ACT_CLOSE_SESSION:
 		ldpe_imsg_compose_lde(IMSG_NEIGHBOR_DOWN, nbr->peerid, 0,
