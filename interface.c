@@ -225,6 +225,8 @@ if_start_hello_timer(struct iface *iface)
 {
 	struct timeval tv;
 
+	send_hello(HELLO_LINK, iface, NULL);
+
 	timerclear(&tv);
 	tv.tv_sec = iface->hello_interval;
 	if (evtimer_add(&iface->hello_timer, &tv) == -1)

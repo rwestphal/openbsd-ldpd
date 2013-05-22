@@ -251,6 +251,8 @@ tnbr_start_hello_timer(struct tnbr *tnbr)
 {
 	struct timeval tv;
 
+	send_hello(HELLO_TARGETED, NULL, tnbr);
+
 	timerclear(&tv);
 	tv.tv_sec = tnbr->hello_interval;
 	if (evtimer_add(&tnbr->hello_timer, &tv) == -1)
