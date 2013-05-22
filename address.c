@@ -84,12 +84,6 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 	struct address_list_tlv	alt;
 	enum imsg_type		type;
 
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_address: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
-
 	bcopy(buf, &addr, sizeof(addr));
 	log_debug("recv_address: neighbor ID %s%s", inet_ntoa(nbr->id),
 	    ntohs(addr.type) == MSG_TYPE_ADDR ? "" : " address withdraw");
