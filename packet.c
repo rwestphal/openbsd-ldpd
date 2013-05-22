@@ -293,7 +293,7 @@ session_accept(int fd, short event, void *bula)
 	}
 
 	nbr->fd = newfd;
-	nbr_fsm(nbr, NBR_EVT_SESSION_UP);
+	nbr_fsm(nbr, NBR_EVT_CONNECT_UP);
 }
 
 void
