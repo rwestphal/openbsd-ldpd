@@ -50,6 +50,8 @@ print_mainconf(struct ldpd_conf *conf)
 		printf("advertisement ondemand\n");
 	else
 		printf("advertisement unsolicited\n");
+
+	printf("keepalive %u\n", conf->keepalive);
 }
 
 void

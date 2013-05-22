@@ -211,7 +211,6 @@ struct iface {
 	int			 state;
 	int			 mtu;
 	u_int16_t		 holdtime;
-	u_int16_t		 keepalive;
 	u_int16_t		 hello_interval;
 	u_int16_t		 flags;
 	enum iface_type		 type;
@@ -253,6 +252,7 @@ struct ldpd_conf {
 	int			ldp_session_socket;
 	int			flags;
 	u_int8_t		mode;
+	u_int16_t		keepalive;
 };
 
 /* kroute */
@@ -312,7 +312,6 @@ struct ctl_iface {
 };
 
 struct ctl_nbr {
-	char			 name[IF_NAMESIZE];
 	struct in_addr		 id;
 	struct in_addr		 addr;
 	struct in_addr		 dr;
@@ -324,7 +323,6 @@ struct ctl_nbr {
 	u_int32_t		 ls_retrans_lst_cnt;
 	u_int32_t		 state_chng_cnt;
 	int			 nbr_state;
-	int			 iface_state;
 	u_int8_t		 priority;
 	u_int8_t		 options;
 };
