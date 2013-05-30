@@ -167,7 +167,10 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 	switch (nbr_fsm_tbl[i].action) {
 	case NBR_ACT_RST_ITIMER:
 	case NBR_ACT_STRT_ITIMER:
-		nbr_start_itimer(nbr);
+		if (nbr->holdtime != INFINITE_HOLDTIME)
+			nbr_start_itimer(nbr);
+		else
+			nbr_stop_itimer(nbr);
 		break;
 	case NBR_ACT_RST_KTIMEOUT:
 		nbr_start_ktimeout(nbr);
