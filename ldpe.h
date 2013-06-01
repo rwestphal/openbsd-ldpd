@@ -54,7 +54,6 @@ struct nbr {
 	struct in_addr		 id;
 
 	struct ibuf_read	*rbuf;
-	struct iface		*iface;
 
 	time_t			 uptime;
 	u_int32_t		 peerid;	/* unique ID in DB */
@@ -149,7 +148,7 @@ int	 if_set_tos(int, int);
 int	 if_set_reuse(int, int);
 
 /* neighbor.c */
-struct nbr	*nbr_new(u_int32_t, struct iface *, struct in_addr);
+struct nbr	*nbr_new(u_int32_t, struct in_addr);
 void		 nbr_del(struct nbr *);
 
 struct nbr	*nbr_find_ip(u_int32_t);
