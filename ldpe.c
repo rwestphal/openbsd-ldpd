@@ -399,6 +399,8 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 				    "neighbor");
 				return;
 			}
+			if (nbr->state != NBR_STA_OPER)
+				return;
 
 			switch (imsg.hdr.type) {
 			case IMSG_MAPPING_ADD:
@@ -421,6 +423,8 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 				    "neighbor");
 				return;
 			}
+			if (nbr->state != NBR_STA_OPER)
+				return;
 
 			switch (imsg.hdr.type) {
 			case IMSG_MAPPING_ADD_END:
@@ -445,6 +449,8 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 				    "neighbor");
 				return;
 			}
+			if (nbr->state != NBR_STA_OPER)
+				return;
 
 			send_notification_nbr(nbr, nm.status,
 			    htonl(nm.messageid), htonl(nm.type));

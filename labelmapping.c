@@ -96,12 +96,6 @@ recv_labelmapping(struct nbr *nbr, char *buf, u_int16_t len)
 	int			feclen, lbllen, tlen;
 	u_int8_t		addr_type;
 
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_labelmapping: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
-
 	bcopy(buf, &lm, sizeof(lm));
 
 	buf += sizeof(struct ldp_msg);
@@ -201,12 +195,6 @@ recv_labelrequest(struct nbr *nbr, char *buf, u_int16_t len)
 	int		feclen, tlen;
 	u_int8_t	addr_type;
 
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_labelrequest: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
-
 	bcopy(buf, &lr, sizeof(lr));
 
 	buf += sizeof(struct ldp_msg);
@@ -303,12 +291,6 @@ recv_labelwithdraw(struct nbr *nbr, char *buf, u_int16_t len)
 	u_int32_t	label = NO_LABEL;
 	int		feclen, tlen, numfec = 0;
 	u_int8_t	addr_type;
-
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_labelwithdraw: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
 
 	bcopy(buf, &lw, sizeof(lw));
 
@@ -442,12 +424,6 @@ recv_labelrelease(struct nbr *nbr, char *buf, u_int16_t len)
 	int		feclen, tlen, numfec = 0;
 	u_int8_t	addr_type;
 
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_labelrelease: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
-
 	bcopy(buf, &lr, sizeof(lr));
 
 	buf += sizeof(struct ldp_msg);
@@ -556,12 +532,6 @@ recv_labelabortreq(struct nbr *nbr, char *buf, u_int16_t len)
 	struct tlv	ft;
 	int		feclen, tlen;
 	u_int8_t	addr_type;
-
-	if (nbr->state != NBR_STA_OPER) {
-		log_debug("recv_labelabortreq: neighbor ID %s not operational",
-		    inet_ntoa(nbr->id));
-		return (-1);
-	}
 
 	log_debug("recv_labelabortreq: neighbor ID %s", inet_ntoa(nbr->id));
 
