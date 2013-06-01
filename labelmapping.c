@@ -60,7 +60,7 @@ send_labelmapping(struct nbr *nbr)
 		fatal("send_labelmapping");
 
 	/* real size will be set up later */
-	gen_ldp_hdr(buf, nbr->iface, 0);
+	gen_ldp_hdr(buf, 0);
 
 	size = LDP_HDR_SIZE - TLV_HDR_LEN;
 
@@ -171,7 +171,7 @@ send_labelrequest(struct nbr *nbr)
 		fatal("send_labelrequest");
 
 	/* real size will be set up later */
-	gen_ldp_hdr(buf, nbr->iface, 0);
+	gen_ldp_hdr(buf, 0);
 
 	size = LDP_HDR_SIZE - TLV_HDR_LEN;
 
@@ -265,7 +265,7 @@ send_labelwithdraw(struct nbr *nbr)
 		fatal("send_labelwithdraw");
 
 	/* real size will be set up later */
-	gen_ldp_hdr(buf, nbr->iface, 0);
+	gen_ldp_hdr(buf, 0);
 
 	size = LDP_HDR_SIZE - TLV_HDR_LEN;
 
@@ -403,7 +403,7 @@ send_labelrelease(struct nbr *nbr)
 		fatal("send_labelrelease");
 
 	/* real size will be set up later */
-	gen_ldp_hdr(buf, nbr->iface, 0);
+	gen_ldp_hdr(buf, 0);
 
 	size = LDP_HDR_SIZE - TLV_HDR_LEN;
 
@@ -539,7 +539,7 @@ send_labelabortreq(struct nbr *nbr)
 
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg);
 
-	gen_ldp_hdr(buf, nbr->iface, size);
+	gen_ldp_hdr(buf, size);
 
 	size -= LDP_HDR_SIZE;
 

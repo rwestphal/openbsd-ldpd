@@ -48,7 +48,7 @@ send_keepalive(struct nbr *nbr)
 
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg);
 
-	gen_ldp_hdr(buf, nbr->iface, size);
+	gen_ldp_hdr(buf, size);
 
 	size -= LDP_HDR_SIZE;
 

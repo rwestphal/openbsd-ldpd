@@ -64,7 +64,7 @@ send_address(struct nbr *nbr, struct iface *iface)
 	    sizeof(struct address_list_tlv) +
 	    iface_count * sizeof(struct in_addr);
 
-	gen_ldp_hdr(buf, nbr->iface, size);
+	gen_ldp_hdr(buf, size);
 
 	size -= LDP_HDR_SIZE;
 
@@ -181,7 +181,7 @@ send_address_withdraw(struct nbr *nbr, struct iface *iface)
 	/* XXX: multiple address on the same iface? */
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) + sizeof(struct in_addr);
 
-	gen_ldp_hdr(buf, nbr->iface, size);
+	gen_ldp_hdr(buf, size);
 
 	size -= LDP_HDR_SIZE;
 
