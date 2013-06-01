@@ -43,9 +43,6 @@ send_keepalive(struct nbr *nbr)
 	struct ibuf	*buf;
 	u_int16_t	 size;
 
-	if (nbr->iface->passive)
-		return;
-
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_keepalive");
 

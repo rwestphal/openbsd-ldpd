@@ -233,15 +233,13 @@ find_iface(struct ldpd_conf *xconf, unsigned int ifindex, struct in_addr src)
 		switch (iface->type) {
 		case IF_TYPE_POINTOPOINT:
 			if (ifindex == iface->ifindex &&
-			    iface->dst.s_addr == src.s_addr &&
-			    !iface->passive)
+			    iface->dst.s_addr == src.s_addr)
 				return (iface);
 			break;
 		default:
 			if (ifindex == iface->ifindex &&
 			    (iface->addr.s_addr & iface->mask.s_addr) ==
-			    (src.s_addr & iface->mask.s_addr) &&
-			    !iface->passive)
+			    (src.s_addr & iface->mask.s_addr))
 				return (iface);
 			break;
 		}

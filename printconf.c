@@ -58,8 +58,6 @@ print_iface(struct iface *iface)
 	printf("\ninterface %s {\n", iface->name);
 	printf("\tholdtime %d\n", iface->holdtime);
 	printf("\thello-interval %d\n", iface->hello_interval);
-	if (iface->passive)
-		printf("\tpassive\n");
 	printf("}\n");
 }
 

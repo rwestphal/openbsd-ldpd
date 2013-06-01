@@ -45,9 +45,6 @@ send_notification_nbr(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
 {
 	struct ibuf	*buf;
 
-	if (nbr->iface->passive)
-		return;
-
 	buf = send_notification(status, nbr->iface, msgid, type);
 	evbuf_enqueue(&nbr->wbuf, buf);
 }

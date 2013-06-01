@@ -46,9 +46,6 @@ send_init(struct nbr *nbr)
 	struct ibuf		*buf;
 	u_int16_t		 size;
 
-	if (nbr->iface->passive)
-		return;
-
 	log_debug("send_init: neighbor ID %s", inet_ntoa(nbr->id));
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)

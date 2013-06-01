@@ -48,9 +48,6 @@ send_address(struct nbr *nbr, struct iface *iface)
 	struct iface	*niface;
 	u_int16_t	 size, iface_count = 0;
 
-	if (nbr->iface->passive)
-		return;
-
 	log_debug("send_address: neighbor ID %s", inet_ntoa(nbr->id));
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
@@ -175,9 +172,6 @@ send_address_withdraw(struct nbr *nbr, struct iface *iface)
 {
 	struct ibuf	*buf;
 	u_int16_t	 size;
-
-	if (nbr->iface->passive)
-		return;
 
 	log_debug("send_address_withdraw: neighbor ID %s", inet_ntoa(nbr->id));
 
