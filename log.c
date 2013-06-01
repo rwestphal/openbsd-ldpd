@@ -202,8 +202,6 @@ if_state_name(int state)
 	switch (state) {
 	case IF_STA_DOWN:
 		return ("DOWN");
-	case IF_STA_LOOPBACK:
-		return ("LOOP");
 	case IF_STA_ACTIVE:
 		return ("ACTIVE");
 	default:
