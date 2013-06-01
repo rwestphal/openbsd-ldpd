@@ -75,6 +75,7 @@ send_address(struct nbr *nbr, struct iface *iface)
 	gen_address_list_tlv(buf, iface, size);
 
 	evbuf_enqueue(&nbr->wbuf, buf);
+	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
 int
@@ -134,6 +135,8 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 		return (-1);
 	}
 
+	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
+
 	return (ntohs(addr.length));
 }
 
@@ -186,4 +189,5 @@ send_address_withdraw(struct nbr *nbr, struct iface *iface)
 	gen_address_list_tlv(buf, iface, size);
 
 	evbuf_enqueue(&nbr->wbuf, buf);
+	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
