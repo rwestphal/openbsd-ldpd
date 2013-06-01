@@ -290,8 +290,8 @@ interface	: INTERFACE STRING	{
 				YYERROR;
 			if (iface->media_type == IFT_LOOP ||
 			    iface->media_type == IFT_CARP) {
-				yyerror("unsupported interface type %s",
-				    iface->name);
+				yyerror("unsupported interface type on "
+				    "interface %s", iface->name);
 				YYERROR;
 			}
 			LIST_INSERT_HEAD(&conf->iface_list, iface, entry);
