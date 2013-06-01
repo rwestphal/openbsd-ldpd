@@ -159,6 +159,7 @@ struct nbr	*nbr_find_ldpid(u_int32_t, u_int16_t);
 struct nbr	*nbr_find_peerid(u_int32_t);
 
 int	 nbr_fsm(struct nbr *, enum nbr_event);
+int	 nbr_session_active_role(struct nbr *);
 
 void	 nbr_itimer(int, short, void *);
 void	 nbr_start_itimer(struct nbr *);

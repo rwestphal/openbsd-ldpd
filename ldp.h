@@ -126,6 +126,12 @@ struct hello_prms_tlv {
 	u_int16_t	flags;
 };
 
+struct hello_prms_opt4_tlv {
+	u_int16_t	type;
+	u_int16_t	length;
+	u_int32_t	value;
+};
+
 #define HELLO_PRMS_SIZE		8
 
 #define	S_SUCCESS	0x00000000
