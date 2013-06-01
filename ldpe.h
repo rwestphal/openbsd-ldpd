@@ -177,7 +177,7 @@ int	 nbr_pending_idtimer(struct nbr *);
 int	 nbr_pending_connect(struct nbr *);
 
 int	 nbr_establish_connection(struct nbr *);
-int	 nbr_act_session_establish(struct nbr *, int);
+int	 nbr_act_connect_setup(struct nbr *, int);
 
 void			 nbr_mapping_add(struct nbr *, struct mapping_head *,
 			    struct map *);
