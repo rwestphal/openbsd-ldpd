@@ -255,6 +255,9 @@ main(int argc, char *argv[])
 	    iev_lde->handler, iev_lde);
 	event_add(&iev_lde->ev, NULL);
 
+	/* notify ldpe about existing interfaces and addresses */
+	kif_redistribute();
+
 	if (kr_init(!(ldpd_conf->flags & LDPD_FLAG_NO_FIB_UPDATE)) == -1)
 		fatalx("kr_init failed");
 
