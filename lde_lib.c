@@ -320,7 +320,7 @@ lde_kernel_insert(struct kroute *kr)
 	}
 
 	if (rn->local_label == NO_LABEL) {
-		if (kr->nexthop.s_addr == INADDR_ANY)
+		if (kr->flags & F_CONNECTED)
 			/* Directly connected route */
 			rn->local_label = MPLS_LABEL_IMPLNULL;
 		else
