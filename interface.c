@@ -144,8 +144,6 @@ if_new(struct kif *kif)
 
 	iface->state = IF_STA_DOWN;
 
-	LIST_INIT(&iface->lde_nbr_list);
-
 	strlcpy(iface->name, kif->ifname, sizeof(iface->name));
 
 	/* get type */
