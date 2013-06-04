@@ -33,8 +33,6 @@
 
 #define LINK_DFLT_HOLDTIME	15
 #define TARGETED_DFLT_HOLDTIME	45
-
-#define DEFAULT_HOLDTIME	15
 #define MIN_HOLDTIME		1
 #define MAX_HOLDTIME		0xffff
 #define	INFINITE_HOLDTIME	0xffff
@@ -46,11 +44,10 @@
 
 #define	DEFAULT_HELLO_INTERVAL	5
 #define	MIN_HELLO_INTERVAL	1
-#define	MAX_HELLO_INTERVAL	0xffff	/* XXX */
+#define	MAX_HELLO_INTERVAL	0xffff
 
 #define	INIT_DELAY_TMR		15
 #define	MAX_DELAY_TMR		120
-#define DEFAULT_NBR_TMOUT	86400	/* 24 hours */
 
 /* LDP message types */
 #define MSG_TYPE_NOTIFICATION	0x0001

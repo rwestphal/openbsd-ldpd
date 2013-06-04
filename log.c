@@ -179,8 +179,6 @@ const char *
 nbr_state_name(int state)
 {
 	switch (state) {
-	case NBR_STA_DOWN:
-		return ("DOWN");
 	case NBR_STA_PRESENT:
 		return ("PRESENT");
 	case NBR_STA_INITIAL:
