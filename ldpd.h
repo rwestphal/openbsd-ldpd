@@ -161,7 +161,6 @@ enum nbr_event {
 	NBR_EVT_PDU_RCVD,
 	NBR_EVT_PDU_SENT,
 	NBR_EVT_INIT_SENT,
-	NBR_EVT_DOWN
 };
 
 /* neighbor actions */
