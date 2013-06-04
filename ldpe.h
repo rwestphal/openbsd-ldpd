@@ -60,6 +60,7 @@ struct nbr {
 
 	int			 fd;
 	int			 state;
+	int			 idtimer_cnt;
 
 	u_int16_t		 holdtime;
 	u_int16_t		 keepalive;

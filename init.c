@@ -107,7 +107,8 @@ recv_init(struct nbr *nbr, char *buf, u_int16_t len)
 	else
 		nbr->keepalive = ntohs(sess.keepalive_time);
 
-	nbr_fsm(nbr, NBR_EVT_INIT_RCVD);
+	if (!nbr_pending_idtimer(nbr))
+		nbr_fsm(nbr, NBR_EVT_INIT_RCVD);
 
 	return (ntohs(init.length));
 }
