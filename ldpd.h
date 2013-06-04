@@ -153,6 +153,7 @@ enum iface_type {
 /* neighbor events */
 enum nbr_event {
 	NBR_EVT_NOTHING,
+	NBR_EVT_MATCH_ADJ,
 	NBR_EVT_CONNECT_UP,
 	NBR_EVT_CLOSE_SESSION,
 	NBR_EVT_INIT_RCVD,

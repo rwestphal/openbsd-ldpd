@@ -65,7 +65,7 @@ send_init(struct nbr *nbr)
 
 	gen_init_prms_tlv(buf, nbr, size);
 
-	evbuf_enqueue(&nbr->wbuf, buf);
+	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 }
 
 int

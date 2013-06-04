@@ -43,15 +43,13 @@ void
 send_notification_nbr(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
     u_int32_t type)
 {
-	struct ibuf	*buf;
-
-	buf = send_notification(status, msgid, type);
-	evbuf_enqueue(&nbr->wbuf, buf);
+	send_notification(status, nbr->tcp, msgid, type);
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
-struct ibuf *
-send_notification(u_int32_t status, u_int32_t msgid, u_int32_t type)
+void
+send_notification(u_int32_t status, struct tcp_conn *tcp, u_int32_t msgid,
+    u_int32_t type)
 {
 	struct ibuf	*buf;
 	u_int16_t	 size;
@@ -71,7 +69,7 @@ send_notification(u_int32_t status, u_int32_t msgid, u_int32_t type)
 
 	gen_status_tlv(buf, status, msgid, type);
 
-	return (buf);
+	evbuf_enqueue(&tcp->wbuf, buf);
 }
 
 int

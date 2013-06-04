@@ -72,7 +72,7 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 
 	gen_address_list_tlv(buf, if_addr, size);
 
-	evbuf_enqueue(&nbr->wbuf, buf);
+	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
@@ -186,6 +186,6 @@ send_address_withdraw(struct nbr *nbr, struct if_addr *if_addr)
 
 	gen_address_list_tlv(buf, if_addr, size);
 
-	evbuf_enqueue(&nbr->wbuf, buf);
+	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
