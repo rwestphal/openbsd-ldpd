@@ -96,6 +96,9 @@ lde(struct ldpd_conf *xconf, int pipe_parent2lde[2], int pipe_ldpe2lde[2],
 
 	ldeconf = xconf;
 
+	setproctitle("label decision engine");
+	ldpd_process = PROC_LDE_ENGINE;
+
 	if ((pw = getpwnam(LDPD_USER)) == NULL)
 		fatal("getpwnam");
 
@@ -103,9 +106,6 @@ lde(struct ldpd_conf *xconf, int pipe_parent2lde[2], int pipe_ldpe2lde[2],
 		fatal("chroot");
 	if (chdir("/") == -1)
 		fatal("chdir(\"/\")");
-
-	setproctitle("label decision engine");
-	ldpd_process = PROC_LDE_ENGINE;
 
 	if (setgroups(1, &pw->pw_gid) ||
 	    setresgid(pw->pw_gid, pw->pw_gid, pw->pw_gid) ||
