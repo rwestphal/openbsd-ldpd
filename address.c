@@ -163,7 +163,7 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr,
 }
 
 void
-send_address_withdraw(struct nbr *nbr,  struct if_addr *if_addr)
+send_address_withdraw(struct nbr *nbr, struct if_addr *if_addr)
 {
 	struct ibuf	*buf;
 	u_int16_t	 size;
