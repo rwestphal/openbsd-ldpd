@@ -389,8 +389,10 @@ session_read(int fd, short event, void *arg)
 		len -= LDP_HDR_SIZE;
 
 		while (len >= LDP_MSG_LEN) {
+			u_int16_t type;
+
 			ldp_msg = (struct ldp_msg *)pdu;
-			u_int16_t type = ntohs(ldp_msg->type);
+			type = ntohs(ldp_msg->type);
 
 			pdu_len = ntohs(ldp_msg->length) + TLV_HDR_LEN;
 			if (pdu_len > len ||
