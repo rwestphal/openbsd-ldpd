@@ -110,7 +110,6 @@ struct ldp_msg {
 
 #define LDP_MSG_LEN		8
 
-#define	UNKNOWN_FLAGS_MASK	0xc000
 #define	UNKNOWN_FLAG		0x8000
 #define	FORWARD_FLAG		0xc000
 
