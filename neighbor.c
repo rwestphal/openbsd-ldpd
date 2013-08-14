@@ -256,11 +256,11 @@ nbr_del(struct nbr *nbr)
 	nbr_stop_ktimeout(nbr);
 	nbr_stop_idtimer(nbr);
 
-	nbr_mapping_list_clr(nbr, &nbr->mapping_list);
-	nbr_mapping_list_clr(nbr, &nbr->withdraw_list);
-	nbr_mapping_list_clr(nbr, &nbr->request_list);
-	nbr_mapping_list_clr(nbr, &nbr->release_list);
-	nbr_mapping_list_clr(nbr, &nbr->abortreq_list);
+	mapping_list_clr(&nbr->mapping_list);
+	mapping_list_clr(&nbr->withdraw_list);
+	mapping_list_clr(&nbr->request_list);
+	mapping_list_clr(&nbr->release_list);
+	mapping_list_clr(&nbr->abortreq_list);
 
 	RB_REMOVE(nbr_pid_head, &nbrs_by_pid, nbr);
 	RB_REMOVE(nbr_id_head, &nbrs_by_id, nbr);
@@ -584,7 +584,7 @@ nbr_mapping_del(struct nbr *nbr, struct mapping_head *mh, struct map *map)
 }
 
 void
-nbr_mapping_list_clr(struct nbr *nbr, struct mapping_head *mh)
+mapping_list_clr(struct mapping_head *mh)
 {
 	struct mapping_entry	*me;
 
