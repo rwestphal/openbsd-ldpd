@@ -422,11 +422,12 @@ kr_redist_eval(struct kroute *kr)
 		goto dont_redistribute;
 
 	/*
-	 * We consider the loopback net, multicast and experimental addresses
-	 * as not redistributable.
+	 * We consider the loopback net, default route, multicast and
+	 * experimental addresses as not redistributable.
 	 */
 	a = ntohl(kr->prefix.s_addr);
 	if (IN_MULTICAST(a) || IN_BADCLASS(a) ||
+	    (kr->prefixlen == 0) ||
 	    (a >> IN_CLASSA_NSHIFT) == IN_LOOPBACKNET)
 		goto dont_redistribute;
 	/*
