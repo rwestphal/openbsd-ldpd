@@ -71,8 +71,6 @@ recv_keepalive(struct nbr *nbr, char *buf, u_int16_t len)
 
 	if (nbr->state != NBR_STA_OPER)
 		nbr_fsm(nbr, NBR_EVT_KEEPALIVE_RCVD);
-	else
-		nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
 
 	return (ntohs(ka.length));
 }
