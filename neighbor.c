@@ -217,7 +217,7 @@ nbr_new(struct in_addr id, struct in_addr addr)
 
 	nbr->state = NBR_STA_PRESENT;
 	nbr->id.s_addr = id.s_addr;
-	nbr->addr = addr;
+	nbr->addr.s_addr = addr.s_addr;
 
 	/* get next unused peerid */
 	while (nbr_find_peerid(++peercnt))
