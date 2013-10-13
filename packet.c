@@ -526,8 +526,7 @@ void
 session_shutdown(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
     u_int32_t type)
 {
-	log_debug("session_shutdown: nbr ID %s, status %x",
-	    inet_ntoa(nbr->id), status);
+	log_debug("session_shutdown: nbr ID %s", inet_ntoa(nbr->id));
 
 	send_notification_nbr(nbr, status, msgid, type);
 
