@@ -41,7 +41,7 @@ struct fec {
  */
 struct lde_req {
 	struct fec		fec;
-	u_int32_t		msgid;	
+	u_int32_t		msgid;
 };
 
 /* mapping entries */
@@ -111,7 +111,6 @@ void		lde_map_del(struct lde_nbr *, struct lde_map *, int);
 struct lde_req *lde_req_add(struct lde_nbr *, struct fec *, int);
 void		lde_req_del(struct lde_nbr *, struct lde_req *, int);
 struct lde_nbr *lde_find_address(struct in_addr);
-
 
 int			 lde_address_add(struct lde_nbr *, struct in_addr *);
 struct lde_nbr_address	*lde_address_find(struct lde_nbr *, struct in_addr *);

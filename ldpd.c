@@ -264,7 +264,6 @@ main(int argc, char *argv[])
 	/* remove unneded stuff from config */
 		/* ... */
 
-
 	event_dispatch();
 
 	ldpd_shutdown();
