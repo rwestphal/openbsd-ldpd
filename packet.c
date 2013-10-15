@@ -474,8 +474,15 @@ session_read(int fd, short event, void *arg)
 			default:
 				log_debug("session_read: unknown LDP packet "
 				    "from nbr %s", inet_ntoa(nbr->id));
-				free(buf);
-				return;
+				if (!(ntohs(ldp_msg->type) & UNKNOWN_FLAG)) {
+					session_shutdown(nbr, S_UNKNOWN_MSG,
+					    ldp_msg->msgid, ldp_msg->type);
+					free(buf);
+					return;
+				}
+				/* unknown flag is set, ignore the message */
+				msg_size = ntohs(ldp_msg->length);
+				break;
 			}
 
 			if (msg_size == -1) {
