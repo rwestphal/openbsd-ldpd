@@ -56,7 +56,7 @@ accept_add(int fd, void (*cb)(int, short, void *), void *arg)
 	struct accept_ev	*av;
 
 	if ((av = calloc(1, sizeof(*av))) == NULL)
-		return -1;
+		return (-1);
 	av->fd = fd;
 	av->accept_cb = cb;
 	av->arg = arg;
