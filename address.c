@@ -133,8 +133,6 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 		return (-1);
 	}
 
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
-
 	return (ntohs(addr.length));
 }
 

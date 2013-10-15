@@ -150,8 +150,6 @@ recv_labelmapping(struct nbr *nbr, char *buf, u_int16_t len)
 		feclen -= tlen;
 	} while (feclen > 0);
 
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
-
 	return (ntohs(lm.length));
 }
 
@@ -243,8 +241,6 @@ recv_labelrequest(struct nbr *nbr, char *buf, u_int16_t len)
 		buf += tlen;
 		feclen -= tlen;
 	} while (feclen > 0);
-
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
 
 	return (ntohs(lr.length));
 }
@@ -380,8 +376,6 @@ recv_labelwithdraw(struct nbr *nbr, char *buf, u_int16_t len)
 		feclen -= tlen;
 	} while (feclen > 0);
 
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
-
 	return (ntohs(lw.length));
 }
 
@@ -515,8 +509,6 @@ recv_labelrelease(struct nbr *nbr, char *buf, u_int16_t len)
 		feclen -= tlen;
 	} while (feclen > 0);
 
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
-
 	return (ntohs(lr.length));
 }
 
@@ -610,8 +602,6 @@ recv_labelabortreq(struct nbr *nbr, char *buf, u_int16_t len)
 		buf += tlen;
 		feclen -= tlen;
 	} while (feclen > 0);
-
-	nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
 
 	return (ntohs(la.length));
 }
