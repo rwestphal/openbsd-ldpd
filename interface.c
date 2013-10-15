@@ -170,8 +170,6 @@ if_del(struct iface *iface)
 
 	log_debug("if_del: interface %s", iface->name);
 
-	if_stop_hello_timer(iface);
-
 	while ((adj = LIST_FIRST(&iface->adj_list)) != NULL) {
 		LIST_REMOVE(adj, iface_entry);
 		adj_del(adj);
