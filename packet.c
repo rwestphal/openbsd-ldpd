@@ -389,6 +389,9 @@ session_read(int fd, short event, void *arg)
 		pdu += LDP_HDR_SIZE;
 		len -= LDP_HDR_SIZE;
 
+		if (nbr->state == NBR_STA_OPER)
+			nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
+
 		while (len >= LDP_MSG_LEN) {
 			u_int16_t type;
 
