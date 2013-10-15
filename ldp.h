@@ -92,6 +92,7 @@ struct ldp_hdr {
 } __packed;
 
 #define	LDP_HDR_SIZE		10
+#define	LDP_HDR_PDU_LEN		6
 
 /* TLV record */
 struct tlv {

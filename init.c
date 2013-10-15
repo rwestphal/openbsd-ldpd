@@ -93,6 +93,11 @@ recv_init(struct nbr *nbr, char *buf, u_int16_t len)
 		return (-1);
 	}
 
+	if (ntohs(sess.proto_version) != LDP_VERSION) {
+		session_shutdown(nbr, S_BAD_PROTO_VER, init.msgid, init.type);
+		return (-1);
+	}
+
 	buf += SESS_PRMS_SIZE;
 	len -= SESS_PRMS_SIZE;
 
