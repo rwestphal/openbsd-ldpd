@@ -179,7 +179,7 @@ adj_stop_itimer(struct adj *adj)
 /* targeted neighbors */
 
 struct tnbr *
-tnbr_new(struct in_addr addr, int configured)
+tnbr_new(struct ldpd_conf *xconf, struct in_addr addr, int configured)
 {
 	struct tnbr		*tnbr;
 
@@ -190,8 +190,8 @@ tnbr_new(struct in_addr addr, int configured)
 	if (configured)
 		tnbr->flags |= F_TNBR_CONFIGURED;
 	else {
-		tnbr->hello_holdtime = leconf->thello_holdtime;
-		tnbr->hello_interval = leconf->thello_interval;
+		tnbr->hello_holdtime = xconf->thello_holdtime;
+		tnbr->hello_interval = xconf->thello_interval;
 	}
 
 	return (tnbr);

@@ -135,7 +135,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 			    leconf->flags & LDPD_FLAG_TH_ACCEPT))
 				return;
 
-			tnbr = tnbr_new(src, 0);
+			tnbr = tnbr_new(leconf, src, 0);
 			if (!tnbr)
 				return;
 			tnbr_init(leconf, tnbr);
