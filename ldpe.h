@@ -19,6 +19,7 @@
 #ifndef _LDPE_H_
 #define _LDPE_H_
 
+#define min(x,y) ((x) <= (y) ? (x) : (y))
 #define max(x,y) ((x) > (y) ? (x) : (y))
 
 #include <sys/types.h>
@@ -223,7 +224,6 @@ void	 session_accept(int, short, void *);
 
 struct tcp_conn *tcp_new(int, struct nbr *);
 void		 tcp_close(struct tcp_conn *);
-
 
 void	 session_read(int, short, void *);
 void	 session_write(int, short, void *);

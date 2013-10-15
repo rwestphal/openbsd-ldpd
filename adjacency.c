@@ -77,7 +77,7 @@ void
 adj_del(struct adj *adj)
 {
 	log_debug("adj_del: LSR ID %s, %s", inet_ntoa(adj->nbr->id),
-		print_hello_src(&adj->source));
+	    print_hello_src(&adj->source));
 
 	adj_stop_itimer(adj);
 
@@ -120,14 +120,18 @@ print_hello_src(struct hello_source *src)
 {
 	static char buffer[64];
 
-	if (src->type == HELLO_LINK)
+	switch (src->type) {
+	case HELLO_LINK:
 		snprintf(buffer, sizeof(buffer), "iface %s",
 		    src->link.iface->name);
-	else
+		break;
+	case HELLO_TARGETED:
 		snprintf(buffer, sizeof(buffer), "source %s",
 		    inet_ntoa(src->target->addr));
+		break;
+	}
 
-	return buffer;
+	return (buffer);
 }
 
 /* adjacency timers */

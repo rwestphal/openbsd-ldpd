@@ -288,9 +288,9 @@ int
 nbr_session_active_role(struct nbr *nbr)
 {
 	if (ntohl(ldpe_router_id()) > ntohl(nbr->addr.s_addr))
-		return 1;
+		return (1);
 
-	return 0;
+	return (0);
 }
 
 /* timers */

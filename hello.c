@@ -197,19 +197,14 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 	case HELLO_LINK:
 		if (holdtime == 0)
 			holdtime = LINK_DFLT_HOLDTIME;
-		if (iface->hello_holdtime < holdtime)
-			adj->holdtime = iface->hello_holdtime;
-		else
-			adj->holdtime = holdtime;
+
+		adj->holdtime = min(iface->hello_holdtime, holdtime);
 		break;
 	case HELLO_TARGETED:
 		if (holdtime == 0)
 			holdtime = TARGETED_DFLT_HOLDTIME;
-		if (tnbr->hello_holdtime < holdtime)
-			adj->holdtime = tnbr->hello_holdtime;
-		else
-			adj->holdtime = holdtime;
-		break;
+
+		adj->holdtime = min(tnbr->hello_holdtime, holdtime);
 	}
 
 	if (adj->holdtime != INFINITE_HOLDTIME)
