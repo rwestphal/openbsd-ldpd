@@ -892,7 +892,7 @@ conf_get_tnbr(struct in_addr addr)
 		}
 	}
 
-	t = tnbr_new(addr, 1);
+	t = tnbr_new(conf, addr, 1);
 
 	return (t);
 }
