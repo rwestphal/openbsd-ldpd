@@ -146,7 +146,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 	} else {
 		if (ldp.lspace_id != 0) {
 			log_debug("recv_hello: invalid label space "
-			    "ID %s, interface %s", ldp.lspace_id,
+			    "ID %u, interface %s", ldp.lspace_id,
 			    iface->name);
 			return;
 		}

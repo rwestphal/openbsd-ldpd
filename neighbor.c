@@ -340,7 +340,7 @@ nbr_ktimeout(int fd, short event, void *arg)
 {
 	struct nbr *nbr = arg;
 
-	log_debug("nbr_ktimeout: neighbor ID %s peerid %lu", inet_ntoa(nbr->id),
+	log_debug("nbr_ktimeout: neighbor ID %s peerid %u", inet_ntoa(nbr->id),
 	    nbr->peerid);
 
 	session_shutdown(nbr, S_KEEPALIVE_TMR, 0, 0);
@@ -373,7 +373,7 @@ nbr_idtimer(int fd, short event, void *arg)
 {
 	struct nbr *nbr = arg;
 
-	log_debug("nbr_idtimer: neighbor ID %s peerid %lu", inet_ntoa(nbr->id),
+	log_debug("nbr_idtimer: neighbor ID %s peerid %u", inet_ntoa(nbr->id),
 	    nbr->peerid);
 
 	if (nbr_session_active_role(nbr))
@@ -454,7 +454,8 @@ nbr_connect_cb(int fd, short event, void *arg)
 		close(nbr->fd);
 		errno = error;
 		log_debug("nbr_connect_cb: error while "
-		    "connecting to %s", inet_ntoa(nbr->addr));
+		    "connecting to %s: %s", inet_ntoa(nbr->addr),
+		    strerror(errno));
 		return;
 	}
 
@@ -470,7 +471,7 @@ nbr_establish_connection(struct nbr *nbr)
 
 	nbr->fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (nbr->fd == -1) {
-		log_debug("nbr_establish_connection: error while "
+		log_warn("nbr_establish_connection: error while "
 		    "creating socket");
 		return (-1);
 	}
@@ -484,7 +485,7 @@ nbr_establish_connection(struct nbr *nbr)
 
 	if (bind(nbr->fd, (struct sockaddr *) &local_sa,
 	    sizeof(struct sockaddr_in)) == -1) {
-		log_debug("nbr_establish_connection: error while "
+		log_warn("nbr_establish_connection: error while "
 		    "binding socket to %s", inet_ntoa(local_sa.sin_addr));
 		close(nbr->fd);
 		return (-1);
@@ -511,7 +512,7 @@ nbr_establish_connection(struct nbr *nbr)
 			event_add(&nbr->ev_connect, NULL);
 			return (0);
 		}
-		log_debug("nbr_establish_connection: error while "
+		log_warn("nbr_establish_connection: error while "
 		    "connecting to %s", inet_ntoa(nbr->addr));
 		close(nbr->fd);
 		return (-1);
