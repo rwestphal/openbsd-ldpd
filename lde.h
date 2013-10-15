@@ -94,6 +94,7 @@ struct rt_node {
 
 /* lde.c */
 pid_t		lde(struct ldpd_conf *, int [2], int [2], int [2]);
+int		lde_imsg_compose_parent(int, pid_t, void *, u_int16_t);
 int		lde_imsg_compose_ldpe(int, u_int32_t, pid_t, void *, u_int16_t);
 u_int32_t	lde_assign_label(void);
 
