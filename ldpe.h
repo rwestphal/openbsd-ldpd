@@ -122,12 +122,8 @@ void	 send_address_withdraw(struct nbr *, struct if_addr *);
 
 /* labelmapping.c */
 #define PREFIX_SIZE(x)	(((x) + 7) / 8)
+void	 send_labelmessage(struct nbr *, u_int16_t, struct mapping_head *);
 int	 recv_labelmessage(struct nbr *, char *, u_int16_t, u_int16_t);
-void	 send_labelmapping(struct nbr *);
-void	 send_labelrequest(struct nbr *);
-void	 send_labelwithdraw(struct nbr *);
-void	 send_labelrelease(struct nbr *);
-void	 send_labelabortreq(struct nbr *);
 
 /* ldpe.c */
 pid_t		 ldpe(struct ldpd_conf *, int[2], int[2], int[2]);
