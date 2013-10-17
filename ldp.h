@@ -192,8 +192,6 @@ struct address_list_tlv {
 	/* address entries */
 } __packed;
 
-#define	BASIC_LABEL_MAP_LEN	24
-
 #define	ADDR_IPV4		0x1
 #define	ADDR_IPV6		0x2
 
