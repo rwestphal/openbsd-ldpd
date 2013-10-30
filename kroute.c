@@ -884,7 +884,7 @@ if_newaddr(u_short ifindex, struct sockaddr_in *ifa, struct sockaddr_in *mask,
 	if (ifa == NULL || ifa->sin_family != AF_INET)
 		return;
 	if ((kif = kif_find(ifindex)) == NULL) {
-		log_warnx("if_newaddr: corresponding if %i not found", ifindex);
+		log_warnx("if_newaddr: corresponding if %d not found", ifindex);
 		return;
 	}
 	a = ntohl(ifa->sin_addr.s_addr);
@@ -922,7 +922,7 @@ if_deladdr(u_short ifindex, struct sockaddr_in *ifa, struct sockaddr_in *mask,
 	if (ifa == NULL || ifa->sin_family != AF_INET)
 		return;
 	if ((kif = kif_find(ifindex)) == NULL) {
-		log_warnx("if_deladdr: corresponding if %i not found", ifindex);
+		log_warnx("if_deladdr: corresponding if %d not found", ifindex);
 		return;
 	}
 
