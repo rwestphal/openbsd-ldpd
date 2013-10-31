@@ -77,7 +77,7 @@ accept_del(int fd)
 
 	LIST_FOREACH(av, &accept_queue.queue, entry)
 		if (av->fd == fd) {
-			log_debug("accept_del: %i removed from queue", fd);
+			log_debug("accept_del: %d removed from queue", fd);
 			event_del(&av->ev);
 			LIST_REMOVE(av, entry);
 			free(av);
