@@ -507,7 +507,7 @@ session_write(int fd, short event, void *arg)
 	struct nbr *nbr = tcp->nbr;
 
 	if (event & EV_WRITE) {
-		if (msgbuf_write(&tcp->wbuf.wbuf) == -1) {
+		if (msgbuf_write(&tcp->wbuf.wbuf) == -1 && errno != EAGAIN) {
 			if (nbr)
 				nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
 		}

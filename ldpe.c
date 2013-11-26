@@ -330,7 +330,7 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			shut = 1;
 	}
 	if (event & EV_WRITE) {
-		if (msgbuf_write(&ibuf->w) == -1)
+		if (msgbuf_write(&ibuf->w) == -1 && errno != EAGAIN)
 			fatal("ldpe_dispatch_main: msgbuf_write");
 	}
 
@@ -470,7 +470,7 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 			shut = 1;
 	}
 	if (event & EV_WRITE) {
-		if (msgbuf_write(&ibuf->w) == -1)
+		if (msgbuf_write(&ibuf->w) == -1 && errno != EAGAIN)
 			fatal("ldpe_dispatch_lde: msgbuf_write");
 	}
 

@@ -209,7 +209,7 @@ control_dispatch_imsg(int fd, short event, void *bula)
 		}
 	}
 	if (event & EV_WRITE) {
-		if (msgbuf_write(&c->iev.ibuf.w) == -1) {
+		if (msgbuf_write(&c->iev.ibuf.w) == -1 && errno != EAGAIN) {
 			control_close(fd);
 			return;
 		}
