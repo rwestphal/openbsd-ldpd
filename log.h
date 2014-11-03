@@ -23,6 +23,7 @@
 
 void	log_init(int);
 void	log_verbose(int);
+void	logit(int, const char *, ...);
 void	vlog(int, const char *, va_list);
 void	log_warn(const char *, ...);
 void	log_warnx(const char *, ...);
