@@ -41,8 +41,6 @@ static const char * const procnames[] = {
 int	debug;
 int	verbose;
 
-void	 logit(int, const char *, ...);
-
 void
 log_init(int n_debug)
 {
