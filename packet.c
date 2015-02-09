@@ -267,7 +267,8 @@ session_accept(int fd, short event, void *bula)
 	if (!(event & EV_READ))
 		return;
 
-	newfd = accept(fd, (struct sockaddr *)&src, &len);
+	newfd = accept4(fd, (struct sockaddr *)&src, &len,
+	    SOCK_NONBLOCK | SOCK_CLOEXEC);
 	if (newfd == -1) {
 		/*
 		 * Pause accept if we are out of file descriptors, or
@@ -281,8 +282,6 @@ session_accept(int fd, short event, void *bula)
 			    strerror(errno));
 		return;
 	}
-
-	session_socket_blockmode(newfd, BM_NONBLOCK);
 
 	tcp_new(newfd, NULL);
 }

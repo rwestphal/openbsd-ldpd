@@ -469,14 +469,12 @@ nbr_establish_connection(struct nbr *nbr)
 	struct sockaddr_in	remote_sa;
 	struct adj		*adj;
 
-	nbr->fd = socket(AF_INET, SOCK_STREAM, 0);
+	nbr->fd = socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK|SOCK_CLOEXEC, 0);
 	if (nbr->fd == -1) {
 		log_warn("nbr_establish_connection: error while "
 		    "creating socket");
 		return (-1);
 	}
-
-	session_socket_blockmode(nbr->fd, BM_NONBLOCK);
 
 	bzero(&local_sa, sizeof(local_sa));
 	local_sa.sin_family = AF_INET;

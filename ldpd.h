@@ -244,11 +244,6 @@ enum {
 	PROC_LDE_ENGINE
 } ldpd_process;
 
-enum blockmodes {
-	BM_NORMAL,
-	BM_NONBLOCK
-};
-
 enum hello_type {
 	HELLO_LINK,
 	HELLO_TARGETED
@@ -359,9 +354,6 @@ struct ctl_rt {
 /* parse.y */
 struct ldpd_conf	*parse_config(char *, int);
 int			 cmdline_symset(char *);
-
-/* control.c */
-void	session_socket_blockmode(int, enum blockmodes);
 
 /* kroute.c */
 int		 kif_init(void);
