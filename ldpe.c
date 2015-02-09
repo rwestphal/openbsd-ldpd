@@ -154,7 +154,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	sess_addr.sin_port = htons(LDP_PORT);
 	sess_addr.sin_addr.s_addr = INADDR_ANY;
 
-	if ((xconf->ldp_session_socket = socket(AF_INET, SOCK_STREAM,
+	if ((xconf->ldp_session_socket = socket(AF_INET,
+	    SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_TCP)) == -1)
 		fatal("error creating session socket");
 
@@ -172,7 +173,6 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (if_set_tos(xconf->ldp_session_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	session_socket_blockmode(xconf->ldp_session_socket, BM_NONBLOCK);
 
 	if ((pw = getpwnam(LDPD_USER)) == NULL)
 		fatal("getpwnam");
