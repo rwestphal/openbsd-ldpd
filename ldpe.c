@@ -101,7 +101,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = INADDR_ANY;
 
-	if ((xconf->ldp_discovery_socket = socket(AF_INET, SOCK_DGRAM,
+	if ((xconf->ldp_discovery_socket = socket(AF_INET,
+	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating discovery socket");
 
@@ -130,7 +131,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = xconf->rtr_id.s_addr;
 
-	if ((xconf->ldp_ediscovery_socket = socket(AF_INET, SOCK_DGRAM,
+	if ((xconf->ldp_ediscovery_socket = socket(AF_INET,
+	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating extended discovery socket");
 
