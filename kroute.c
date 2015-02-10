@@ -154,7 +154,8 @@ kr_init(int fs)
 
 	kr_state.fib_sync = fs;
 
-	if ((kr_state.fd = socket(AF_ROUTE, SOCK_RAW, 0)) == -1) {
+	if ((kr_state.fd = socket(AF_ROUTE,
+	    SOCK_RAW | SOCK_CLOEXEC | SOCK_NONBLOCK, 0)) == -1) {
 		log_warn("kr_init: socket");
 		return (-1);
 	}
