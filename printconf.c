@@ -30,7 +30,8 @@
 
 void	print_mainconf(struct ldpd_conf *);
 void	print_iface(struct iface *);
-void	print_tnbr(struct tnbr *tnbr);
+void	print_tnbr(struct tnbr *);
+void	print_nbrp(struct nbr_params *);
 
 void
 print_mainconf(struct ldpd_conf *conf)
@@ -69,10 +70,20 @@ print_tnbr(struct tnbr *tnbr)
 }
 
 void
+print_nbrp(struct nbr_params *nbrp)
+{
+	printf("\nneighbor %s {\n", inet_ntoa(nbrp->addr));
+	if (nbrp->auth.method == AUTH_MD5SIG)
+		printf("\tpassword XXXXXX\n");
+	printf("}\n");
+}
+
+void
 print_config(struct ldpd_conf *conf)
 {
-	struct iface	*iface;
-	struct tnbr	*tnbr;
+	struct iface		*iface;
+	struct tnbr		*tnbr;
+	struct nbr_params	*nbrp;
 
 	print_mainconf(conf);
 	printf("\n");
@@ -82,4 +93,7 @@ print_config(struct ldpd_conf *conf)
 	printf("\n");
 	LIST_FOREACH(tnbr, &conf->tnbr_list, entry)
 		print_tnbr(tnbr);
+	printf("\n");
+	LIST_FOREACH(nbrp, &conf->nbrp_list, entry)
+		print_nbrp(nbrp);
 }
