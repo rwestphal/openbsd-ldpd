@@ -97,6 +97,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 		fatalx("control socket setup failed");
 
 	/* create the discovery UDP socket */
+	memset(&disc_addr, 0, sizeof(disc_addr));
+	disc_addr.sin_len = sizeof(disc_addr);
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = INADDR_ANY;
@@ -127,6 +129,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if_set_recvbuf(xconf->ldp_discovery_socket);
 
 	/* create the extended discovery UDP socket */
+	memset(&disc_addr, 0, sizeof(disc_addr));
+	disc_addr.sin_len = sizeof(disc_addr);
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = xconf->rtr_id.s_addr;
@@ -152,6 +156,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if_set_recvbuf(xconf->ldp_ediscovery_socket);
 
 	/* create the session TCP socket */
+	memset(&sess_addr, 0, sizeof(sess_addr));
+	sess_addr.sin_len = sizeof(sess_addr);
 	sess_addr.sin_family = AF_INET;
 	sess_addr.sin_port = htons(LDP_PORT);
 	sess_addr.sin_addr.s_addr = INADDR_ANY;
