@@ -534,10 +534,8 @@ nbr_act_session_operational(struct nbr *nbr)
 void
 nbr_send_labelmappings(struct nbr *nbr)
 {
-	if (leconf->mode & MODE_ADV_UNSOLICITED) {
-		ldpe_imsg_compose_lde(IMSG_LABEL_MAPPING_FULL, nbr->peerid, 0,
-		    NULL, 0);
-	}
+	ldpe_imsg_compose_lde(IMSG_LABEL_MAPPING_FULL, nbr->peerid, 0,
+	    NULL, 0);
 }
 
 void
