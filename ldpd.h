@@ -263,12 +263,12 @@ struct ldpd_conf {
 /* kroute */
 struct kroute {
 	struct in_addr	prefix;
+	u_int8_t	prefixlen;
 	struct in_addr	nexthop;
 	u_int32_t	local_label;
 	u_int32_t	remote_label;
 	u_int16_t	flags;
 	u_short		ifindex;
-	u_int8_t	prefixlen;
 	u_int8_t	priority;
 };
 
@@ -347,9 +347,8 @@ void		 kr_show_route(struct imsg *);
 void		 kr_ifinfo(char *, pid_t);
 struct kif	*kif_findname(char *);
 void		 kr_reload(void);
-
-u_int8_t	mask2prefixlen(in_addr_t);
-in_addr_t	prefixlen2mask(u_int8_t);
+u_int8_t	 mask2prefixlen(in_addr_t);
+in_addr_t	 prefixlen2mask(u_int8_t);
 
 /* log.h */
 const char	*nbr_state_name(int);

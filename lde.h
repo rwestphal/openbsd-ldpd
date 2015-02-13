@@ -78,7 +78,6 @@ struct rt_lsp {
 
 	struct in_addr		nexthop;
 	u_int32_t		remote_label;
-	u_int8_t		priority;
 };
 
 struct rt_node {
