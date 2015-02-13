@@ -414,17 +414,18 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 				break;
 
 			LIST_REMOVE(if_addr, global_entry);
+			iface = if_lookup(kaddr->ifindex);
+			if (iface) {
+				LIST_REMOVE(if_addr, iface_entry);
+				if_fsm(iface, IF_EVT_DELADDR);
+			}
+
 			RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
 				if (nbr->state != NBR_STA_OPER)
 					continue;
 				send_address_withdraw(nbr, if_addr);
 			}
 
-			iface = if_lookup(kaddr->ifindex);
-			if (iface) {
-				LIST_REMOVE(if_addr, iface_entry);
-				if_fsm(iface, IF_EVT_DELADDR);
-			}
 			free(if_addr);
 			break;
 		case IMSG_RECONF_CONF:
