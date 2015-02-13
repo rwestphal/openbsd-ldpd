@@ -41,8 +41,7 @@ void	 tnbr_start_hello_timer(struct tnbr *);
 void	 tnbr_stop_hello_timer(struct tnbr *);
 
 struct adj *
-adj_new(struct nbr *nbr, struct hello_source *source, u_int16_t holdtime,
-    struct in_addr addr)
+adj_new(struct nbr *nbr, struct hello_source *source, struct in_addr addr)
 {
 	struct adj	*adj;
 
