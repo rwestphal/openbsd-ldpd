@@ -34,11 +34,7 @@ struct fec {
 	u_int8_t		prefixlen;
 };
 
-/*
- * fec tree of pending label request
- * Note: currently only one outstanding request per FEC can be tracked but
- *       should not be a problem since ldpd does not support multipath for now.
- */
+/* request entries */
 struct lde_req {
 	struct fec		fec;
 	u_int32_t		msgid;
@@ -49,6 +45,12 @@ struct lde_map {
 	struct fec		 fec;
 	LIST_ENTRY(lde_map)	 entry;
 	struct lde_nbr		*nexthop;
+	u_int32_t		 label;
+};
+
+/* withdraw entries */
+struct lde_wdraw {
+	struct fec		 fec;
 	u_int32_t		 label;
 };
 
@@ -100,15 +102,16 @@ u_int32_t	lde_assign_label(void);
 void	lde_send_change_klabel(struct rt_node *, struct rt_lsp *);
 void	lde_send_delete_klabel(struct rt_node *, struct rt_lsp *);
 void	lde_send_labelmapping(struct lde_nbr *, struct rt_node *);
-void	lde_send_labelrequest(struct lde_nbr *, struct rt_node *);
+void	lde_send_labelwithdraw(struct lde_nbr *, struct rt_node *);
 void	lde_send_labelrelease(struct lde_nbr *, struct rt_node *, u_int32_t);
 void	lde_send_notification(u_int32_t, u_int32_t, u_int32_t, u_int32_t);
 
-void		lde_nbr_do_mappings(struct rt_node *);
 struct lde_map *lde_map_add(struct lde_nbr *, struct rt_node *, int);
 void		lde_map_del(struct lde_nbr *, struct lde_map *, int);
 struct lde_req *lde_req_add(struct lde_nbr *, struct fec *, int);
 void		lde_req_del(struct lde_nbr *, struct lde_req *, int);
+struct lde_wdraw *lde_wdraw_add(struct lde_nbr *, struct rt_node *);
+void		  lde_wdraw_del(struct lde_nbr *, struct lde_wdraw *);
 struct lde_nbr *lde_find_address(struct in_addr);
 
 int			 lde_address_add(struct lde_nbr *, struct in_addr *);
@@ -132,7 +135,9 @@ void		 lde_kernel_remove(struct kroute *);
 void		 lde_check_mapping(struct map *, struct lde_nbr *);
 void		 lde_check_request(struct map *, struct lde_nbr *);
 void		 lde_check_release(struct map *, struct lde_nbr *);
+void		 lde_check_release_wcard(struct map *, struct lde_nbr *);
 void		 lde_check_withdraw(struct map *, struct lde_nbr *);
+void		 lde_check_withdraw_wcard(struct map *, struct lde_nbr *);
 void		 lde_label_list_free(struct lde_nbr *);
 
 #endif	/* _LDE_H_ */
