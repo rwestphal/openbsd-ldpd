@@ -52,6 +52,9 @@ void		 lde_nbr_clear(void);
 void		 lde_map_free(void *);
 void		 lde_address_list_free(struct lde_nbr *);
 
+RB_PROTOTYPE(fec_tree, fec, entry, fec_compare)
+extern struct fec_tree	rt;
+
 struct ldpd_conf	*ldeconf = NULL, *nconf = NULL;
 struct imsgev		*iev_ldpe;
 struct imsgev		*iev_main;
@@ -616,8 +619,24 @@ lde_nbr_new(u_int32_t peerid, struct in_addr *id)
 void
 lde_nbr_del(struct lde_nbr *nbr)
 {
+	struct fec	*f;
+	struct rt_node	*rn;
+	struct rt_lsp	*rl;
+
 	if (nbr == NULL)
 		return;
+
+	/* uninstall received mappings */
+	RB_FOREACH(f, fec_tree, &rt) {
+		rn = (struct rt_node *)f;
+
+		LIST_FOREACH(rl, &rn->lsp, entry) {
+			if (lde_address_find(nbr, &rl->nexthop)) {
+				lde_send_delete_klabel(rn, rl);
+				rl->remote_label = NO_LABEL;
+			}
+		}
+	}
 
 	lde_address_list_free(nbr);
 
