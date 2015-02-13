@@ -87,39 +87,6 @@ Set the keepalive timeout in seconds.
 The default value is 180; valid range is 1\-65535.
 .Pp
 .It Xo
-.Ic distribution
-.Pq Ic independent Ns | Ns Ic ordered
-.Xc
-Select the distribution mode.
-.Ic independent
-distributes labels at any time;
-.Ic ordered
-forces
-.Xr ldpd 8
-to wait a mapping from nexthop before distributing it to peers.
-.Pp
-.It Xo
-.Ic retention
-.Pq Ic liberal Ns | Ns Ic conservative
-.Xc
-Select the retention mode.
-.Ic conservative
-retains just the labels advertised from nexthop;
-.Ic liberal
-mode retains every label received, even those not advertised
-from nexthops.
-.Pp
-.It Xo
-.Ic advertisement
-.Pq Ic unsolicited Ns | Ns Ic ondemand
-.Xc
-Select the advertisement mode.
-.Ic unsolicited
-advertises labels according to the distribution mode;
-.Ic ondemand
-advertises labels solely upon explicit request from peers.
-.Pp
-.It Xo
 .Ic targeted-hello-accept
 .Pq Ic yes Ns | Ns Ic no
 .Xc
