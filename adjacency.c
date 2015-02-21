@@ -230,11 +230,11 @@ tnbr_init(struct ldpd_conf *xconf, struct tnbr *tnbr)
 }
 
 struct tnbr *
-tnbr_find(struct in_addr addr)
+tnbr_find(struct ldpd_conf *xconf, struct in_addr addr)
 {
 	struct tnbr *tnbr;
 
-	LIST_FOREACH(tnbr, &leconf->tnbr_list, entry)
+	LIST_FOREACH(tnbr, &xconf->tnbr_list, entry)
 		if (addr.s_addr == tnbr->addr.s_addr)
 			return (tnbr);
 

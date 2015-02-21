@@ -246,7 +246,7 @@ nbr_new(struct in_addr id, struct in_addr addr)
 
 	/* init pfkey - remove old if any, load new ones */
 	pfkey_remove(nbr);
-	nbrp = nbr_params_find(nbr->addr);
+	nbrp = nbr_params_find(leconf, nbr->addr);
 	if (nbrp && pfkey_establish(nbr, nbrp) == -1)
 		fatalx("pfkey setup failed");
 
@@ -489,7 +489,7 @@ nbr_establish_connection(struct nbr *nbr)
 		return (-1);
 	}
 
-	nbrp = nbr_params_find(nbr->addr);
+	nbrp = nbr_params_find(leconf, nbr->addr);
 	if (nbrp && nbrp->auth.method == AUTH_MD5SIG) {
 		if (sysdep.no_pfkey || sysdep.no_md5sig) {
 			log_warnx("md5sig configured but not available");
@@ -603,11 +603,11 @@ nbr_params_new(struct in_addr addr)
 }
 
 struct nbr_params *
-nbr_params_find(struct in_addr addr)
+nbr_params_find(struct ldpd_conf *xconf, struct in_addr addr)
 {
 	struct nbr_params *nbrp;
 
-	LIST_FOREACH(nbrp, &leconf->nbrp_list, entry)
+	LIST_FOREACH(nbrp, &xconf->nbrp_list, entry)
 		if (nbrp->addr.s_addr == addr.s_addr)
 			return (nbrp);
 
