@@ -218,6 +218,7 @@ nbr_new(struct in_addr id, struct in_addr addr)
 	if ((nbr = calloc(1, sizeof(*nbr))) == NULL)
 		fatal("nbr_new");
 
+	LIST_INIT(&nbr->adj_list);
 	nbr->state = NBR_STA_PRESENT;
 	nbr->id.s_addr = id.s_addr;
 	nbr->addr.s_addr = addr.s_addr;
