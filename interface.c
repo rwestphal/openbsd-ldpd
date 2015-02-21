@@ -55,6 +55,9 @@ if_new(struct kif *kif)
 
 	iface->state = IF_STA_DOWN;
 
+	LIST_INIT(&iface->addr_list);
+	LIST_INIT(&iface->adj_list);
+
 	strlcpy(iface->name, kif->ifname, sizeof(iface->name));
 
 	/* get type */
