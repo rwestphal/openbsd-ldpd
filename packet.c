@@ -214,7 +214,7 @@ disc_find_iface(unsigned int ifindex, struct in_addr src)
 	struct if_addr	*if_addr;
 
 	LIST_FOREACH(iface, &leconf->iface_list, entry)
-		LIST_FOREACH(if_addr, &iface->addr_list, iface_entry)
+		LIST_FOREACH(if_addr, &iface->addr_list, entry)
 			switch (iface->type) {
 			case IF_TYPE_POINTOPOINT:
 				if (ifindex == iface->ifindex &&

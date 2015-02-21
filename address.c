@@ -52,7 +52,7 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 		fatal("send_address");
 
 	if (if_addr == NULL)
-		LIST_FOREACH(if_addr, &leconf->addr_list, global_entry)
+		LIST_FOREACH(if_addr, &leconf->addr_list, entry)
 			iface_count++;
 	else
 		iface_count = 1;
@@ -153,7 +153,7 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr,
 	ibuf_add(buf, &alt, sizeof(alt));
 
 	if (if_addr == NULL)
-		LIST_FOREACH(if_addr, &leconf->addr_list, global_entry)
+		LIST_FOREACH(if_addr, &leconf->addr_list, entry)
 			ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
 	else
 		ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
