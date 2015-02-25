@@ -66,7 +66,7 @@ send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 		dst.sin_addr.s_addr = tnbr->addr.s_addr;
 		holdtime = tnbr->hello_holdtime;
 		flags = TARGETED_HELLO;
-		if (tnbr->flags & F_TNBR_CONFIGURED)
+		if ((tnbr->flags & F_TNBR_CONFIGURED) || tnbr->pw_count)
 			flags |= REQUEST_TARG_HELLO;
 		fd = tnbr->discovery_fd;
 		break;

@@ -251,6 +251,8 @@ control_dispatch_imsg(int fd, short event, void *bula)
 			ldpe_adj_ctl(c);
 			break;
 		case IMSG_CTL_SHOW_LIB:
+		case IMSG_CTL_SHOW_L2VPN_PW:
+		case IMSG_CTL_SHOW_L2VPN_BINDING:
 			c->iev.ibuf.pid = imsg.hdr.pid;
 			ldpe_imsg_compose_lde(imsg.hdr.type, 0, imsg.hdr.pid,
 			    imsg.data, imsg.hdr.len - IMSG_HEADER_SIZE);

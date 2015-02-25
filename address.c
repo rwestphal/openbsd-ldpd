@@ -111,7 +111,7 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 	}
 
 	/* For now we only support IPv4 */
-	if (alt.family != htons(ADDR_IPV4)) {
+	if (alt.family != htons(AF_IPV4)) {
 		send_notification_nbr(nbr, S_UNSUP_ADDR, addr.msgid, addr.type);
 		return (-1);
 	}
@@ -148,7 +148,7 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr,
 	alt.type = TLV_TYPE_ADDRLIST;
 	alt.length = htons(size);
 	/* XXX: just ipv4 for now */
-	alt.family = htons(ADDR_IPV4);
+	alt.family = htons(AF_IPV4);
 
 	ibuf_add(buf, &alt, sizeof(alt));
 
