@@ -542,7 +542,7 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn)
 	me = (struct lde_map *)fec_find(&ln->sent_map, &fn->fec);
 	if (me == NULL)
 		me = lde_map_add(ln, fn, 1);
-	me->label = map.label;
+	memcpy(&me->map, &map, sizeof(map));
 }
 
 void
