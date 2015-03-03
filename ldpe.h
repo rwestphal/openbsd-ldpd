@@ -180,8 +180,9 @@ void		 adj_del(struct adj *);
 struct adj	*adj_find(struct nbr *, struct hello_source *);
 void		 adj_start_itimer(struct adj *);
 void		 adj_stop_itimer(struct adj *);
-struct tnbr	*tnbr_new(struct ldpd_conf *, struct in_addr, int);
+struct tnbr	*tnbr_new(struct ldpd_conf *, struct in_addr);
 void		 tnbr_del(struct tnbr *);
+struct tnbr	*tnbr_check(struct tnbr *);
 void		 tnbr_init(struct ldpd_conf *, struct tnbr *);
 struct tnbr	*tnbr_find(struct in_addr);
 

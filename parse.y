@@ -200,6 +200,7 @@ conf_main	: ROUTERID STRING {
 		| iface_defaults
 		| tnbr_defaults
 		;
+
 iface_defaults	: LHELLOHOLDTIME NUMBER {
 			if ($2 < MIN_HOLDTIME ||
 			    $2 > MAX_HOLDTIME) {
@@ -318,6 +319,8 @@ tneighbor	: TNEIGHBOR STRING	{
 			tnbr = conf_get_tnbr(addr);
 			if (tnbr == NULL)
 				YYERROR;
+
+			tnbr->flags |= F_TNBR_CONFIGURED;
 			LIST_INSERT_HEAD(&conf->tnbr_list, tnbr, entry);
 
 			memcpy(&tnbrdefs, defs, sizeof(tnbrdefs));
@@ -903,7 +906,7 @@ conf_get_tnbr(struct in_addr addr)
 		}
 	}
 
-	t = tnbr_new(conf, addr, 1);
+	t = tnbr_new(conf, addr);
 
 	return (t);
 }
