@@ -279,6 +279,7 @@ ldpe_shutdown(void)
 	}
 
 	close(leconf->ldp_discovery_socket);
+	close(leconf->ldp_ediscovery_socket);
 	close(leconf->ldp_session_socket);
 
 	/* clean up */
