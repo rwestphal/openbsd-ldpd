@@ -195,12 +195,6 @@ struct address_list_tlv {
 #define	ADDR_IPV4		0x1
 #define	ADDR_IPV6		0x2
 
-/* This struct is badly aligned so use two 32 bit fields */
-struct fec_elm {
-	u_int32_t	hdr;
-	u_int32_t	addr;
-};
-
 #define FEC_ELM_MIN_LEN		4
 #define	FEC_WILDCARD		0x01
 #define	FEC_PREFIX		0x02

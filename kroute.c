@@ -113,8 +113,6 @@ RB_HEAD(kif_tree, kif_node)		kit;
 RB_PROTOTYPE(kif_tree, kif_node, entry, kif_compare)
 RB_GENERATE(kif_tree, kif_node, entry, kif_compare)
 
-int		flag_implicit_null = 0;
-
 int
 kif_init(void)
 {

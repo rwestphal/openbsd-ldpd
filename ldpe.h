@@ -198,10 +198,6 @@ int	 nbr_establish_connection(struct nbr *);
 
 void			 nbr_mapping_add(struct nbr *, struct mapping_head *,
 			    struct map *);
-struct mapping_entry	*nbr_mapping_find(struct nbr *, struct mapping_head *,
-			    struct map *);
-void			 nbr_mapping_del(struct nbr *, struct mapping_head *,
-			    struct map *);
 void			 mapping_list_clr(struct mapping_head *);
 
 struct ctl_nbr	*nbr_to_ctl(struct nbr *);
