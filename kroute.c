@@ -1247,6 +1247,10 @@ rtmsg_process(char *buf, size_t len)
 			if (rtm->rtm_flags & RTF_LLINFO)	/* arp cache */
 				continue;
 
+			/* LDP should follow the IGP and ignore BGP routes */
+			if (rtm->rtm_priority == RTP_BGP)
+				continue;
+
 			if (rtm->rtm_flags & RTF_MPATH)
 				mpath = 1;
 			prio = rtm->rtm_priority;
