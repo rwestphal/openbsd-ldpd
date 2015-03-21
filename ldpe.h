@@ -136,7 +136,9 @@ void		 ldpe_fib_update(int);
 void		 ldpe_iface_ctl(struct ctl_conn *, unsigned int);
 
 /* interface.c */
-int		 if_fsm(struct iface *, enum iface_event);
+int		 if_start(struct iface *);
+int		 if_reset(struct iface *);
+int		 if_update(struct iface *);
 
 struct iface	*if_new(struct kif *);
 void		 if_del(struct iface *);
