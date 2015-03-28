@@ -198,6 +198,7 @@ void		 ldpe_adj_ctl(struct ctl_conn *);
 /* neighbor.c */
 struct nbr	*nbr_new(struct in_addr, struct in_addr);
 void		 nbr_del(struct nbr *);
+void		 nbr_update_peerid(struct nbr *);
 
 struct nbr	*nbr_find_ldpid(u_int32_t);
 struct nbr	*nbr_find_peerid(u_int32_t);
