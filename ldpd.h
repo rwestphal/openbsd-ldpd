@@ -321,14 +321,11 @@ struct ctl_nbr {
 
 struct ctl_rt {
 	struct in_addr		 prefix;
+	u_int8_t		 prefixlen;
 	struct in_addr		 nexthop;
-	struct in_addr		 adv_rtr;
-	time_t			 uptime;
 	u_int32_t		 local_label;
 	u_int32_t		 remote_label;
 	u_int8_t		 flags;
-	u_int8_t		 prefixlen;
-	u_int8_t		 connected;
 	u_int8_t		 in_use;
 };
 
