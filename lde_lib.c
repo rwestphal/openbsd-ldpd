@@ -54,7 +54,7 @@ extern struct ldpd_conf		*ldeconf;
 
 struct fec_tree	rt = RB_INITIALIZER(&rt);
 
-/* FEC tree fucntions */
+/* FEC tree functions */
 void
 fec_init(struct fec_tree *fh)
 {
