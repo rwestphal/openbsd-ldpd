@@ -40,9 +40,6 @@
 #define TCP_MD5_KEY_LEN		80
 #define L2VPN_NAME_LEN		32
 
-#define NBR_IDSELF		1
-#define NBR_CNTSTART		(NBR_IDSELF + 1)
-
 #define	RT_BUF_SIZE		16384
 #define	MAX_RTSOCK_BUF		128 * 1024
 #define	LDP_BACKLOG		128
