@@ -288,6 +288,9 @@ log_fec(struct map *map)
 	static char	buf[32];
 	char		pstr[32];
 
+	if (map->flags & F_MAP_WILDCARD)
+		return ("wildcard");
+
 	if (snprintf(buf, sizeof(buf), "%s/%u",
 	    inet_ntop(AF_INET, &map->prefix, pstr, sizeof(pstr)),
 	    map->prefixlen) == -1)
