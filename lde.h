@@ -33,6 +33,8 @@ struct fec {
 	struct in_addr		prefix;
 	u_int8_t		prefixlen;
 };
+RB_PROTOTYPE(fec_tree, fec, entry, fec_compare)
+extern struct fec_tree rt;
 
 /*
  * fec tree of pending label request
