@@ -42,21 +42,6 @@ print_mainconf(struct ldpd_conf *conf)
 	else
 		printf("fib-update yes\n");
 
-	if (conf->mode & MODE_DIST_INDEPENDENT)
-		printf("distribution independent\n");
-	else
-		printf("distribution ordered\n");
-
-	if (conf->mode & MODE_RET_LIBERAL)
-		printf("retention liberal\n");
-	else
-		printf("retention conservative\n");
-
-	if (conf->mode & MODE_ADV_ONDEMAND)
-		printf("advertisement ondemand\n");
-	else
-		printf("advertisement unsolicited\n");
-
 	if (conf->flags & LDPD_FLAG_TH_ACCEPT)
 		printf("targeted-hello-accept yes\n");
 	else

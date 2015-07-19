@@ -230,13 +230,6 @@ enum hello_type {
 	HELLO_TARGETED
 };
 
-#define	MODE_DIST_INDEPENDENT	0x01
-#define	MODE_DIST_ORDERED	0x02
-#define	MODE_RET_LIBERAL	0x04
-#define	MODE_RET_CONSERVATIVE	0x08
-#define	MODE_ADV_ONDEMAND	0x10
-#define	MODE_ADV_UNSOLICITED	0x20
-
 struct ldpd_conf {
 	struct event		disc_ev;
 	struct event		edisc_ev;
@@ -254,7 +247,6 @@ struct ldpd_conf {
 	int			ldp_ediscovery_socket;
 	int			ldp_session_socket;
 	int			flags;
-	u_int8_t		mode;
 	u_int16_t		keepalive;
 	u_int16_t		thello_holdtime;
 	u_int16_t		thello_interval;
