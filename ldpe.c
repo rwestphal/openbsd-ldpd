@@ -574,16 +574,16 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 
 			switch (imsg.hdr.type) {
 			case IMSG_MAPPING_ADD:
-				nbr_mapping_add(nbr, &nbr->mapping_list, &map);
+				mapping_list_add(&nbr->mapping_list, &map);
 				break;
 			case IMSG_RELEASE_ADD:
-				nbr_mapping_add(nbr, &nbr->release_list, &map);
+				mapping_list_add(&nbr->release_list, &map);
 				break;
 			case IMSG_REQUEST_ADD:
-				nbr_mapping_add(nbr, &nbr->request_list, &map);
+				mapping_list_add(&nbr->request_list, &map);
 				break;
 			case IMSG_WITHDRAW_ADD:
-				nbr_mapping_add(nbr, &nbr->withdraw_list, &map);
+				mapping_list_add(&nbr->withdraw_list, &map);
 				break;
 			}
 			break;
@@ -674,6 +674,30 @@ u_int32_t
 ldpe_router_id(void)
 {
 	return (leconf->rtr_id.s_addr);
+}
+
+void
+mapping_list_add(struct mapping_head *mh, struct map *map)
+{
+	struct mapping_entry	*me;
+
+	me = calloc(1, sizeof(*me));
+	if (me == NULL)
+		fatal("mapping_list_add");
+	me->map = *map;
+
+	TAILQ_INSERT_TAIL(mh, me, entry);
+}
+
+void
+mapping_list_clr(struct mapping_head *mh)
+{
+	struct mapping_entry	*me;
+
+	while ((me = TAILQ_FIRST(mh)) != NULL) {
+		TAILQ_REMOVE(mh, me, entry);
+		free(me);
+	}
 }
 
 void
