@@ -763,6 +763,11 @@ parse_config(char *filename, int opts)
 	}
 	topfile = file;
 
+	LIST_INIT(&conf->iface_list);
+	LIST_INIT(&conf->addr_list);
+	LIST_INIT(&conf->tnbr_list);
+	LIST_INIT(&conf->nbrp_list);
+
 	yyparse();
 	errors = file->errors;
 	popfile();
