@@ -932,11 +932,23 @@ conf_get_nbrp(struct in_addr addr)
 void
 clear_config(struct ldpd_conf *xconf)
 {
-	struct iface	*i;
+	struct iface		*i;
+	struct tnbr		*t;
+	struct nbr_params	*n;
 
-	while ((i = LIST_FIRST(&conf->iface_list)) != NULL) {
+	while ((i = LIST_FIRST(&xconf->iface_list)) != NULL) {
 		LIST_REMOVE(i, entry);
 		if_del(i);
+	}
+
+	while ((t = LIST_FIRST(&xconf->tnbr_list)) != NULL) {
+		LIST_REMOVE(t, entry);
+		tnbr_del(t);
+	}
+
+	while ((n = LIST_FIRST(&xconf->nbrp_list)) != NULL) {
+		LIST_REMOVE(n, entry);
+		free(n);
 	}
 
 	free(xconf);

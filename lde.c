@@ -164,11 +164,12 @@ lde_shutdown(void)
 	lde_nbr_clear();
 	rt_clear();
 
+	config_clear(ldeconf);
+
 	msgbuf_clear(&iev_ldpe->ibuf.w);
 	free(iev_ldpe);
 	msgbuf_clear(&iev_main->ibuf.w);
 	free(iev_main);
-	free(ldeconf);
 
 	log_info("label decision engine exiting");
 	_exit(0);
