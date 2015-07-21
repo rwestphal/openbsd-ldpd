@@ -220,6 +220,7 @@ struct tnbr {
 	u_int8_t		 flags;
 };
 #define F_TNBR_CONFIGURED	 0x01
+#define F_TNBR_DYNAMIC		 0x02
 
 enum auth_method {
 	AUTH_NONE,
