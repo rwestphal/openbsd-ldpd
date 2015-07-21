@@ -160,6 +160,8 @@ struct iface	*if_new(struct kif *);
 void		 if_del(struct iface *);
 void		 if_init(struct ldpd_conf *, struct iface *);
 struct iface	*if_lookup(u_short);
+struct if_addr	*if_addr_new(struct kaddr *);
+struct if_addr	*if_addr_lookup(struct if_addr_head *, struct kaddr *);
 
 struct ctl_iface	*if_to_ctl(struct iface *);
 
