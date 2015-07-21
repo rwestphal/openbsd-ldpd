@@ -566,10 +566,10 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("ldpe_dispatch_lde: cannot find "
 				    "neighbor");
-				return;
+				break;
 			}
 			if (nbr->state != NBR_STA_OPER)
-				return;
+				break;
 
 			switch (imsg.hdr.type) {
 			case IMSG_MAPPING_ADD:
@@ -594,10 +594,10 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("ldpe_dispatch_lde: cannot find "
 				    "neighbor");
-				return;
+				break;
 			}
 			if (nbr->state != NBR_STA_OPER)
-				return;
+				break;
 
 			switch (imsg.hdr.type) {
 			case IMSG_MAPPING_ADD_END:
@@ -627,10 +627,10 @@ ldpe_dispatch_lde(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("ldpe_dispatch_lde: cannot find "
 				    "neighbor");
-				return;
+				break;
 			}
 			if (nbr->state != NBR_STA_OPER)
-				return;
+				break;
 
 			send_notification_full(nbr->tcp, &nm);
 			break;
