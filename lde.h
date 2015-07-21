@@ -47,7 +47,7 @@ struct lde_map {
 	struct fec		 fec;
 	LIST_ENTRY(lde_map)	 entry;
 	struct lde_nbr		*nexthop;
-	u_int32_t		 label;
+	struct map		 map;
 };
 
 /* withdraw entries */
