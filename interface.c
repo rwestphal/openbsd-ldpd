@@ -104,11 +104,11 @@ if_init(struct ldpd_conf *xconf, struct iface *iface)
 }
 
 struct iface *
-if_lookup(u_short ifindex)
+if_lookup(struct ldpd_conf *xconf, u_short ifindex)
 {
 	struct iface *iface;
 
-	LIST_FOREACH(iface, &leconf->iface_list, entry)
+	LIST_FOREACH(iface, &xconf->iface_list, entry)
 		if (iface->ifindex == ifindex)
 			return (iface);
 

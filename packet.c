@@ -290,7 +290,7 @@ session_accept(int fd, short event, void *bula)
 		return;
 	}
 
-	nbrp = nbr_params_find(src.sin_addr);
+	nbrp = nbr_params_find(leconf, src.sin_addr);
 	if (nbrp && nbrp->auth.method == AUTH_MD5SIG) {
 		if (sysdep.no_pfkey || sysdep.no_md5sig) {
 			log_warnx("md5sig configured but not available");

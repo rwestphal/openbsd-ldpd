@@ -128,7 +128,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 
 	bzero(&source, sizeof(source));
 	if (flags & TARGETED_HELLO) {
-		tnbr = tnbr_find(src);
+		tnbr = tnbr_find(leconf, src);
 
 		/* remove the dynamic tnbr if the 'R' bit was cleared */
 		if (tnbr && (tnbr->flags & F_TNBR_DYNAMIC) &&

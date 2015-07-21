@@ -497,12 +497,6 @@ kr_redistribute(struct kroute_prefix *kp)
 	}
 }
 
-void
-kr_reload(void)
-{
-	/* XXX TODO */
-}
-
 /* rb-tree compare */
 int
 kroute_compare(struct kroute_prefix *a, struct kroute_prefix *b)
