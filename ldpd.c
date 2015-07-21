@@ -274,7 +274,6 @@ ldpd_shutdown(void)
 	if (lde_pid)
 		kill(lde_pid, SIGTERM);
 
-	control_cleanup();
 	kr_shutdown();
 
 	do {

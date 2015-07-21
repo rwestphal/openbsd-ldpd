@@ -283,6 +283,8 @@ ldpe_shutdown(void)
 {
 	struct if_addr		*if_addr;
 
+	control_cleanup();
+
 	event_del(&disc_ev);
 	event_del(&edisc_ev);
 	event_del(&pfkey_ev);
