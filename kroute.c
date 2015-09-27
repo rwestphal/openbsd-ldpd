@@ -799,7 +799,7 @@ kif_update(u_short ifindex, int flags, struct if_data *ifd,
 
 	kif->k.flags = flags;
 	kif->k.link_state = ifd->ifi_link_state;
-	kif->k.media_type = ifd->ifi_type;
+	kif->k.if_type = ifd->ifi_type;
 	kif->k.baudrate = ifd->ifi_baudrate;
 	kif->k.mtu = ifd->ifi_mtu;
 

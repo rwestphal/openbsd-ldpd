@@ -230,7 +230,7 @@ struct iface {
 	u_int16_t		 hello_interval;
 	u_int16_t		 flags;
 	enum iface_type		 type;
-	u_int8_t		 media_type;
+	u_int8_t		 if_type;
 	u_int8_t		 linkstate;
 };
 
@@ -375,7 +375,7 @@ struct kif {
 	int			 flags;
 	int			 mtu;
 	u_short			 ifindex;
-	u_int8_t		 media_type;
+	u_int8_t		 if_type;
 	u_int8_t		 link_state;
 };
 
@@ -391,7 +391,7 @@ struct ctl_iface {
 	u_int16_t		 hello_interval;
 	enum iface_type		 type;
 	u_int8_t		 linkstate;
-	u_int8_t		 mediatype;
+	u_int8_t		 if_type;
 };
 
 struct ctl_adj {
