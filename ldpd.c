@@ -206,9 +206,6 @@ main(int argc, char *argv[])
 	ldpe_pid = ldpe(ldpd_conf, pipe_parent2ldpe, pipe_ldpe2lde,
 	    pipe_parent2lde);
 
-	/* show who we are */
-	setproctitle("parent");
-
 	event_init();
 
 	/* setup signal handler */
