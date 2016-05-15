@@ -173,7 +173,7 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 		nbr_act_session_operational(nbr);
 		nbr_start_ktimer(nbr);
 		nbr_start_ktimeout(nbr);
-		send_address(nbr, NULL);
+		send_address(nbr, NULL, 0);
 		nbr_send_labelmappings(nbr);
 		break;
 	case NBR_ACT_CONNECT_SETUP:

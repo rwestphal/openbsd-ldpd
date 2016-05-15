@@ -41,12 +41,16 @@ extern struct ldpd_conf        *leconf;
 void	gen_address_list_tlv(struct ibuf *, struct if_addr *, uint16_t);
 
 void
-send_address(struct nbr *nbr, struct if_addr *if_addr)
+send_address(struct nbr *nbr, struct if_addr *if_addr, int withdraw)
 {
 	struct ibuf	*buf;
+	uint32_t	 msg_type;
 	uint16_t	 size, iface_count = 0;
 
-	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
+	if (!withdraw)
+		msg_type = MSG_TYPE_ADDR;
+	else
+		msg_type = MSG_TYPE_ADDRWITHDRAW;
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal(__func__);
@@ -65,7 +69,7 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 
 	size -= LDP_HDR_SIZE;
 
-	gen_msg_tlv(buf, MSG_TYPE_ADDR, size);
+	gen_msg_tlv(buf, msg_type, size);
 
 	size -= sizeof(struct ldp_msg);
 
@@ -156,32 +160,4 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr, uint16_t size)
 			ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
 	else
 		ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
-}
-
-void
-send_address_withdraw(struct nbr *nbr, struct if_addr *if_addr)
-{
-	struct ibuf	*buf;
-	uint16_t	 size;
-
-	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
-
-	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal(__func__);
-
-	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) +
-	    sizeof(struct address_list_tlv) + sizeof(struct in_addr);
-
-	gen_ldp_hdr(buf, size);
-
-	size -= LDP_HDR_SIZE;
-
-	gen_msg_tlv(buf, MSG_TYPE_ADDRWITHDRAW, size);
-
-	size -= sizeof(struct ldp_msg);
-
-	gen_address_list_tlv(buf, if_addr, size);
-
-	evbuf_enqueue(&nbr->tcp->wbuf, buf);
-	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }

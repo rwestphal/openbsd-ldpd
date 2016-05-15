@@ -131,9 +131,8 @@ void	 send_notification_full(struct tcp_conn *, struct notify_msg *);
 int	 recv_notification(struct nbr *, char *, uint16_t);
 
 /* address.c */
-void	 send_address(struct nbr *, struct if_addr *);
+void	 send_address(struct nbr *, struct if_addr *, int);
 int	 recv_address(struct nbr *, char *, uint16_t);
-void	 send_address_withdraw(struct nbr *, struct if_addr *);
 
 /* labelmapping.c */
 #define PREFIX_SIZE(x)	(((x) + 7) / 8)
