@@ -104,7 +104,7 @@ if_init(struct ldpd_conf *xconf, struct iface *iface)
 }
 
 struct iface *
-if_lookup(struct ldpd_conf *xconf, u_short ifindex)
+if_lookup(struct ldpd_conf *xconf, unsigned short ifindex)
 {
 	struct iface *iface;
 
@@ -283,7 +283,7 @@ if_to_ctl(struct iface *iface)
 
 /* misc */
 int
-if_set_mcast_ttl(int fd, u_int8_t ttl)
+if_set_mcast_ttl(int fd, uint8_t ttl)
 {
 	if (setsockopt(fd, IPPROTO_IP, IP_MULTICAST_TTL,
 	    (char *)&ttl, sizeof(ttl)) < 0) {
@@ -452,7 +452,7 @@ if_set_mcast(struct iface *iface)
 int
 if_set_mcast_loop(int fd)
 {
-	u_int8_t	loop = 0;
+	uint8_t	loop = 0;
 
 	if (setsockopt(fd, IPPROTO_IP, IP_MULTICAST_LOOP,
 	    (char *)&loop, sizeof(loop)) < 0) {

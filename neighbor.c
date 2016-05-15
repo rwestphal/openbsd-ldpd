@@ -71,7 +71,7 @@ nbr_pid_compare(struct nbr *a, struct nbr *b)
 struct nbr_id_head nbrs_by_id = RB_INITIALIZER(&nbrs_by_id);
 struct nbr_pid_head nbrs_by_pid = RB_INITIALIZER(&nbrs_by_pid);
 
-u_int32_t	peercnt = 1;
+uint32_t	peercnt = 1;
 
 extern struct ldpd_conf		*leconf;
 extern struct ldpd_sysdep	 sysdep;
@@ -290,7 +290,7 @@ nbr_update_peerid(struct nbr *nbr)
 }
 
 struct nbr *
-nbr_find_peerid(u_int32_t peerid)
+nbr_find_peerid(uint32_t peerid)
 {
 	struct nbr	n;
 	n.peerid = peerid;
@@ -298,7 +298,7 @@ nbr_find_peerid(u_int32_t peerid)
 }
 
 struct nbr *
-nbr_find_ldpid(u_int32_t rtr_id)
+nbr_find_ldpid(uint32_t rtr_id)
 {
 	struct nbr	n;
 	n.id.s_addr = rtr_id;

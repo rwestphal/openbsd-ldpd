@@ -31,10 +31,10 @@ void	log_info(const char *, ...);
 void	log_debug(const char *, ...);
 void	fatal(const char *) __dead;
 void	fatalx(const char *) __dead;
-const char *pw_type_name(u_int16_t);
+const char *pw_type_name(uint16_t);
 const char *log_map(struct map *);
 struct fec;
 const char *log_fec(struct fec *);
-void	log_rtmsg(u_char);
+void	log_rtmsg(unsigned char);
 
 #endif /* _LOG_H_ */

@@ -96,10 +96,10 @@
 
 /* LDP header */
 struct ldp_hdr {
-	u_int16_t		version;
-	u_int16_t		length;
-	u_int32_t		lsr_id;
-	u_int16_t		lspace_id;
+	uint16_t	version;
+	uint16_t	length;
+	uint32_t	lsr_id;
+	uint16_t	lspace_id;
 } __packed;
 
 #define	LDP_HDR_SIZE		10
@@ -107,15 +107,15 @@ struct ldp_hdr {
 
 /* TLV record */
 struct tlv {
-	u_int16_t	type;
-	u_int16_t	length;
+	uint16_t	type;
+	uint16_t	length;
 };
 #define	TLV_HDR_LEN		4
 
 struct ldp_msg {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	msgid;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	msgid;
 	/* Mandatory Parameters */
 	/* Optional Parameters */
 } __packed;
@@ -129,16 +129,16 @@ struct ldp_msg {
 #define REQUEST_TARG_HELLO	0x4000
 
 struct hello_prms_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int16_t	holdtime;
-	u_int16_t	flags;
+	uint16_t	type;
+	uint16_t	length;
+	uint16_t	holdtime;
+	uint16_t	flags;
 };
 
 struct hello_prms_opt4_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	value;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	value;
 };
 
 #define HELLO_PRMS_SIZE		8
@@ -180,25 +180,25 @@ struct hello_prms_opt4_tlv {
 #define S_WITHDRAW_MTHD	0x0000002B
 
 struct sess_prms_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int16_t	proto_version;
-	u_int16_t	keepalive_time;
-	u_int8_t	reserved;
-	u_int8_t	pvlim;
-	u_int16_t	max_pdu_len;
-	u_int32_t	lsr_id;
-	u_int16_t	lspace_id;
+	uint16_t	type;
+	uint16_t	length;
+	uint16_t	proto_version;
+	uint16_t	keepalive_time;
+	uint8_t		reserved;
+	uint8_t		pvlim;
+	uint16_t	max_pdu_len;
+	uint32_t	lsr_id;
+	uint16_t	lspace_id;
 } __packed;
 
 #define SESS_PRMS_SIZE		18
 
 struct status_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	status_code;
-	u_int32_t	msg_id;
-	u_int16_t	msg_type;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	status_code;
+	uint32_t	msg_id;
+	uint16_t	msg_type;
 } __packed;
 
 #define STATUS_SIZE		14
@@ -209,9 +209,9 @@ struct status_tlv {
 #define	AF_IPV6			0x2
 
 struct address_list_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int16_t	family;
+	uint16_t	type;
+	uint16_t	length;
+	uint16_t	family;
 	/* address entries */
 } __packed;
 
@@ -229,8 +229,8 @@ struct address_list_tlv {
 
 /* RFC 4447 Sub-TLV record */
 struct subtlv {
-	u_int8_t	type;
-	u_int8_t	length;
+	uint8_t		type;
+	uint8_t		length;
 };
 #define	SUBTLV_HDR_LEN		2
 
@@ -241,25 +241,25 @@ struct subtlv {
 #define FEC_SUBTLV_VLANID_LEN	4
 
 struct label_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	label;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	label;
 };
 
 #define LABEL_TLV_LEN		8
 
 struct reqid_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	reqid;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	reqid;
 };
 
 #define REQID_TLV_LEN		8
 
 struct pw_status_tlv {
-	u_int16_t	type;
-	u_int16_t	length;
-	u_int32_t	value;
+	uint16_t	type;
+	uint16_t	length;
+	uint32_t	value;
 };
 
 #define PW_STATUS_TLV_LEN	8

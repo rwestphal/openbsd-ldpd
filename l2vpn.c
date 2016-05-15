@@ -289,7 +289,7 @@ l2vpn_pw_negotiate(struct lde_nbr *ln, struct fec_node *fn, struct map *map)
 }
 
 void
-l2vpn_send_pw_status(u_int32_t peerid, u_int32_t status, struct fec *fec)
+l2vpn_send_pw_status(uint32_t peerid, uint32_t status, struct fec *fec)
 {
 	struct notify_msg	 nm;
 

@@ -40,7 +40,7 @@ void
 send_keepalive(struct nbr *nbr)
 {
 	struct ibuf	*buf;
-	u_int16_t	 size;
+	uint16_t	 size;
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
 		fatal("send_keepalive");
@@ -57,7 +57,7 @@ send_keepalive(struct nbr *nbr)
 }
 
 int
-recv_keepalive(struct nbr *nbr, char *buf, u_int16_t len)
+recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg ka;
 

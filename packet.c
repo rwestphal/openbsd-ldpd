@@ -48,7 +48,7 @@ ssize_t		 session_get_pdu(struct ibuf_read *, char **);
 static int	 msgcnt = 0;
 
 int
-gen_ldp_hdr(struct ibuf *buf, u_int16_t size)
+gen_ldp_hdr(struct ibuf *buf, uint16_t size)
 {
 	struct ldp_hdr	ldp_hdr;
 
@@ -66,7 +66,7 @@ gen_ldp_hdr(struct ibuf *buf, u_int16_t size)
 }
 
 int
-gen_msg_tlv(struct ibuf *buf, u_int32_t type, u_int16_t size)
+gen_msg_tlv(struct ibuf *buf, uint32_t type, uint16_t size)
 {
 	struct ldp_msg	msg;
 
@@ -122,7 +122,7 @@ disc_recv_packet(int fd, short event, void *bula)
 	char			*buf;
 	struct cmsghdr		*cmsg;
 	ssize_t			 r;
-	u_int16_t		 len;
+	uint16_t		 len;
 	unsigned int		 ifindex = 0;
 
 	if (event != EV_READ)
@@ -155,7 +155,7 @@ disc_recv_packet(int fd, short event, void *bula)
 		}
 	}
 
-	len = (u_int16_t)r;
+	len = (uint16_t)r;
 
 	/* find a matching interface */
 	if ((fd == leconf->ldp_discovery_socket) &&
@@ -324,7 +324,7 @@ session_read(int fd, short event, void *arg)
 	char		*buf, *pdu;
 	ssize_t		 n, len;
 	int		 msg_size;
-	u_int16_t	 pdu_len;
+	uint16_t	 pdu_len;
 
 	if (event != EV_READ) {
 		log_debug("session_read: spurious event");
@@ -419,7 +419,7 @@ session_read(int fd, short event, void *arg)
 			nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
 
 		while (len >= LDP_MSG_LEN) {
-			u_int16_t type;
+			uint16_t type;
 
 			ldp_msg = (struct ldp_msg *)pdu;
 			type = ntohs(ldp_msg->type);
@@ -544,8 +544,8 @@ session_write(int fd, short event, void *arg)
 }
 
 void
-session_shutdown(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
-    u_int32_t type)
+session_shutdown(struct nbr *nbr, uint32_t status, uint32_t msgid,
+    uint32_t type)
 {
 	log_debug("session_shutdown: nbr ID %s", inet_ntoa(nbr->id));
 

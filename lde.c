@@ -44,8 +44,8 @@ void		 lde_shutdown(void);
 void		 lde_dispatch_imsg(int, short, void *);
 void		 lde_dispatch_parent(int, short, void *);
 
-struct lde_nbr	*lde_nbr_find(u_int32_t);
-struct lde_nbr	*lde_nbr_new(u_int32_t, struct in_addr *);
+struct lde_nbr	*lde_nbr_find(uint32_t);
+struct lde_nbr	*lde_nbr_new(uint32_t, struct in_addr *);
 void		 lde_nbr_del(struct lde_nbr *);
 void		 lde_nbr_clear(void);
 
@@ -185,14 +185,14 @@ lde_shutdown(void)
 
 /* imesg */
 int
-lde_imsg_compose_parent(int type, pid_t pid, void *data, u_int16_t datalen)
+lde_imsg_compose_parent(int type, pid_t pid, void *data, uint16_t datalen)
 {
 	return (imsg_compose_event(iev_main, type, 0, pid, -1, data, datalen));
 }
 
 int
-lde_imsg_compose_ldpe(int type, u_int32_t peerid, pid_t pid, void *data,
-    u_int16_t datalen)
+lde_imsg_compose_ldpe(int type, uint32_t peerid, pid_t pid, void *data,
+    uint16_t datalen)
 {
 	return (imsg_compose_event(iev_ldpe, type, peerid, pid,
 	     -1, data, datalen));
@@ -539,10 +539,10 @@ lde_dispatch_parent(int fd, short event, void *bula)
 	}
 }
 
-u_int32_t
+uint32_t
 lde_assign_label(void)
 {
-	static u_int32_t label = MPLS_LABEL_RESERVED_MAX;
+	static uint32_t label = MPLS_LABEL_RESERVED_MAX;
 
 	/* XXX some checks needed */
 	label++;
@@ -797,7 +797,7 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 }
 
 void
-lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, u_int32_t label)
+lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 {
 	struct map		 map;
 	struct fec_nh		*fnh = NULL;
@@ -829,8 +829,8 @@ lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, u_int32_t label)
 }
 
 void
-lde_send_notification(u_int32_t peerid, u_int32_t code, u_int32_t msgid,
-    u_int32_t type)
+lde_send_notification(uint32_t peerid, uint32_t code, uint32_t msgid,
+    uint32_t type)
 {
 	struct notify_msg nm;
 
@@ -860,7 +860,7 @@ lde_nbr_compare(struct lde_nbr *a, struct lde_nbr *b)
 }
 
 struct lde_nbr *
-lde_nbr_find(u_int32_t peerid)
+lde_nbr_find(uint32_t peerid)
 {
 	struct lde_nbr	n;
 
@@ -870,7 +870,7 @@ lde_nbr_find(u_int32_t peerid)
 }
 
 struct lde_nbr *
-lde_nbr_new(u_int32_t peerid, struct in_addr *id)
+lde_nbr_new(uint32_t peerid, struct in_addr *id)
 {
 	struct lde_nbr	*nbr;
 

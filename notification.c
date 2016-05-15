@@ -36,13 +36,13 @@
 #include "log.h"
 #include "ldpe.h"
 
-int	gen_status_tlv(struct ibuf *, u_int32_t, u_int32_t, u_int32_t);
+int	gen_status_tlv(struct ibuf *, uint32_t, uint32_t, uint32_t);
 
 void
 send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 {
 	struct ibuf	*buf;
-	u_int16_t	 size;
+	uint16_t	 size;
 
 	if (tcp->nbr)
 		log_debug("send_notification_full: nbr ID %s, status %s",
@@ -61,7 +61,7 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 		case FEC_PWID:
 			size += FEC_PWID_ELM_MIN_LEN;
 			if (nm->fec.flags & F_MAP_PW_ID)
-				size += sizeof(u_int32_t);
+				size += sizeof(uint32_t);
 			break;
 		}
 	}
@@ -84,8 +84,8 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 
 /* send a notification without optional tlvs */
 void
-send_notification(u_int32_t status, struct tcp_conn *tcp, u_int32_t msgid,
-    u_int32_t type)
+send_notification(uint32_t status, struct tcp_conn *tcp, uint32_t msgid,
+    uint32_t type)
 {
 	struct notify_msg	 nm;
 
@@ -98,15 +98,15 @@ send_notification(u_int32_t status, struct tcp_conn *tcp, u_int32_t msgid,
 }
 
 void
-send_notification_nbr(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
-    u_int32_t type)
+send_notification_nbr(struct nbr *nbr, uint32_t status, uint32_t msgid,
+    uint32_t type)
 {
 	send_notification(status, nbr->tcp, msgid, type);
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
 int
-recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
+recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg		not;
 	struct status_tlv	st;
@@ -167,7 +167,7 @@ recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
 				return (-1);
 			}
 
-			nm.pw_status = ntohl(*(u_int32_t *)buf);
+			nm.pw_status = ntohl(*(uint32_t *)buf);
 			nm.flags |= F_NOTIF_PW_STATUS;
 			break;
 		case TLV_TYPE_FEC:
@@ -242,8 +242,7 @@ recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
 }
 
 int
-gen_status_tlv(struct ibuf *buf, u_int32_t status, u_int32_t msgid,
-    u_int32_t type)
+gen_status_tlv(struct ibuf *buf, uint32_t status, uint32_t msgid, uint32_t type)
 {
 	struct status_tlv	st;
 

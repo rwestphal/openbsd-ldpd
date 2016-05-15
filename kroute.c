@@ -44,7 +44,7 @@
 #include "log.h"
 
 struct {
-	u_int32_t		rtseq;
+	uint32_t		rtseq;
 	pid_t			pid;
 	int			fib_sync;
 	int			fd;
@@ -61,14 +61,14 @@ struct kroute_node {
 struct kroute_priority {
 	TAILQ_ENTRY(kroute_priority)	 entry;
 	struct kroute_prefix		*kp;		/* back pointer */
-	u_int8_t			 priority;
+	uint8_t				 priority;
 	TAILQ_HEAD(, kroute_node)	 nexthops;
 };
 
 struct kroute_prefix {
 	RB_ENTRY(kroute_prefix)			 entry;
 	struct in_addr				 prefix;
-	u_int8_t				 prefixlen;
+	uint8_t					 prefixlen;
 	TAILQ_HEAD(plist, kroute_priority)	 priorities;
 };
 
@@ -90,37 +90,38 @@ void	kr_redistribute(struct kroute_prefix *);
 int	kroute_compare(struct kroute_prefix *, struct kroute_prefix *);
 int	kif_compare(struct kif_node *, struct kif_node *);
 
-struct kroute_prefix	*kroute_find(in_addr_t, u_int8_t);
-struct kroute_priority	*kroute_find_prio(in_addr_t, u_int8_t, u_int8_t);
-struct kroute_node	*kroute_find_gw(in_addr_t, u_int8_t, u_int8_t,
-    struct in_addr);
+struct kroute_prefix	*kroute_find(in_addr_t, uint8_t);
+struct kroute_priority	*kroute_find_prio(in_addr_t, uint8_t, uint8_t);
+struct kroute_node	*kroute_find_gw(in_addr_t, uint8_t, uint8_t,
+			    struct in_addr);
 int			 kroute_insert(struct kroute *);
 int			 kroute_uninstall(struct kroute_node *);
 int			 kroute_remove(struct kroute *);
 void			 kroute_clear(void);
 
-struct kif_node		*kif_find(u_short);
-struct kif_node		*kif_insert(u_short);
+struct kif_node		*kif_find(unsigned short);
+struct kif_node		*kif_insert(unsigned short);
 int			 kif_remove(struct kif_node *);
 void			 kif_clear(void);
-struct kif_node		*kif_update(u_short, int, struct if_data *,
+struct kif_node		*kif_update(unsigned short, int, struct if_data *,
 			    struct sockaddr_dl *, int *);
 
 struct kroute_priority	*kroute_match(in_addr_t);
 
-u_int8_t	prefixlen_classful(in_addr_t);
+uint8_t		prefixlen_classful(in_addr_t);
 void		get_rtaddrs(int, struct sockaddr *, struct sockaddr **);
-void		if_change(u_short, int, struct if_data *, struct sockaddr_dl *);
-void		if_newaddr(u_short, struct sockaddr_in *, struct sockaddr_in *,
-		    struct sockaddr_in *);
-void		if_deladdr(u_short, struct sockaddr_in *, struct sockaddr_in *,
-		    struct sockaddr_in *);
+void		if_change(unsigned short, int, struct if_data *,
+		    struct sockaddr_dl *);
+void		if_newaddr(unsigned short, struct sockaddr_in *,
+		    struct sockaddr_in *, struct sockaddr_in *);
+void		if_deladdr(unsigned short, struct sockaddr_in *,
+		    struct sockaddr_in *, struct sockaddr_in *);
 void		if_announce(void *);
 
-int		send_rtmsg(int, int, struct kroute *, u_int32_t);
+int		send_rtmsg(int, int, struct kroute *, uint32_t);
 int		dispatch_rtmsg(void);
 int		fetchtable(void);
-int		fetchifs(u_short);
+int		fetchifs(unsigned short);
 int		rtmsg_process(char *, size_t);
 
 RB_HEAD(kroute_tree, kroute_prefix)	krt;
@@ -342,7 +343,7 @@ kr_fib_decouple(void)
 	struct kroute_prefix	*kp;
 	struct kroute_priority	*kprio;
 	struct kroute_node	*kn;
-	u_int32_t		 rl;
+	uint32_t		 rl;
 	struct kif_node		*kif;
 
 	if (kr_state.fib_sync == 0)	/* already decoupled */
@@ -463,7 +464,7 @@ kr_redist_remove(struct kroute *kr)
 int
 kr_redist_eval(struct kroute *kr)
 {
-	u_int32_t	 a;
+	uint32_t	 a;
 
 	/* was the route redistributed? */
 	if (kr->flags & F_REDISTRIBUTED)
@@ -540,7 +541,7 @@ kif_compare(struct kif_node *a, struct kif_node *b)
 
 /* tree management */
 struct kroute_prefix *
-kroute_find(in_addr_t prefix, u_int8_t prefixlen)
+kroute_find(in_addr_t prefix, uint8_t prefixlen)
 {
 	struct kroute_prefix	 s;
 
@@ -551,7 +552,7 @@ kroute_find(in_addr_t prefix, u_int8_t prefixlen)
 }
 
 struct kroute_priority *
-kroute_find_prio(in_addr_t prefix, u_int8_t prefixlen, u_int8_t prio)
+kroute_find_prio(in_addr_t prefix, uint8_t prefixlen, uint8_t prio)
 {
 	struct kroute_prefix	*kp;
 	struct kroute_priority	*kprio;
@@ -571,7 +572,7 @@ kroute_find_prio(in_addr_t prefix, u_int8_t prefixlen, u_int8_t prio)
 }
 
 struct kroute_node *
-kroute_find_gw(in_addr_t prefix, u_int8_t prefixlen, u_int8_t prio,
+kroute_find_gw(in_addr_t prefix, uint8_t prefixlen, uint8_t prio,
     struct in_addr nh)
 {
 	struct kroute_priority	*kprio;
@@ -718,7 +719,7 @@ kroute_clear(void)
 }
 
 struct kif_node *
-kif_find(u_short ifindex)
+kif_find(unsigned short ifindex)
 {
 	struct kif_node	s;
 
@@ -741,7 +742,7 @@ kif_findname(char *ifname)
 }
 
 struct kif_node *
-kif_insert(u_short ifindex)
+kif_insert(unsigned short ifindex)
 {
 	struct kif_node	*kif;
 
@@ -785,7 +786,7 @@ kif_clear(void)
 }
 
 struct kif_node *
-kif_update(u_short ifindex, int flags, struct if_data *ifd,
+kif_update(unsigned short ifindex, int flags, struct if_data *ifd,
     struct sockaddr_dl *sdl, int *link_old)
 {
 	struct kif_node		*kif;
@@ -836,7 +837,7 @@ kroute_match(in_addr_t key)
 }
 
 /* misc */
-u_int8_t
+uint8_t
 prefixlen_classful(in_addr_t ina)
 {
 	/* it hurt to write this. */
@@ -853,7 +854,7 @@ prefixlen_classful(in_addr_t ina)
 		return (8);
 }
 
-u_int8_t
+uint8_t
 mask2prefixlen(in_addr_t ina)
 {
 	if (ina == 0)
@@ -863,7 +864,7 @@ mask2prefixlen(in_addr_t ina)
 }
 
 in_addr_t
-prefixlen2mask(u_int8_t prefixlen)
+prefixlen2mask(uint8_t prefixlen)
 {
 	if (prefixlen == 0)
 		return (0);
@@ -890,7 +891,7 @@ get_rtaddrs(int addrs, struct sockaddr *sa, struct sockaddr **rti_info)
 }
 
 void
-if_change(u_short ifindex, int flags, struct if_data *ifd,
+if_change(unsigned short ifindex, int flags, struct if_data *ifd,
     struct sockaddr_dl *sdl)
 {
 	struct kif_node		*kif;
@@ -924,12 +925,12 @@ if_change(u_short ifindex, int flags, struct if_data *ifd,
 }
 
 void
-if_newaddr(u_short ifindex, struct sockaddr_in *ifa, struct sockaddr_in *mask,
-    struct sockaddr_in *brd)
+if_newaddr(unsigned short ifindex, struct sockaddr_in *ifa,
+    struct sockaddr_in *mask, struct sockaddr_in *brd)
 {
 	struct kif_node *kif;
 	struct kif_addr *ka;
-	u_int32_t	 a;
+	uint32_t	 a;
 
 	if (ifa == NULL || ifa->sin_family != AF_INET)
 		return;
@@ -963,8 +964,8 @@ if_newaddr(u_short ifindex, struct sockaddr_in *ifa, struct sockaddr_in *mask,
 }
 
 void
-if_deladdr(u_short ifindex, struct sockaddr_in *ifa, struct sockaddr_in *mask,
-    struct sockaddr_in *brd)
+if_deladdr(unsigned short ifindex, struct sockaddr_in *ifa,
+    struct sockaddr_in *mask, struct sockaddr_in *brd)
 {
 	struct kif_node *kif;
 	struct kif_addr *ka, *nka;
@@ -1014,7 +1015,7 @@ if_announce(void *msg)
 
 /* rtsock */
 int
-send_rtmsg(int fd, int action, struct kroute *kroute, u_int32_t family)
+send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 {
 	struct iovec		iov[5];
 	struct rt_msghdr	hdr;
@@ -1182,7 +1183,7 @@ fetchtable(void)
 }
 
 int
-fetchifs(u_short ifindex)
+fetchifs(unsigned short ifindex)
 {
 	size_t			 len;
 	int			 mib[6];
@@ -1249,16 +1250,16 @@ rtmsg_process(char *buf, size_t len)
 	struct kroute_node	*kn;
 	struct kroute		 kr;
 	struct in_addr		 prefix, nexthop;
-	u_int8_t		 prefixlen, prio;
+	uint8_t			 prefixlen, prio;
 	int			 flags;
-	u_short			 ifindex = 0;
+	unsigned short		 ifindex = 0;
 	size_t			 offset;
 	char			*next;
 
 	for (offset = 0; offset < len; offset += rtm->rtm_msglen) {
 		next = buf + offset;
 		rtm = (struct rt_msghdr *)next;
-		if (len < offset + sizeof(u_short) ||
+		if (len < offset + sizeof(unsigned short) ||
 		    len < offset + rtm->rtm_msglen)
 			fatalx("rtmsg_process: partial rtm in buffer");
 		if (rtm->rtm_version != RTM_VERSION)

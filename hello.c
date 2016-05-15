@@ -37,18 +37,18 @@
 
 extern struct ldpd_conf        *leconf;
 
-int	tlv_decode_hello_prms(char *, u_int16_t, u_int16_t *, u_int16_t *);
-int	tlv_decode_opt_hello_prms(char *, u_int16_t, struct in_addr *,
-	    u_int32_t *);
-int	gen_hello_prms_tlv(struct ibuf *buf, u_int16_t, u_int16_t);
-int	gen_opt4_hello_prms_tlv(struct ibuf *, u_int16_t, u_int32_t);
+int	tlv_decode_hello_prms(char *, uint16_t, uint16_t *, uint16_t *);
+int	tlv_decode_opt_hello_prms(char *, uint16_t, struct in_addr *,
+	    uint32_t *);
+int	gen_hello_prms_tlv(struct ibuf *buf, uint16_t, uint16_t);
+int	gen_opt4_hello_prms_tlv(struct ibuf *, uint16_t, uint32_t);
 
 int
 send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 {
 	struct sockaddr_in	 dst;
 	struct ibuf		*buf;
-	u_int16_t		 size, holdtime = 0, flags = 0;
+	uint16_t		 size, holdtime = 0, flags = 0;
 	int			 fd = 0;
 
 	dst.sin_port = htons(LDP_PORT);
@@ -95,7 +95,7 @@ send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 }
 
 void
-recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
+recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 {
 	struct ldp_msg		 hello;
 	struct ldp_hdr		 ldp;
@@ -103,8 +103,8 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 	struct nbr		*nbr;
 	struct in_addr		 lsr_id;
 	struct in_addr		 transport_addr;
-	u_int32_t		 conf_number;
-	u_int16_t		 holdtime, flags;
+	uint32_t		 conf_number;
+	uint16_t		 holdtime, flags;
 	int			 r;
 	struct hello_source	 source;
 	struct tnbr		*tnbr = NULL;
@@ -225,7 +225,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 }
 
 int
-gen_hello_prms_tlv(struct ibuf *buf, u_int16_t holdtime, u_int16_t flags)
+gen_hello_prms_tlv(struct ibuf *buf, uint16_t holdtime, uint16_t flags)
 {
 	struct hello_prms_tlv	parms;
 
@@ -239,7 +239,7 @@ gen_hello_prms_tlv(struct ibuf *buf, u_int16_t holdtime, u_int16_t flags)
 }
 
 int
-gen_opt4_hello_prms_tlv(struct ibuf *buf, u_int16_t type, u_int32_t value)
+gen_opt4_hello_prms_tlv(struct ibuf *buf, uint16_t type, uint32_t value)
 {
 	struct hello_prms_opt4_tlv	parms;
 
@@ -252,8 +252,8 @@ gen_opt4_hello_prms_tlv(struct ibuf *buf, u_int16_t type, u_int32_t value)
 }
 
 int
-tlv_decode_hello_prms(char *buf, u_int16_t len, u_int16_t *holdtime,
-    u_int16_t *flags)
+tlv_decode_hello_prms(char *buf, uint16_t len, uint16_t *holdtime,
+    uint16_t *flags)
 {
 	struct hello_prms_tlv	tlv;
 
@@ -274,12 +274,12 @@ tlv_decode_hello_prms(char *buf, u_int16_t len, u_int16_t *holdtime,
 }
 
 int
-tlv_decode_opt_hello_prms(char *buf, u_int16_t len, struct in_addr *addr,
-    u_int32_t *conf_number)
+tlv_decode_opt_hello_prms(char *buf, uint16_t len, struct in_addr *addr,
+    uint32_t *conf_number)
 {
 	struct tlv	tlv;
 	int		cons = 0;
-	u_int16_t	tlv_len;
+	uint16_t	tlv_len;
 
 	bzero(addr, sizeof(*addr));
 	*conf_number = 0;
@@ -289,15 +289,14 @@ tlv_decode_opt_hello_prms(char *buf, u_int16_t len, struct in_addr *addr,
 		tlv_len = ntohs(tlv.length);
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_IPV4TRANSADDR:
-			if (tlv_len != sizeof(u_int32_t))
+			if (tlv_len != sizeof(uint32_t))
 				return (-1);
-			bcopy(buf + TLV_HDR_LEN, addr, sizeof(u_int32_t));
+			bcopy(buf + TLV_HDR_LEN, addr, sizeof(uint32_t));
 			break;
 		case TLV_TYPE_CONFIG:
-			if (tlv_len != sizeof(u_int32_t))
+			if (tlv_len != sizeof(uint32_t))
 				return (-1);
-			bcopy(buf + TLV_HDR_LEN, conf_number,
-			    sizeof(u_int32_t));
+			bcopy(buf + TLV_HDR_LEN, conf_number, sizeof(uint32_t));
 			break;
 		default:
 			/* if unknown flag set, ignore TLV */

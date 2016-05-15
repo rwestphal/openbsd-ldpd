@@ -38,13 +38,13 @@
 
 extern struct ldpd_conf        *leconf;
 
-void	gen_address_list_tlv(struct ibuf *, struct if_addr *, u_int16_t);
+void	gen_address_list_tlv(struct ibuf *, struct if_addr *, uint16_t);
 
 void
 send_address(struct nbr *nbr, struct if_addr *if_addr)
 {
 	struct ibuf	*buf;
-	u_int16_t	 size, iface_count = 0;
+	uint16_t	 size, iface_count = 0;
 
 	log_debug("send_address: neighbor ID %s", inet_ntoa(nbr->id));
 
@@ -76,7 +76,7 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 }
 
 int
-recv_address(struct nbr *nbr, char *buf, u_int16_t len)
+recv_address(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg		addr;
 	struct address_list_tlv	alt;
@@ -136,8 +136,7 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 }
 
 void
-gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr,
-    u_int16_t size)
+gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr, uint16_t size)
 {
 	struct address_list_tlv	 alt;
 
@@ -163,7 +162,7 @@ void
 send_address_withdraw(struct nbr *nbr, struct if_addr *if_addr)
 {
 	struct ibuf	*buf;
-	u_int16_t	 size;
+	uint16_t	 size;
 
 	log_debug("send_address_withdraw: neighbor ID %s", inet_ntoa(nbr->id));
 

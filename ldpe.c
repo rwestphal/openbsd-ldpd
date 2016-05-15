@@ -320,14 +320,14 @@ ldpe_shutdown(void)
 
 /* imesg */
 int
-ldpe_imsg_compose_parent(int type, pid_t pid, void *data, u_int16_t datalen)
+ldpe_imsg_compose_parent(int type, pid_t pid, void *data, uint16_t datalen)
 {
 	return (imsg_compose_event(iev_main, type, 0, pid, -1, data, datalen));
 }
 
 int
-ldpe_imsg_compose_lde(int type, u_int32_t peerid, pid_t pid,
-    void *data, u_int16_t datalen)
+ldpe_imsg_compose_lde(int type, uint32_t peerid, pid_t pid, void *data,
+    uint16_t datalen)
 {
 	return (imsg_compose_event(iev_lde, type, peerid, pid, -1,
 	    data, datalen));
@@ -674,7 +674,7 @@ ldpe_dispatch_pfkey(int fd, short event, void *bula)
 	}
 }
 
-u_int32_t
+uint32_t
 ldpe_router_id(void)
 {
 	return (leconf->rtr_id.s_addr);

@@ -38,14 +38,14 @@
 
 extern struct ldpd_conf        *leconf;
 
-int	gen_init_prms_tlv(struct ibuf *, struct nbr *, u_int16_t);
-int	tlv_decode_opt_init_prms(char *, u_int16_t);
+int	gen_init_prms_tlv(struct ibuf *, struct nbr *, uint16_t);
+int	tlv_decode_opt_init_prms(char *, uint16_t);
 
 void
 send_init(struct nbr *nbr)
 {
 	struct ibuf		*buf;
-	u_int16_t		 size;
+	uint16_t		 size;
 
 	log_debug("send_init: neighbor ID %s", inet_ntoa(nbr->id));
 
@@ -68,7 +68,7 @@ send_init(struct nbr *nbr)
 }
 
 int
-recv_init(struct nbr *nbr, char *buf, u_int16_t len)
+recv_init(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg		init;
 	struct sess_prms_tlv	sess;
@@ -115,7 +115,7 @@ recv_init(struct nbr *nbr, char *buf, u_int16_t len)
 }
 
 int
-gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, u_int16_t size)
+gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, uint16_t size)
 {
 	struct sess_prms_tlv	parms;
 
@@ -137,11 +137,11 @@ gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, u_int16_t size)
 }
 
 int
-tlv_decode_opt_init_prms(char *buf, u_int16_t len)
+tlv_decode_opt_init_prms(char *buf, uint16_t len)
 {
 	struct tlv	tlv;
 	int		cons = 0;
-	u_int16_t	tlv_len;
+	uint16_t	tlv_len;
 
 	 while (len >= sizeof(tlv)) {
 		bcopy(buf, &tlv, sizeof(tlv));

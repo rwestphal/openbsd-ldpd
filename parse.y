@@ -80,7 +80,7 @@ int		 symset(const char *, const char *, int);
 char		*symget(const char *);
 
 void		 clear_config(struct ldpd_conf *xconf);
-u_int32_t	 get_rtr_id(void);
+uint32_t	 get_rtr_id(void);
 int		 host(const char *, struct in_addr *, struct in_addr *);
 
 static struct ldpd_conf	*conf;
@@ -93,11 +93,11 @@ struct l2vpn		*l2vpn = NULL;
 struct l2vpn_pw		*pw = NULL;
 
 struct config_defaults {
-	u_int16_t	lhello_holdtime;
-	u_int16_t	lhello_interval;
-	u_int16_t	thello_holdtime;
-	u_int16_t	thello_interval;
-	u_int8_t	pwflags;
+	uint16_t	lhello_holdtime;
+	uint16_t	lhello_interval;
+	uint16_t	thello_holdtime;
+	uint16_t	thello_interval;
+	uint8_t		pwflags;
 };
 
 struct config_defaults	 globaldefs;
@@ -685,10 +685,10 @@ lookup(char *s)
 
 #define MAXPUSHBACK	128
 
-u_char	*parsebuf;
-int	 parseindex;
-u_char	 pushback_buffer[MAXPUSHBACK];
-int	 pushback_index = 0;
+unsigned char	*parsebuf;
+int		 parseindex;
+unsigned char	 pushback_buffer[MAXPUSHBACK];
+int		 pushback_index = 0;
 
 int
 lgetc(int quotec)
@@ -778,10 +778,10 @@ findeol(void)
 int
 yylex(void)
 {
-	u_char	 buf[8096];
-	u_char	*p, *val;
-	int	 quotec, next, c;
-	int	 token;
+	unsigned char	 buf[8096];
+	unsigned char	*p, *val;
+	int		 quotec, next, c;
+	int		 token;
 
 top:
 	p = buf;
@@ -1133,7 +1133,7 @@ symget(const char *nam)
 int
 bad_ip_addr(struct in_addr addr)
 {
-	u_int32_t a = ntohl(addr.s_addr);
+	uint32_t a = ntohl(addr.s_addr);
 
 	return (((a >> IN_CLASSA_NSHIFT) == 0)
 	    || ((a >> IN_CLASSA_NSHIFT) == IN_LOOPBACKNET)
@@ -1289,11 +1289,11 @@ clear_config(struct ldpd_conf *xconf)
 	free(xconf);
 }
 
-u_int32_t
+uint32_t
 get_rtr_id(void)
 {
 	struct ifaddrs		*ifap, *ifa;
-	u_int32_t		 ip = 0, cur, localnet;
+	uint32_t		 ip = 0, cur, localnet;
 
 	localnet = htonl(INADDR_LOOPBACK & IN_CLASSA_NET);
 

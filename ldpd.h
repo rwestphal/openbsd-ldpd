@@ -170,24 +170,24 @@ enum nbr_action {
 TAILQ_HEAD(mapping_head, mapping_entry);
 
 struct map {
-	u_int8_t	type;
-	u_int32_t	messageid;
+	uint8_t		type;
+	uint32_t	messageid;
 	union map_fec {
 		struct {
 			struct in_addr	prefix;
-			u_int8_t	prefixlen;
+			uint8_t		prefixlen;
 		} ipv4;
 		struct {
-			u_int16_t	type;
-			u_int32_t	pwid;
-			u_int32_t	group_id;
-			u_int16_t	ifmtu;
+			uint16_t	type;
+			uint32_t	pwid;
+			uint32_t	group_id;
+			uint16_t	ifmtu;
 		} pwid;
 	} fec;
-	u_int32_t	label;
-	u_int32_t	requestid;
-	u_int32_t	pw_status;
-	u_int8_t	flags;
+	uint32_t	label;
+	uint32_t	requestid;
+	uint32_t	pw_status;
+	uint8_t		flags;
 };
 #define F_MAP_REQ_ID	0x01	/* optional request message id present */
 #define F_MAP_PW_CWORD	0x02	/* pseudowire control word */
@@ -196,12 +196,12 @@ struct map {
 #define F_MAP_PW_STATUS	0x10	/* pseudowire status */
 
 struct notify_msg {
-	u_int32_t	messageid;
-	u_int32_t	status;
-	u_int32_t	type;
-	u_int32_t	pw_status;
+	uint32_t	messageid;
+	uint32_t	status;
+	uint32_t	type;
+	uint32_t	pw_status;
 	struct map	fec;
-	u_int8_t	flags;
+	uint8_t		flags;
 };
 #define F_NOTIF_PW_STATUS	0x01	/* pseudowire status tlv present */
 #define F_NOTIF_FEC		0x02	/* fec tlv present */
@@ -226,12 +226,12 @@ struct iface {
 	unsigned int		 ifindex;
 	int			 discovery_fd;
 	int			 state;
-	u_int16_t		 hello_holdtime;
-	u_int16_t		 hello_interval;
-	u_int16_t		 flags;
+	uint16_t		 hello_holdtime;
+	uint16_t		 hello_interval;
+	uint16_t		 flags;
 	enum iface_type		 type;
-	u_int8_t		 if_type;
-	u_int8_t		 linkstate;
+	uint8_t			 if_type;
+	uint8_t			 linkstate;
 };
 
 /* source of targeted hellos */
@@ -242,10 +242,10 @@ struct tnbr {
 	struct adj		*adj;
 	struct in_addr		 addr;
 
-	u_int16_t		 hello_holdtime;
-	u_int16_t		 hello_interval;
-	u_int16_t		 pw_count;
-	u_int8_t		 flags;
+	uint16_t		 hello_holdtime;
+	uint16_t		 hello_interval;
+	uint16_t		 pw_count;
+	uint8_t			 flags;
 };
 #define F_TNBR_CONFIGURED	 0x01
 #define F_TNBR_DYNAMIC		 0x02
@@ -262,7 +262,7 @@ struct nbr_params {
 	struct {
 		enum auth_method	 method;
 		char			 md5key[TCP_MD5_KEY_LEN];
-		u_int8_t		 md5key_len;
+		uint8_t			 md5key_len;
 	} auth;
 };
 
@@ -271,21 +271,21 @@ struct l2vpn_if {
 	struct l2vpn		*l2vpn;
 	char			 ifname[IF_NAMESIZE];
 	unsigned int		 ifindex;
-	u_int16_t		 flags;
-	u_int8_t		 link_state;
+	uint16_t		 flags;
+	uint8_t			 link_state;
 };
 
 struct l2vpn_pw {
 	LIST_ENTRY(l2vpn_pw)	 entry;
 	struct l2vpn		*l2vpn;
 	struct in_addr		 addr;
-	u_int32_t		 pwid;
+	uint32_t		 pwid;
 	char			 ifname[IF_NAMESIZE];
 	unsigned int		 ifindex;
-	u_int32_t		 remote_group;
-	u_int16_t		 remote_mtu;
-	u_int32_t		 remote_status;
-	u_int8_t		 flags;
+	uint32_t		 remote_group;
+	uint16_t		 remote_mtu;
+	uint32_t		 remote_status;
+	uint8_t			 flags;
 };
 #define F_PW_STATUSTLV_CONF	0x01	/* status tlv configured */
 #define F_PW_STATUSTLV		0x02	/* status tlv negotiated */
@@ -320,51 +320,51 @@ enum hello_type {
 };
 
 struct ldpd_conf {
-	struct in_addr		rtr_id;
-	LIST_HEAD(, iface)	iface_list;
-	struct if_addr_head	addr_list;
-	LIST_HEAD(, tnbr)	tnbr_list;
-	LIST_HEAD(, nbr_params)	nbrp_list;
-	LIST_HEAD(, l2vpn)	l2vpn_list;
+	struct in_addr		 rtr_id;
+	LIST_HEAD(, iface)	 iface_list;
+	struct if_addr_head	 addr_list;
+	LIST_HEAD(, tnbr)	 tnbr_list;
+	LIST_HEAD(, nbr_params)	 nbrp_list;
+	LIST_HEAD(, l2vpn)	 l2vpn_list;
 
-	u_int32_t		opts;
+	uint32_t		 opts;
 #define LDPD_OPT_VERBOSE	0x00000001
 #define LDPD_OPT_VERBOSE2	0x00000002
 #define LDPD_OPT_NOACTION	0x00000004
-	time_t			uptime;
-	int			pfkeysock;
-	int			ldp_discovery_socket;
-	int			ldp_ediscovery_socket;
-	int			ldp_session_socket;
-	int			flags;
-	u_int16_t		keepalive;
-	u_int16_t		thello_holdtime;
-	u_int16_t		thello_interval;
+	time_t			 uptime;
+	int			 pfkeysock;
+	int			 ldp_discovery_socket;
+	int			 ldp_ediscovery_socket;
+	int			 ldp_session_socket;
+	int			 flags;
+	uint16_t		 keepalive;
+	uint16_t		 thello_holdtime;
+	uint16_t		 thello_interval;
 };
 
 /* kroute */
 struct kroute {
-	struct in_addr	prefix;
-	struct in_addr	nexthop;
-	u_int32_t	local_label;
-	u_int32_t	remote_label;
-	u_int16_t	flags;
-	u_short		ifindex;
-	u_int8_t	prefixlen;
-	u_int8_t	priority;
+	struct in_addr		 prefix;
+	struct in_addr		 nexthop;
+	uint32_t		 local_label;
+	uint32_t		 remote_label;
+	uint16_t		 flags;
+	unsigned short		 ifindex;
+	uint8_t			 prefixlen;
+	uint8_t			 priority;
 };
 
 struct kpw {
-	u_short			 ifindex;
+	unsigned short		 ifindex;
 	int			 pw_type;
 	struct in_addr		 nexthop;
-	u_int32_t		 local_label;
-	u_int32_t		 remote_label;
-	u_int8_t		 flags;
+	uint32_t		 local_label;
+	uint32_t		 remote_label;
+	uint8_t			 flags;
 };
 
 struct kaddr {
-	u_short			 ifindex;
+	unsigned short		 ifindex;
 	struct in_addr		 addr;
 	struct in_addr		 mask;
 	struct in_addr		 dstbrd;
@@ -372,12 +372,12 @@ struct kaddr {
 
 struct kif {
 	char			 ifname[IF_NAMESIZE];
-	u_int64_t		 baudrate;
+	uint64_t		 baudrate;
 	int			 flags;
 	int			 mtu;
-	u_short			 ifindex;
-	u_int8_t		 if_type;
-	u_int8_t		 link_state;
+	unsigned short		 ifindex;
+	uint8_t			 if_type;
+	uint8_t			 link_state;
 };
 
 /* control data structures */
@@ -386,13 +386,13 @@ struct ctl_iface {
 	time_t			 uptime;
 	unsigned int		 ifindex;
 	int			 state;
-	u_int16_t		 adj_cnt;
-	u_int16_t		 flags;
-	u_int16_t		 hello_holdtime;
-	u_int16_t		 hello_interval;
+	uint16_t		 adj_cnt;
+	uint16_t		 flags;
+	uint16_t		 hello_holdtime;
+	uint16_t		 hello_interval;
 	enum iface_type		 type;
-	u_int8_t		 linkstate;
-	u_int8_t		 if_type;
+	uint8_t			 linkstate;
+	uint8_t			 if_type;
 };
 
 struct ctl_adj {
@@ -400,7 +400,7 @@ struct ctl_adj {
 	enum hello_type		 type;
 	char			 ifname[IF_NAMESIZE];
 	struct in_addr		 src_addr;
-	u_int16_t		 holdtime;
+	uint16_t		 holdtime;
 };
 
 struct ctl_nbr {
@@ -412,26 +412,26 @@ struct ctl_nbr {
 
 struct ctl_rt {
 	struct in_addr		 prefix;
-	u_int8_t		 prefixlen;
+	uint8_t			 prefixlen;
 	struct in_addr		 nexthop;
-	u_int32_t		 local_label;
-	u_int32_t		 remote_label;
-	u_int8_t		 flags;
-	u_int8_t		 in_use;
+	uint32_t		 local_label;
+	uint32_t		 remote_label;
+	uint8_t			 flags;
+	uint8_t			 in_use;
 };
 
 struct ctl_pw {
-	u_int16_t		 type;
+	uint16_t		 type;
 	char			 ifname[IF_NAMESIZE];
-	u_int32_t		 pwid;
+	uint32_t		 pwid;
 	struct in_addr		 nexthop;
-	u_int32_t		 local_label;
-	u_int32_t		 local_gid;
-	u_int16_t		 local_ifmtu;
-	u_int32_t		 remote_label;
-	u_int32_t		 remote_gid;
-	u_int16_t		 remote_ifmtu;
-	u_int32_t		 status;
+	uint32_t		 local_label;
+	uint32_t		 local_gid;
+	uint16_t		 local_ifmtu;
+	uint32_t		 remote_label;
+	uint32_t		 remote_gid;
+	uint16_t		 remote_ifmtu;
+	uint32_t		 status;
 };
 
 /* parse.y */
@@ -451,8 +451,8 @@ void		 kr_dispatch_msg(int, short, void *);
 void		 kr_show_route(struct imsg *);
 void		 kr_ifinfo(char *, pid_t);
 struct kif	*kif_findname(char *);
-u_int8_t	 mask2prefixlen(in_addr_t);
-in_addr_t	 prefixlen2mask(u_int8_t);
+uint8_t		 mask2prefixlen(in_addr_t);
+in_addr_t	 prefixlen2mask(uint8_t);
 void		 kmpw_set(struct kpw *);
 void		 kmpw_unset(struct kpw *);
 void		 kmpw_install(const char *, struct kpw *);
@@ -462,15 +462,15 @@ void		 kmpw_uninstall(const char *, struct kpw *);
 const char	*nbr_state_name(int);
 const char	*if_state_name(int);
 const char	*if_type_name(enum iface_type);
-const char	*notification_name(u_int32_t);
+const char	*notification_name(uint32_t);
 
 /* ldpd.c */
-void	main_imsg_compose_ldpe(int, pid_t, void *, u_int16_t);
-void	main_imsg_compose_lde(int, pid_t, void *, u_int16_t);
+void	main_imsg_compose_ldpe(int, pid_t, void *, uint16_t);
+void	main_imsg_compose_lde(int, pid_t, void *, uint16_t);
 void	merge_config(struct ldpd_conf *, struct ldpd_conf *);
 void	config_clear(struct ldpd_conf *);
-int	imsg_compose_event(struct imsgev *, u_int16_t, u_int32_t, pid_t,
-	    int, void *, u_int16_t);
+int	imsg_compose_event(struct imsgev *, uint16_t, uint32_t, pid_t,
+	    int, void *, uint16_t);
 void	imsg_event_add(struct imsgev *);
 void	evbuf_enqueue(struct evbuf *, struct ibuf *);
 void	evbuf_event_add(struct evbuf *);

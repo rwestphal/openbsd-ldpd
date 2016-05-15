@@ -33,22 +33,22 @@
 #include "ldpe.h"
 #include "log.h"
 
-#define	PFKEY2_CHUNK sizeof(u_int64_t)
+#define	PFKEY2_CHUNK sizeof(uint64_t)
 #define	ROUNDUP(x) (((x) + (PFKEY2_CHUNK - 1)) & ~(PFKEY2_CHUNK - 1))
 #define	IOV_CNT	20
 
-static u_int32_t	sadb_msg_seq = 0;
-static u_int32_t	pid = 0; /* should pid_t but pfkey needs u_int32_t */
-static int		fd;
+static uint32_t	sadb_msg_seq = 0;
+static uint32_t	pid = 0; /* should pid_t but pfkey needs uint32_t */
+static int	fd;
 
-int	pfkey_reply(int, u_int32_t *);
+int	pfkey_reply(int, uint32_t *);
 int	pfkey_send(int, uint8_t, uint8_t, uint8_t,
 	    struct in_addr *, struct in_addr *,
-	    u_int32_t, uint8_t, int, char *, uint8_t, int, char *,
+	    uint32_t, uint8_t, int, char *, uint8_t, int, char *,
 	    uint16_t, uint16_t);
-int	pfkey_sa_add(struct in_addr *, struct in_addr *, u_int8_t, char *,
-	    u_int32_t *);
-int	pfkey_sa_remove(struct in_addr *, struct in_addr *, u_int32_t *);
+int	pfkey_sa_add(struct in_addr *, struct in_addr *, uint8_t, char *,
+	    uint32_t *);
+int	pfkey_sa_remove(struct in_addr *, struct in_addr *, uint32_t *);
 
 int	pfkey_md5sig_establish(struct nbr *, struct nbr_params *nbrp);
 int	pfkey_md5sig_remove(struct nbr *);
@@ -70,7 +70,7 @@ addr2sa(struct in_addr *addr)
 
 int
 pfkey_send(int sd, uint8_t satype, uint8_t mtype, uint8_t dir,
-    struct in_addr *src, struct in_addr *dst, u_int32_t spi,
+    struct in_addr *src, struct in_addr *dst, uint32_t spi,
     uint8_t aalg, int alen, char *akey, uint8_t ealg, int elen, char *ekey,
     uint16_t sport, uint16_t dport)
 {
@@ -279,12 +279,12 @@ pfkey_read(int sd, struct sadb_msg *h)
 }
 
 int
-pfkey_reply(int sd, u_int32_t *spip)
+pfkey_reply(int sd, uint32_t *spip)
 {
 	struct sadb_msg hdr, *msg;
 	struct sadb_ext *ext;
 	struct sadb_sa *sa;
-	u_int8_t *data;
+	uint8_t *data;
 	ssize_t len;
 	int rv;
 
@@ -324,9 +324,9 @@ pfkey_reply(int sd, u_int32_t *spip)
 
 		msg = (struct sadb_msg *)data;
 		for (ext = (struct sadb_ext *)(msg + 1);
-		    (size_t)((u_int8_t *)ext - (u_int8_t *)msg) <
+		    (size_t)((uint8_t *)ext - (uint8_t *)msg) <
 		    msg->sadb_msg_len * PFKEY2_CHUNK;
-		    ext = (struct sadb_ext *)((u_int8_t *)ext +
+		    ext = (struct sadb_ext *)((uint8_t *)ext +
 		    ext->sadb_ext_len * PFKEY2_CHUNK)) {
 			if (ext->sadb_ext_type == SADB_EXT_SA) {
 				sa = (struct sadb_sa *) ext;
@@ -341,8 +341,8 @@ pfkey_reply(int sd, u_int32_t *spip)
 }
 
 int
-pfkey_sa_add(struct in_addr *src, struct in_addr *dst, u_int8_t keylen,
-    char *key, u_int32_t *spi)
+pfkey_sa_add(struct in_addr *src, struct in_addr *dst, uint8_t keylen,
+    char *key, uint32_t *spi)
 {
 	if (pfkey_send(fd, SADB_X_SATYPE_TCPSIGNATURE, SADB_GETSPI, 0,
 	    src, dst, 0, 0, 0, NULL, 0, 0, NULL, 0, 0) < 0)
@@ -358,7 +358,7 @@ pfkey_sa_add(struct in_addr *src, struct in_addr *dst, u_int8_t keylen,
 }
 
 int
-pfkey_sa_remove(struct in_addr *src, struct in_addr *dst, u_int32_t *spi)
+pfkey_sa_remove(struct in_addr *src, struct in_addr *dst, uint32_t *spi)
 {
 	if (pfkey_send(fd, SADB_X_SATYPE_TCPSIGNATURE, SADB_DELETE, 0,
 	    src, dst, *spi, 0, 0, NULL, 0, 0, NULL, 0, 0) < 0)
