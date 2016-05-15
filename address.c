@@ -36,9 +36,8 @@
 #include "lde.h"
 #include "log.h"
 
-extern struct ldpd_conf        *leconf;
-
-void	gen_address_list_tlv(struct ibuf *, uint16_t, int, struct if_addr *);
+static void	gen_address_list_tlv(struct ibuf *, uint16_t, int,
+		    struct if_addr *);
 
 void
 send_address(struct nbr *nbr, int af, struct if_addr *if_addr, int withdraw)
@@ -181,7 +180,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 	return (0);
 }
 
-void
+static void
 gen_address_list_tlv(struct ibuf *buf, uint16_t size, int af,
     struct if_addr *if_addr)
 {
