@@ -228,8 +228,10 @@ if_reset(struct iface *iface)
 	if_stop_hello_timer(iface);
 
 	/* try to cleanup */
-	inet_aton(AllRouters, &addr);
-	if_leave_group(iface, &addr);
+	if (global.ldp_disc_socket != -1) {
+		inet_aton(AllRouters, &addr);
+		if_leave_group(iface, &addr);
+	}
 
 	return (0);
 }
