@@ -1307,12 +1307,12 @@ clear_config(struct ldpd_conf *xconf)
 
 	while ((i = LIST_FIRST(&xconf->iface_list)) != NULL) {
 		LIST_REMOVE(i, entry);
-		if_del(i);
+		free(i);
 	}
 
 	while ((t = LIST_FIRST(&xconf->tnbr_list)) != NULL) {
 		LIST_REMOVE(t, entry);
-		tnbr_del(t);
+		free(t);
 	}
 
 	while ((n = LIST_FIRST(&xconf->nbrp_list)) != NULL) {
