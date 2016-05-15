@@ -414,7 +414,6 @@ lde_check_mapping(struct map *map, struct lde_nbr *ln)
 	struct fec_node		*fn;
 	struct fec_nh		*fnh;
 	struct lde_req		*lre;
-	struct lde_addr		*addr;
 	struct lde_map		*me;
 	struct l2vpn_pw		*pw;
 	int			 msgsource = 0;
@@ -447,13 +446,17 @@ lde_check_mapping(struct map *map, struct lde_nbr *ln)
 			/* LMp.10a */
 			lde_send_labelrelease(ln, fn, me->map.label);
 
-			LIST_FOREACH(fnh, &fn->nexthops, entry)
-				TAILQ_FOREACH(addr, &ln->addr_list, entry)
-					if (fnh->nexthop.s_addr ==
-					    addr->addr.s_addr) {
-						lde_send_delete_klabel(fn, fnh);
-						fnh->remote_label = NO_LABEL;
-					}
+			/*
+			 * Can not use lde_nbr_find_by_addr() because there's
+			 * the possibility of multipath.
+			 */
+			LIST_FOREACH(fnh, &fn->nexthops, entry) {
+				if (lde_address_find(ln, &fnh->nexthop) == NULL)
+					continue;
+
+				lde_send_delete_klabel(fn, fnh);
+				fnh->remote_label = NO_LABEL;
+			}
 		}
 	}
 
