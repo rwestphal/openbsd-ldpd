@@ -266,7 +266,7 @@ l2vpn_pw_negotiate(struct lde_nbr *ln, struct fec_node *fn, struct map *map)
 		} else if (!(map->flags & F_MAP_PW_CWORD) &&
 		    (pw->flags & F_PW_CONTROLWORD_CONF)) {
 			/* TODO append a "Wrong C-bit" status code */
-			lde_send_labelwithdraw(ln, fn);
+			lde_send_labelwithdraw(ln, fn, NO_LABEL);
 
 			pw->flags &= ~F_PW_CONTROLWORD;
 			lde_send_labelmapping(ln, fn, 1);

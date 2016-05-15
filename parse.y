@@ -125,7 +125,7 @@ typedef struct {
 
 %}
 
-%token	INTERFACE TNEIGHBOR ROUTERID FIBUPDATE
+%token	INTERFACE TNEIGHBOR ROUTERID FIBUPDATE EXPNULL
 %token	LHELLOHOLDTIME LHELLOINTERVAL
 %token	THELLOHOLDTIME THELLOINTERVAL
 %token	THELLOACCEPT
@@ -214,6 +214,12 @@ conf_main	: ROUTERID STRING {
 				conf->flags &= ~LDPD_FLAG_TH_ACCEPT;
 			else
 				conf->flags |= LDPD_FLAG_TH_ACCEPT;
+		}
+		| EXPNULL yesno {
+			if ($2 == 0)
+				conf->flags &= ~LDPD_FLAG_EXPNULL;
+			else
+				conf->flags |= LDPD_FLAG_EXPNULL;
 		}
 		| KEEPALIVE NUMBER {
 			if ($2 < MIN_KEEPALIVE ||
@@ -649,6 +655,7 @@ lookup(char *s)
 		{"control-word",		CONTROLWORD},
 		{"ethernet",			ETHERNET},
 		{"ethernet-tagged",		ETHERNETTAGGED},
+		{"explicit-null",		EXPNULL},
 		{"fib-update",			FIBUPDATE},
 		{"interface",			INTERFACE},
 		{"keepalive",			KEEPALIVE},

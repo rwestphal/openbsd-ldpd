@@ -617,12 +617,32 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	struct nbr_params	*nbrp, *ntmp, *xn;
 	struct l2vpn		*l2vpn, *ltmp, *xl;
 	struct nbr		*nbr;
+	int			 egress_label_changed = 0;
 
 	/* change of rtr_id needs a restart */
-	conf->flags = xconf->flags;
 	conf->keepalive = xconf->keepalive;
 	conf->thello_holdtime = xconf->thello_holdtime;
 	conf->thello_interval = xconf->thello_interval;
+
+	/* update flags */
+	if ((conf->flags & LDPD_FLAG_EXPNULL) !=
+	    (xconf->flags & LDPD_FLAG_EXPNULL))
+		egress_label_changed = 1;
+
+	conf->flags = xconf->flags;
+
+	if (egress_label_changed) {
+		switch (ldpd_process) {
+		case PROC_LDE_ENGINE:
+			lde_change_egress_label(conf->flags & LDPD_FLAG_EXPNULL);
+			break;
+		case PROC_MAIN:
+			kr_change_egress_label(conf->flags & LDPD_FLAG_EXPNULL);
+			break;
+		default:
+			break;
+		}
+	}
 
 	/* merge interfaces */
 	LIST_FOREACH_SAFE(iface, &conf->iface_list, entry, itmp) {

@@ -120,7 +120,8 @@ void		lde_map2fec(struct map *, struct in_addr, struct fec *);
 void	lde_send_change_klabel(struct fec_node *, struct fec_nh *);
 void	lde_send_delete_klabel(struct fec_node *, struct fec_nh *);
 void	lde_send_labelmapping(struct lde_nbr *, struct fec_node *, int);
-void	lde_send_labelwithdraw(struct lde_nbr *, struct fec_node *);
+void	lde_send_labelwithdraw(struct lde_nbr *, struct fec_node *, uint32_t);
+void	lde_send_labelwithdraw_all(struct fec_node *, uint32_t);
 void	lde_send_labelrelease(struct lde_nbr *, struct fec_node *, uint32_t);
 void	lde_send_notification(uint32_t, uint32_t, uint32_t, uint32_t);
 
@@ -131,6 +132,7 @@ void		lde_req_del(struct lde_nbr *, struct lde_req *, int);
 struct lde_wdraw *lde_wdraw_add(struct lde_nbr *, struct fec_node *);
 void		  lde_wdraw_del(struct lde_nbr *, struct lde_wdraw *);
 struct lde_nbr *lde_find_address(struct in_addr);
+void		lde_change_egress_label(int);
 
 int			 lde_address_add(struct lde_nbr *, struct in_addr *);
 struct lde_nbr_address	*lde_address_find(struct lde_nbr *, struct in_addr *);
@@ -148,6 +150,7 @@ void		 fec_snap(struct lde_nbr *);
 void		 fec_tree_clear(void);
 
 struct fec_nh	*fec_nh_find(struct fec_node *, struct in_addr);
+uint32_t	 egress_label(enum fec_type);
 void		 lde_kernel_insert(struct fec *, struct in_addr, int, void *);
 void		 lde_kernel_remove(struct fec *, struct in_addr);
 void		 lde_check_mapping(struct map *, struct lde_nbr *);

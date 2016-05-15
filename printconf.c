@@ -50,6 +50,11 @@ print_mainconf(struct ldpd_conf *conf)
 	else
 		printf("targeted-hello-accept no\n");
 
+	if (conf->flags & LDPD_FLAG_EXPNULL)
+		printf("explicit-null yes\n");
+	else
+		printf("explicit-null no\n");
+
 	printf("keepalive %u\n", conf->keepalive);
 }
 

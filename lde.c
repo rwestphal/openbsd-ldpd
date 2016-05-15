@@ -56,6 +56,14 @@ struct ldpd_conf	*ldeconf = NULL, *nconf = NULL;
 struct imsgev		*iev_ldpe;
 struct imsgev		*iev_main;
 
+static __inline int lde_nbr_compare(struct lde_nbr *, struct lde_nbr *);
+
+RB_HEAD(nbr_tree, lde_nbr);
+RB_PROTOTYPE(nbr_tree, lde_nbr, entry, lde_nbr_compare)
+RB_GENERATE(nbr_tree, lde_nbr, entry, lde_nbr_compare)
+
+struct nbr_tree lde_nbrs = RB_INITIALIZER(&lde_nbrs);
+
 /* ARGSUSED */
 void
 lde_sig_handler(int sig, short event, void *arg)
@@ -737,7 +745,7 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn, int single)
 }
 
 void
-lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
+lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 {
 	struct lde_wdraw	*lw;
 	struct map		 map;
@@ -761,7 +769,7 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 	} else {
 		memset(&map, 0, sizeof(map));
 		map.type = FEC_WILDCARD;
-		map.label = NO_LABEL;
+		map.label = label;
 	}
 
 	/* SWd.1: send label withdraw. */
@@ -786,6 +794,15 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 			lw->label = map.label;
 		}
 	}
+}
+
+void
+lde_send_labelwithdraw_all(struct fec_node *fn, uint32_t label)
+{
+	struct lde_nbr		*ln;
+
+	RB_FOREACH(ln, nbr_tree, &lde_nbrs)
+		lde_send_labelwithdraw(ln, fn, label);
 }
 
 void
@@ -834,14 +851,6 @@ lde_send_notification(uint32_t peerid, uint32_t code, uint32_t msgid,
 	lde_imsg_compose_ldpe(IMSG_NOTIFICATION_SEND, peerid, 0,
 	    &nm, sizeof(nm));
 }
-
-static __inline int lde_nbr_compare(struct lde_nbr *, struct lde_nbr *);
-
-RB_HEAD(nbr_tree, lde_nbr);
-RB_PROTOTYPE(nbr_tree, lde_nbr, entry, lde_nbr_compare)
-RB_GENERATE(nbr_tree, lde_nbr, entry, lde_nbr_compare)
-
-struct nbr_tree lde_nbrs = RB_INITIALIZER(&lde_nbrs);
 
 static __inline int
 lde_nbr_compare(struct lde_nbr *a, struct lde_nbr *b)
@@ -1107,4 +1116,35 @@ lde_find_address(struct in_addr address)
 	}
 
 	return (NULL);
+}
+
+void
+lde_change_egress_label(int was_implicit)
+{
+	struct lde_nbr	*ln;
+	struct fec	*f;
+	struct fec_node	*fn;
+	int		 count = 0;
+
+	/* explicit withdraw */
+	if (was_implicit)
+		lde_send_labelwithdraw_all(NULL, MPLS_LABEL_IMPLNULL);
+	else
+		lde_send_labelwithdraw_all(NULL, MPLS_LABEL_IPV4NULL);
+
+	/* update label of connected prefixes */
+	RB_FOREACH(ln, nbr_tree, &lde_nbrs) {
+		RB_FOREACH(f, fec_tree, &ft) {
+			fn = (struct fec_node *)f;
+			if (fn->local_label > MPLS_LABEL_RESERVED_MAX)
+				continue;
+
+			fn->local_label = egress_label(fn->fec.type);
+			lde_send_labelmapping(ln, fn, 0);
+			count++;
+		}
+		if (count > 0)
+			lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END,
+			    ln->peerid, 0, NULL, 0);
+	}
 }

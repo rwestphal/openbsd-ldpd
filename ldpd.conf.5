@@ -100,6 +100,17 @@ allow LDP sessions to be established with remote neighbors that have not been
 specifically configured.
 The default is
 .Ic no .
+.Pp
+.It Xo
+.Ic explicit-null
+.Pq Ic yes Ns | Ns Ic no
+.Xc
+If set to
+.Ic yes ,
+advertise explicit-null labels in place of implicit-null labels for directly
+connected prefixes.
+The default is
+.Ic no .
 .El
 .Sh INTERFACES
 Each interface can have several parameters configured individually, otherwise

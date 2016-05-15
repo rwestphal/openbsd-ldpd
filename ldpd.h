@@ -333,6 +333,7 @@ struct ldpd_conf {
 };
 #define	LDPD_FLAG_NO_FIB_UPDATE	0x0001
 #define	LDPD_FLAG_TH_ACCEPT	0x0002
+#define	LDPD_FLAG_EXPNULL	0x0004
 
 struct ldpd_global {
 	int			 cmd_opts;
@@ -451,6 +452,7 @@ int		 kr_delete(struct kroute *);
 void		 kr_shutdown(void);
 void		 kr_fib_couple(void);
 void		 kr_fib_decouple(void);
+void		 kr_change_egress_label(int);
 void		 kr_dispatch_msg(int, short, void *);
 void		 kr_show_route(struct imsg *);
 void		 kr_ifinfo(char *, pid_t);

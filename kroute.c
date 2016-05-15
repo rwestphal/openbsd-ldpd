@@ -380,6 +380,28 @@ kr_fib_decouple(void)
 	log_info("kernel routing table decoupled");
 }
 
+void
+kr_change_egress_label(int was_implicit)
+{
+	struct kroute_prefix	*kp;
+	struct kroute_priority	*kprio;
+	struct kroute_node	*kn;
+
+	RB_FOREACH(kp, kroute_tree, &krt) {
+		TAILQ_FOREACH(kprio, &kp->priorities, entry) {
+			TAILQ_FOREACH(kn, &kprio->nexthops, entry) {
+				if (kn->r.local_label > MPLS_LABEL_RESERVED_MAX)
+					continue;
+
+				if (!was_implicit)
+					kn->r.local_label = MPLS_LABEL_IMPLNULL;
+				else
+					kn->r.local_label = MPLS_LABEL_IPV4NULL;
+			}
+		}
+	}
+}
+
 /* ARGSUSED */
 void
 kr_dispatch_msg(int fd, short event, void *bula)
@@ -1028,8 +1050,11 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 	if (kr_state.fib_sync == 0)
 		return (0);
 
-	/* Implicit NULL label should not be added to the FIB */
-	if (family == AF_MPLS && kroute->local_label == MPLS_LABEL_IMPLNULL)
+	/*
+	 * Reserved labels (implicit and explicit NULL) should not be added
+	 * to the FIB.
+	 */
+	if (family == AF_MPLS && kroute->local_label < MPLS_LABEL_RESERVED_MAX)
 		return (0);
 
 	/* initialize header */
