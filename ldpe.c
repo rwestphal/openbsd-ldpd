@@ -109,8 +109,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating discovery socket");
 
-	if (if_set_reuse(global.ldp_disc_socket, 1) == -1)
-		fatal("if_set_reuse");
+	if (sock_set_reuse(global.ldp_disc_socket, 1) == -1)
+		fatal("sock_set_reuse");
 
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
@@ -120,17 +120,17 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 		fatal("error binding discovery socket");
 
 	/* set some defaults */
-	if (if_set_mcast_ttl(global.ldp_disc_socket,
+	if (sock_set_ipv4_mcast_ttl(global.ldp_disc_socket,
 	    IP_DEFAULT_MULTICAST_TTL) == -1)
-		fatal("if_set_mcast_ttl");
-	if (if_set_mcast_loop(global.ldp_disc_socket) == -1)
-		fatal("if_set_mcast_loop");
-	if (if_set_tos(global.ldp_disc_socket,
+		fatal("sock_set_ipv4_mcast_ttl");
+	if (sock_set_ipv4_mcast_loop(global.ldp_disc_socket) == -1)
+		fatal("sock_set_ipv4_mcast_loop");
+	if (sock_set_ipv4_tos(global.ldp_disc_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
-		fatal("if_set_tos");
-	if (if_set_recvif(global.ldp_disc_socket, 1) == -1)
-		fatal("if_set_recvif");
-	if_set_recvbuf(global.ldp_disc_socket);
+		fatal("sock_set_ipv4_tos");
+	if (sock_set_ipv4_recvif(global.ldp_disc_socket, 1) == -1)
+		fatal("sock_set_ipv4_recvif");
+	sock_set_recvbuf(global.ldp_disc_socket);
 
 	/* create the extended discovery UDP socket */
 	if ((global.ldp_edisc_socket = socket(AF_INET,
@@ -138,8 +138,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating extended discovery socket");
 
-	if (if_set_reuse(global.ldp_edisc_socket, 1) == -1)
-		fatal("if_set_reuse");
+	if (sock_set_reuse(global.ldp_edisc_socket, 1) == -1)
+		fatal("sock_set_reuse");
 
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
@@ -149,12 +149,12 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 		fatal("error binding extended discovery socket");
 
 	/* set some defaults */
-	if (if_set_tos(global.ldp_edisc_socket,
+	if (sock_set_ipv4_tos(global.ldp_edisc_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
-		fatal("if_set_tos");
-	if (if_set_recvif(global.ldp_edisc_socket, 1) == -1)
-		fatal("if_set_recvif");
-	if_set_recvbuf(global.ldp_edisc_socket);
+		fatal("sock_set_ipv4_tos");
+	if (sock_set_ipv4_recvif(global.ldp_edisc_socket, 1) == -1)
+		fatal("sock_set_ipv4_recvif");
+	sock_set_recvbuf(global.ldp_edisc_socket);
 
 	/* create the session TCP socket */
 	if ((global.ldp_session_socket = socket(AF_INET,
@@ -162,8 +162,8 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    IPPROTO_TCP)) == -1)
 		fatal("error creating session socket");
 
-	if (if_set_reuse(global.ldp_session_socket, 1) == -1)
-		fatal("if_set_reuse");
+	if (sock_set_reuse(global.ldp_session_socket, 1) == -1)
+		fatal("sock_set_reuse");
 
 	sess_addr.sin_family = AF_INET;
 	sess_addr.sin_port = htons(LDP_PORT);
@@ -186,9 +186,9 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	}
 
 	/* set some defaults */
-	if (if_set_tos(global.ldp_session_socket,
+	if (sock_set_ipv4_tos(global.ldp_session_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
-		fatal("if_set_tos");
+		fatal("sock_set_ipv4_tos");
 
 	if ((pw = getpwnam(LDPD_USER)) == NULL)
 		fatal("getpwnam");

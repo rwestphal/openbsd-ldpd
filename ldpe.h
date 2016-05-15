@@ -185,13 +185,6 @@ struct ctl_iface	*if_to_ctl(struct iface *);
 
 int	 if_join_group(struct iface *, struct in_addr *);
 int	 if_leave_group(struct iface *, struct in_addr *);
-int	 if_set_mcast(struct iface *);
-int	 if_set_recvif(int, int);
-void	 if_set_recvbuf(int);
-int	 if_set_mcast_loop(int);
-int	 if_set_mcast_ttl(int, uint8_t);
-int	 if_set_tos(int, int);
-int	 if_set_reuse(int, int);
 
 /* adjacency.c */
 struct adj	*adj_new(struct nbr *, struct hello_source *, struct in_addr);
