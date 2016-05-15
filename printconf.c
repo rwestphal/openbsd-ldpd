@@ -1,6 +1,8 @@
 /*	$OpenBSD$ */
 
 /*
+ * Copyright (c) 2013, 2016 Renato Westphal <renato@openbsd.org>
+ * Copyright (c) 2009 Michele Marchetto <michele@openbsd.org>
  * Copyright (c) 2004, 2005, 2008 Esben Norby <norby@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
