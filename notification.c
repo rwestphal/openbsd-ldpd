@@ -55,7 +55,7 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 	if (nm->flags & F_NOTIF_FEC) {
 		size += TLV_HDR_LEN;
 		switch (nm->fec.type) {
-		case FEC_PWID:
+		case MAP_TYPE_PWID:
 			size += FEC_PWID_ELM_MIN_LEN;
 			if (nm->fec.flags & F_MAP_PW_ID)
 				size += sizeof(uint32_t);
@@ -198,8 +198,8 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 		}
 
 		switch (nm.fec.type) {
-		case FEC_PWID:
-		case FEC_GENPWID:
+		case MAP_TYPE_PWID:
+		case MAP_TYPE_GENPWID:
 			break;
 		default:
 			send_notification_nbr(nbr, S_BAD_TLV_VAL,

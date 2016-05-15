@@ -81,14 +81,14 @@ send_labelmessage(struct nbr *nbr, uint16_t type, struct mapping_head *mh)
 		msg_size = LDP_MSG_SIZE + TLV_HDR_LEN;
 
 		switch (me->map.type) {
-		case FEC_WILDCARD:
+		case MAP_TYPE_WILDCARD:
 			msg_size += FEC_ELM_WCARD_LEN;
 			break;
-		case FEC_PREFIX:
+		case MAP_TYPE_PREFIX:
 			msg_size += FEC_ELM_PREFIX_MIN_LEN +
 			    PREFIX_SIZE(me->map.fec.ipv4.prefixlen);
 			break;
-		case FEC_PWID:
+		case MAP_TYPE_PWID:
 			msg_size += FEC_PWID_ELM_MIN_LEN;
 
 			if (me->map.flags & F_MAP_PW_ID)
@@ -180,7 +180,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		if ((tlen = tlv_decode_fec_elm(nbr, &lm, buf, feclen,
 		    &map)) == -1)
 			goto err;
-		if (map.type == FEC_PWID &&
+		if (map.type == MAP_TYPE_PWID &&
 		    type == MSG_TYPE_LABELMAPPING &&
 		    !(map.flags & F_MAP_PW_ID)) {
 			send_notification_nbr(nbr, S_MISS_MSG, lm.msgid,
@@ -192,7 +192,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		 * The Wildcard FEC Element can be used only in the
 		 * Label Withdraw and Label Release messages.
 		 */
-		if (map.type == FEC_WILDCARD) {
+		if (map.type == MAP_TYPE_WILDCARD) {
 			switch (type) {
 			case MSG_TYPE_LABELMAPPING:
 			case MSG_TYPE_LABELREQUEST:
@@ -491,12 +491,12 @@ gen_fec_tlv(struct ibuf *buf, struct map *map)
 	ft.type = htons(TLV_TYPE_FEC);
 
 	switch (map->type) {
-	case FEC_WILDCARD:
+	case MAP_TYPE_WILDCARD:
 		ft.length = htons(sizeof(uint8_t));
 		ibuf_add(buf, &ft, sizeof(ft));
 		ibuf_add(buf, &map->type, sizeof(map->type));
 		break;
-	case FEC_PREFIX:
+	case MAP_TYPE_PREFIX:
 		len = PREFIX_SIZE(map->fec.ipv4.prefixlen);
 		ft.length = htons(sizeof(map->type) + sizeof(family) +
 		    sizeof(map->fec.ipv4.prefixlen) + len);
@@ -510,7 +510,7 @@ gen_fec_tlv(struct ibuf *buf, struct map *map)
 		if (len)
 			ibuf_add(buf, &map->fec.ipv4.prefix, len);
 		break;
-	case FEC_PWID:
+	case MAP_TYPE_PWID:
 		if (map->flags & F_MAP_PW_ID)
 			pw_len += sizeof(uint32_t);
 		if (map->flags & F_MAP_PW_IFMTU)
@@ -561,7 +561,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 	off += sizeof(uint8_t);
 
 	switch (map->type) {
-	case FEC_WILDCARD:
+	case MAP_TYPE_WILDCARD:
 		if (len == FEC_ELM_WCARD_LEN)
 			return (off);
 		else {
@@ -570,7 +570,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 			return (-1);
 		}
 		break;
-	case FEC_PREFIX:
+	case MAP_TYPE_PREFIX:
 		if (len < FEC_ELM_PREFIX_MIN_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, lm->msgid,
 			    lm->type);
@@ -604,7 +604,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 
 		return (off + PREFIX_SIZE(map->fec.ipv4.prefixlen));
 		break;
-	case FEC_PWID:
+	case MAP_TYPE_PWID:
 		if (len < FEC_PWID_ELM_MIN_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, lm->msgid,
 			    lm->type);
