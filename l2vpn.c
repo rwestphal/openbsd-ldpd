@@ -355,20 +355,21 @@ l2vpn_sync_pws(struct in_addr addr)
 
 	LIST_FOREACH(l2vpn, &ldeconf->l2vpn_list, entry) {
 		LIST_FOREACH(pw, &l2vpn->pw_list, entry) {
-			if (pw->lsr_id.s_addr == addr.s_addr) {
-				l2vpn_pw_fec(pw, &fec);
-				fn = (struct fec_node *)fec_find(&ft, &fec);
-				if (fn == NULL)
-					continue;
-				fnh = fec_nh_find(fn, pw->lsr_id);
-				if (fnh == NULL)
-					continue;
+			if (pw->lsr_id.s_addr != addr.s_addr)
+				continue;
 
-				if (l2vpn_pw_ok(pw, fnh))
-					lde_send_change_klabel(fn, fnh);
-				else
-					lde_send_delete_klabel(fn, fnh);
-			}
+			l2vpn_pw_fec(pw, &fec);
+			fn = (struct fec_node *)fec_find(&ft, &fec);
+			if (fn == NULL)
+				continue;
+			fnh = fec_nh_find(fn, pw->lsr_id);
+			if (fnh == NULL)
+				continue;
+
+			if (l2vpn_pw_ok(pw, fnh))
+				lde_send_change_klabel(fn, fnh);
+			else
+				lde_send_delete_klabel(fn, fnh);
 		}
 	}
 }

@@ -20,9 +20,28 @@
  */
 
 #include <sys/types.h>
+#include <string.h>
 
 #include "ldpd.h"
 #include "log.h"
+
+uint8_t
+mask2prefixlen(in_addr_t ina)
+{
+	if (ina == 0)
+		return (0);
+	else
+		return (33 - ffs(ntohl(ina)));
+}
+
+in_addr_t
+prefixlen2mask(uint8_t prefixlen)
+{
+	if (prefixlen == 0)
+		return (0);
+
+	return (htonl(0xffffffff << (32 - prefixlen)));
+}
 
 int
 bad_ip_addr(struct in_addr addr)

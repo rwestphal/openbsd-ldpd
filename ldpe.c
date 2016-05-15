@@ -274,8 +274,8 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			if (imsg.hdr.len != IMSG_HEADER_SIZE +
 			    sizeof(struct kif))
 				fatalx("IFSTATUS imsg with wrong len");
-
 			kif = imsg.data;
+
 			iface = if_lookup(leconf, kif->ifindex);
 			if (!iface)
 				break;

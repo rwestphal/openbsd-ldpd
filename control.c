@@ -38,6 +38,8 @@ struct ctl_conn	*control_connbyfd(int);
 struct ctl_conn	*control_connbypid(pid_t);
 void		 control_close(int);
 
+struct ctl_conns	 ctl_conns;
+
 int control_fd;
 
 int
@@ -88,7 +90,6 @@ control_init(void)
 int
 control_listen(void)
 {
-
 	if (listen(control_fd, CONTROL_BACKLOG) == -1) {
 		log_warn("%s: listen", __func__);
 		return (-1);
