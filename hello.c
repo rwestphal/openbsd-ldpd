@@ -144,7 +144,7 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 
 		if (!tnbr) {
 			if (!((flags & REQUEST_TARG_HELLO) &&
-			    leconf->flags & LDPD_FLAG_TH_ACCEPT))
+			    leconf->flags & F_LDPD_TH_ACCEPT))
 				return;
 
 			tnbr = tnbr_new(leconf, src);
@@ -279,8 +279,8 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, struct in_addr *addr,
     uint32_t *conf_number)
 {
 	struct tlv	tlv;
-	int		cons = 0;
 	uint16_t	tlv_len;
+	int		total = 0;
 
 	memset(addr, 0, sizeof(*addr));
 	*conf_number = 0;
@@ -308,8 +308,8 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, struct in_addr *addr,
 		}
 		buf += TLV_HDR_LEN + tlv_len;
 		len -= TLV_HDR_LEN + tlv_len;
-		cons += TLV_HDR_LEN + tlv_len;
+		total += TLV_HDR_LEN + tlv_len;
 	}
 
-	return (cons);
+	return (total);
 }

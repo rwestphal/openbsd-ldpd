@@ -297,7 +297,7 @@ fec_nh_del(struct fec_nh *fnh)
 uint32_t
 egress_label(enum fec_type fec_type)
 {
-	if (!(ldeconf->flags & LDPD_FLAG_EXPNULL))
+	if (!(ldeconf->flags & F_LDPD_EXPNULL))
 		return (MPLS_LABEL_IMPLNULL);
 
 	switch (fec_type) {
@@ -402,7 +402,7 @@ lde_check_mapping(struct map *map, struct lde_nbr *ln)
 	struct fec_node		*fn;
 	struct fec_nh		*fnh;
 	struct lde_req		*lre;
-	struct lde_nbr_address	*addr;
+	struct lde_addr		*addr;
 	struct lde_map		*me;
 	struct l2vpn_pw		*pw;
 	int			 msgsource = 0;

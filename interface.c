@@ -100,7 +100,7 @@ if_init(struct iface *iface)
 	/* set event handlers for interface */
 	evtimer_set(&iface->hello_timer, if_hello_timer, iface);
 
-	iface->discovery_fd = global.ldp_discovery_socket;
+	iface->discovery_fd = global.ldp_disc_socket;
 }
 
 struct iface *
@@ -116,29 +116,29 @@ if_lookup(struct ldpd_conf *xconf, unsigned short ifindex)
 }
 
 struct if_addr *
-if_addr_new(struct kaddr *kaddr)
+if_addr_new(struct kaddr *ka)
 {
 	struct if_addr	*if_addr;
 
 	if ((if_addr = calloc(1, sizeof(*if_addr))) == NULL)
 		fatal(__func__);
 
-	if_addr->addr.s_addr = kaddr->addr.s_addr;
-	if_addr->mask.s_addr = kaddr->mask.s_addr;
-	if_addr->dstbrd.s_addr = kaddr->dstbrd.s_addr;
+	if_addr->addr.s_addr = ka->addr.s_addr;
+	if_addr->mask.s_addr = ka->mask.s_addr;
+	if_addr->dstbrd.s_addr = ka->dstbrd.s_addr;
 
 	return (if_addr);
 }
 
 struct if_addr *
-if_addr_lookup(struct if_addr_head *addr_list, struct kaddr *kaddr)
+if_addr_lookup(struct if_addr_head *addr_list, struct kaddr *ka)
 {
 	struct if_addr *if_addr;
 
 	LIST_FOREACH(if_addr, addr_list, entry)
-		if (if_addr->addr.s_addr == kaddr->addr.s_addr &&
-		    if_addr->mask.s_addr == kaddr->mask.s_addr &&
-		    if_addr->dstbrd.s_addr == kaddr->dstbrd.s_addr)
+		if (if_addr->addr.s_addr == ka->addr.s_addr &&
+		    if_addr->mask.s_addr == ka->mask.s_addr &&
+		    if_addr->dstbrd.s_addr == ka->dstbrd.s_addr)
 			return (if_addr);
 
 	return (NULL);

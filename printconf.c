@@ -40,17 +40,17 @@ print_mainconf(struct ldpd_conf *conf)
 {
 	printf("router-id %s\n\n", inet_ntoa(conf->rtr_id));
 
-	if (conf->flags & LDPD_FLAG_NO_FIB_UPDATE)
+	if (conf->flags & F_LDPD_NO_FIB_UPDATE)
 		printf("fib-update no\n");
 	else
 		printf("fib-update yes\n");
 
-	if (conf->flags & LDPD_FLAG_TH_ACCEPT)
+	if (conf->flags & F_LDPD_TH_ACCEPT)
 		printf("targeted-hello-accept yes\n");
 	else
 		printf("targeted-hello-accept no\n");
 
-	if (conf->flags & LDPD_FLAG_EXPNULL)
+	if (conf->flags & F_LDPD_EXPNULL)
 		printf("explicit-null yes\n");
 	else
 		printf("explicit-null no\n");
@@ -122,7 +122,7 @@ print_pw(struct l2vpn_pw *pw)
 		printf("\t\tstatus-tlv yes\n");
 	else
 		printf("\t\tstatus-tlv no\n");
-	if (pw->flags & F_PW_CONTROLWORD_CONF)
+	if (pw->flags & F_PW_CWORD_CONF)
 		printf("\t\tcontrol-word yes\n");
 	else
 		printf("\t\tcontrol-word no\n");

@@ -292,8 +292,8 @@ struct l2vpn_pw {
 };
 #define F_PW_STATUSTLV_CONF	0x01	/* status tlv configured */
 #define F_PW_STATUSTLV		0x02	/* status tlv negotiated */
-#define F_PW_CONTROLWORD_CONF	0x04	/* control word configured */
-#define F_PW_CONTROLWORD	0x08	/* control word negotiated */
+#define F_PW_CWORD_CONF		0x04	/* control word configured */
+#define F_PW_CWORD		0x08	/* control word negotiated */
 #define F_PW_STATUS_UP		0x10	/* pseudowire is operational */
 
 struct l2vpn {
@@ -334,16 +334,16 @@ struct ldpd_conf {
 	uint16_t		 thello_interval;
 	int			 flags;
 };
-#define	LDPD_FLAG_NO_FIB_UPDATE	0x0001
-#define	LDPD_FLAG_TH_ACCEPT	0x0002
-#define	LDPD_FLAG_EXPNULL	0x0004
+#define	F_LDPD_NO_FIB_UPDATE	0x0001
+#define	F_LDPD_TH_ACCEPT	0x0002
+#define	F_LDPD_EXPNULL		0x0004
 
 struct ldpd_global {
 	int			 cmd_opts;
 	time_t			 uptime;
 	int			 pfkeysock;
-	int			 ldp_discovery_socket;
-	int			 ldp_ediscovery_socket;
+	int			 ldp_disc_socket;
+	int			 ldp_edisc_socket;
 	int			 ldp_session_socket;
 	struct if_addr_head	 addr_list;
 };

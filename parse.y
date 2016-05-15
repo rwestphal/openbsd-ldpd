@@ -220,21 +220,21 @@ conf_main	: ROUTERID STRING {
 		}
 		| FIBUPDATE yesno {
 			if ($2 == 0)
-				conf->flags |= LDPD_FLAG_NO_FIB_UPDATE;
+				conf->flags |= F_LDPD_NO_FIB_UPDATE;
 			else
-				conf->flags &= ~LDPD_FLAG_NO_FIB_UPDATE;
+				conf->flags &= ~F_LDPD_NO_FIB_UPDATE;
 		}
 		| THELLOACCEPT yesno {
 			if ($2 == 0)
-				conf->flags &= ~LDPD_FLAG_TH_ACCEPT;
+				conf->flags &= ~F_LDPD_TH_ACCEPT;
 			else
-				conf->flags |= LDPD_FLAG_TH_ACCEPT;
+				conf->flags |= F_LDPD_TH_ACCEPT;
 		}
 		| EXPNULL yesno {
 			if ($2 == 0)
-				conf->flags &= ~LDPD_FLAG_EXPNULL;
+				conf->flags &= ~F_LDPD_EXPNULL;
 			else
-				conf->flags |= LDPD_FLAG_EXPNULL;
+				conf->flags |= F_LDPD_EXPNULL;
 		}
 		| KEEPALIVE NUMBER {
 			if ($2 < MIN_KEEPALIVE || $2 > MAX_KEEPALIVE) {
@@ -337,11 +337,11 @@ pw_defaults	: STATUSTLV yesno {
 		}
 		| CONTROLWORD yesno {
 			if ($2 == 1) {
-				defs->pwflags |= F_PW_CONTROLWORD_CONF;
-				defs->pwflags |= F_PW_CONTROLWORD;
+				defs->pwflags |= F_PW_CWORD_CONF;
+				defs->pwflags |= F_PW_CWORD;
 			} else {
-				defs->pwflags &= ~F_PW_CONTROLWORD_CONF;
-				defs->pwflags &= ~F_PW_CONTROLWORD;
+				defs->pwflags &= ~F_PW_CWORD_CONF;
+				defs->pwflags &= ~F_PW_CWORD;
 			}
 		}
 		;
@@ -1056,8 +1056,8 @@ parse_config(char *filename)
 	conf->thello_interval = DEFAULT_HELLO_INTERVAL;
 	defs->pwflags |= F_PW_STATUSTLV_CONF;
 	defs->pwflags |= F_PW_STATUSTLV;
-	defs->pwflags |= F_PW_CONTROLWORD_CONF;
-	defs->pwflags |= F_PW_CONTROLWORD;
+	defs->pwflags |= F_PW_CWORD_CONF;
+	defs->pwflags |= F_PW_CWORD;
 
 	if ((file = pushfile(filename,
 	    !(global.cmd_opts & LDPD_OPT_NOACTION))) == NULL) {

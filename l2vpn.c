@@ -198,8 +198,8 @@ l2vpn_pw_reset(struct l2vpn_pw *pw)
 {
 	pw->remote_group = 0;
 	pw->remote_mtu = 0;
-	if (!(pw->flags & F_PW_CONTROLWORD_CONF))
-		pw->flags &= ~F_PW_CONTROLWORD;
+	if (!(pw->flags & F_PW_CWORD_CONF))
+		pw->flags &= ~F_PW_CWORD;
 	if (!(pw->flags & F_PW_STATUSTLV_CONF))
 		pw->flags &= ~F_PW_STATUSTLV;
 }
@@ -260,25 +260,25 @@ l2vpn_pw_negotiate(struct lde_nbr *ln, struct fec_node *fn, struct map *map)
 	/* RFC4447 - Section 6.2: control word negotiation */
 	if (fec_find(&ln->sent_map, &fn->fec)) {
 		if ((map->flags & F_MAP_PW_CWORD) &&
-		    !(pw->flags & F_PW_CONTROLWORD_CONF)) {
+		    !(pw->flags & F_PW_CWORD_CONF)) {
 			/* ignore the received label mapping */
 			return (1);
 		} else if (!(map->flags & F_MAP_PW_CWORD) &&
-		    (pw->flags & F_PW_CONTROLWORD_CONF)) {
+		    (pw->flags & F_PW_CWORD_CONF)) {
 			/* TODO append a "Wrong C-bit" status code */
 			lde_send_labelwithdraw(ln, fn, NO_LABEL);
 
-			pw->flags &= ~F_PW_CONTROLWORD;
+			pw->flags &= ~F_PW_CWORD;
 			lde_send_labelmapping(ln, fn, 1);
 		}
 	} else if (map->flags & F_MAP_PW_CWORD) {
-		if (pw->flags & F_PW_CONTROLWORD_CONF)
-			pw->flags |= F_PW_CONTROLWORD;
+		if (pw->flags & F_PW_CWORD_CONF)
+			pw->flags |= F_PW_CWORD;
 		else
 			/* act as if no label mapping had been received */
 			return (1);
 	} else
-		pw->flags &= ~F_PW_CONTROLWORD;
+		pw->flags &= ~F_PW_CWORD;
 
 	/* RFC4447 - Section 5.4.3: pseudowire status negotiation */
 	if (fec_find(&ln->recv_map, &fn->fec) == NULL &&

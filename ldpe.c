@@ -103,57 +103,57 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	global.pfkeysock = pfkey_init(&sysdep);
 
 	/* create the discovery UDP socket */
-	if ((global.ldp_discovery_socket = socket(AF_INET,
+	if ((global.ldp_disc_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating discovery socket");
 
-	if (if_set_reuse(global.ldp_discovery_socket, 1) == -1)
+	if (if_set_reuse(global.ldp_disc_socket, 1) == -1)
 		fatal("if_set_reuse");
 
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = INADDR_ANY;
-	if (bind(global.ldp_discovery_socket, (struct sockaddr *)&disc_addr,
+	if (bind(global.ldp_disc_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding discovery socket");
 
 	/* set some defaults */
-	if (if_set_mcast_ttl(global.ldp_discovery_socket,
+	if (if_set_mcast_ttl(global.ldp_disc_socket,
 	    IP_DEFAULT_MULTICAST_TTL) == -1)
 		fatal("if_set_mcast_ttl");
-	if (if_set_mcast_loop(global.ldp_discovery_socket) == -1)
+	if (if_set_mcast_loop(global.ldp_disc_socket) == -1)
 		fatal("if_set_mcast_loop");
-	if (if_set_tos(global.ldp_discovery_socket,
+	if (if_set_tos(global.ldp_disc_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	if (if_set_recvif(global.ldp_discovery_socket, 1) == -1)
+	if (if_set_recvif(global.ldp_disc_socket, 1) == -1)
 		fatal("if_set_recvif");
-	if_set_recvbuf(global.ldp_discovery_socket);
+	if_set_recvbuf(global.ldp_disc_socket);
 
 	/* create the extended discovery UDP socket */
-	if ((global.ldp_ediscovery_socket = socket(AF_INET,
+	if ((global.ldp_edisc_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating extended discovery socket");
 
-	if (if_set_reuse(global.ldp_ediscovery_socket, 1) == -1)
+	if (if_set_reuse(global.ldp_edisc_socket, 1) == -1)
 		fatal("if_set_reuse");
 
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = xconf->trans_addr.s_addr;
-	if (bind(global.ldp_ediscovery_socket, (struct sockaddr *)&disc_addr,
+	if (bind(global.ldp_edisc_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding extended discovery socket");
 
 	/* set some defaults */
-	if (if_set_tos(global.ldp_ediscovery_socket,
+	if (if_set_tos(global.ldp_edisc_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	if (if_set_recvif(global.ldp_ediscovery_socket, 1) == -1)
+	if (if_set_recvif(global.ldp_edisc_socket, 1) == -1)
 		fatal("if_set_recvif");
-	if_set_recvbuf(global.ldp_ediscovery_socket);
+	if_set_recvbuf(global.ldp_edisc_socket);
 
 	/* create the session TCP socket */
 	if ((global.ldp_session_socket = socket(AF_INET,
@@ -245,12 +245,12 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    ldpe_dispatch_pfkey, NULL);
 	event_add(&pfkey_ev, NULL);
 
-	event_set(&disc_ev, global.ldp_discovery_socket,
-	    EV_READ|EV_PERSIST, disc_recv_packet, NULL);
+	event_set(&disc_ev, global.ldp_disc_socket, EV_READ|EV_PERSIST,
+	    disc_recv_packet, NULL);
 	event_add(&disc_ev, NULL);
 
-	event_set(&edisc_ev, global.ldp_ediscovery_socket,
-	    EV_READ|EV_PERSIST, disc_recv_packet, NULL);
+	event_set(&edisc_ev, global.ldp_edisc_socket, EV_READ|EV_PERSIST,
+	    disc_recv_packet, NULL);
 	event_add(&edisc_ev, NULL);
 
 	accept_add(global.ldp_session_socket, session_accept, NULL);
@@ -289,8 +289,8 @@ ldpe_shutdown(void)
 	event_del(&edisc_ev);
 	accept_del(global.ldp_session_socket);
 	close(global.pfkeysock);
-	close(global.ldp_discovery_socket);
-	close(global.ldp_ediscovery_socket);
+	close(global.ldp_disc_socket);
+	close(global.ldp_edisc_socket);
 	close(global.ldp_session_socket);
 
 	/* remove addresses from global list */

@@ -54,7 +54,7 @@ int		check_child(pid_t, const char *);
 void	main_dispatch_ldpe(int, short, void *);
 void	main_dispatch_lde(int, short, void *);
 
-int	ldp_sendboth(enum imsg_type, void *, uint16_t);
+int	main_imsg_compose_both(enum imsg_type, void *, uint16_t);
 int	ldp_reload(void);
 void	merge_global(struct ldpd_conf *, struct ldpd_conf *);
 void	merge_ifaces(struct ldpd_conf *, struct ldpd_conf *);
@@ -257,7 +257,7 @@ main(int argc, char *argv[])
 	/* notify ldpe about existing interfaces and addresses */
 	kif_redistribute();
 
-	if (kr_init(!(ldpd_conf->flags & LDPD_FLAG_NO_FIB_UPDATE)) == -1)
+	if (kr_init(!(ldpd_conf->flags & F_LDPD_NO_FIB_UPDATE)) == -1)
 		fatalx("kr_init failed");
 
 	/* remove unneded stuff from config */
@@ -490,7 +490,7 @@ main_imsg_compose_lde(int type, pid_t pid, void *data, uint16_t datalen)
 }
 
 int
-ldp_sendboth(enum imsg_type type, void *buf, uint16_t len)
+main_imsg_compose_both(enum imsg_type type, void *buf, uint16_t len)
 {
 	if (imsg_compose_event(iev_ldpe, type, 0, 0, -1, buf, len) == -1)
 		return (-1);
@@ -568,45 +568,46 @@ ldp_reload(void)
 	if ((xconf = parse_config(conffile)) == NULL)
 		return (-1);
 
-	if (ldp_sendboth(IMSG_RECONF_CONF, xconf, sizeof(*xconf)) == -1)
+	if (main_imsg_compose_both(IMSG_RECONF_CONF, xconf,
+	    sizeof(*xconf)) == -1)
 		return (-1);
 
 	LIST_FOREACH(iface, &xconf->iface_list, entry) {
-		if (ldp_sendboth(IMSG_RECONF_IFACE, iface,
+		if (main_imsg_compose_both(IMSG_RECONF_IFACE, iface,
 		    sizeof(*iface)) == -1)
 			return (-1);
 	}
 
 	LIST_FOREACH(tnbr, &xconf->tnbr_list, entry) {
-		if (ldp_sendboth(IMSG_RECONF_TNBR, tnbr,
+		if (main_imsg_compose_both(IMSG_RECONF_TNBR, tnbr,
 		    sizeof(*tnbr)) == -1)
 			return (-1);
 	}
 
 	LIST_FOREACH(nbrp, &xconf->nbrp_list, entry) {
-		if (ldp_sendboth(IMSG_RECONF_NBRP, nbrp,
+		if (main_imsg_compose_both(IMSG_RECONF_NBRP, nbrp,
 		    sizeof(*nbrp)) == -1)
 			return (-1);
 	}
 
 	LIST_FOREACH(l2vpn, &xconf->l2vpn_list, entry) {
-		if (ldp_sendboth(IMSG_RECONF_L2VPN, l2vpn,
+		if (main_imsg_compose_both(IMSG_RECONF_L2VPN, l2vpn,
 		    sizeof(*l2vpn)) == -1)
 			return (-1);
 
 		LIST_FOREACH(lif, &l2vpn->if_list, entry) {
-			if (ldp_sendboth(IMSG_RECONF_L2VPN_IF, lif,
+			if (main_imsg_compose_both(IMSG_RECONF_L2VPN_IF, lif,
 			    sizeof(*lif)) == -1)
 				return (-1);
 		}
 		LIST_FOREACH(pw, &l2vpn->pw_list, entry) {
-			if (ldp_sendboth(IMSG_RECONF_L2VPN_PW, pw,
+			if (main_imsg_compose_both(IMSG_RECONF_L2VPN_PW, pw,
 			    sizeof(*pw)) == -1)
 				return (-1);
 		}
 	}
 
-	if (ldp_sendboth(IMSG_RECONF_END, NULL, 0) == -1)
+	if (main_imsg_compose_both(IMSG_RECONF_END, NULL, 0) == -1)
 		return (-1);
 
 	merge_config(ldpd_conf, xconf);
@@ -637,8 +638,8 @@ merge_global(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	conf->trans_addr.s_addr = xconf->trans_addr.s_addr;
 
 	/* update flags */
-	if ((conf->flags & LDPD_FLAG_EXPNULL) !=
-	    (xconf->flags & LDPD_FLAG_EXPNULL))
+	if ((conf->flags & F_LDPD_EXPNULL) !=
+	    (xconf->flags & F_LDPD_EXPNULL))
 		egress_label_changed = 1;
 
 	conf->flags = xconf->flags;
@@ -646,10 +647,10 @@ merge_global(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	if (egress_label_changed) {
 		switch (ldpd_process) {
 		case PROC_LDE_ENGINE:
-			lde_change_egress_label(conf->flags & LDPD_FLAG_EXPNULL);
+			lde_change_egress_label(conf->flags & F_LDPD_EXPNULL);
 			break;
 		case PROC_MAIN:
-			kr_change_egress_label(conf->flags & LDPD_FLAG_EXPNULL);
+			kr_change_egress_label(conf->flags & F_LDPD_EXPNULL);
 			break;
 		default:
 			break;
@@ -914,9 +915,9 @@ merge_l2vpn(struct ldpd_conf *xconf, struct l2vpn *l2vpn, struct l2vpn *xl)
 		    pw->addr.s_addr != xp->addr.s_addr ||
 		    pw->pwid != xp->pwid ||
 		    ((pw->flags &
-		    (F_PW_STATUSTLV_CONF|F_PW_CONTROLWORD_CONF)) !=
+		    (F_PW_STATUSTLV_CONF|F_PW_CWORD_CONF)) !=
 		    (xp->flags &
-		    (F_PW_STATUSTLV_CONF|F_PW_CONTROLWORD_CONF)))) {
+		    (F_PW_STATUSTLV_CONF|F_PW_CWORD_CONF)))) {
 			LIST_REMOVE(pw, entry);
 			LIST_REMOVE(xp, entry);
 			LIST_INSERT_HEAD(&l2vpn->pw_list, xp, entry);

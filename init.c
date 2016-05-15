@@ -145,8 +145,8 @@ int
 tlv_decode_opt_init_prms(char *buf, uint16_t len)
 {
 	struct tlv	tlv;
-	int		cons = 0;
 	uint16_t	tlv_len;
+	int		total = 0;
 
 	 while (len >= sizeof(tlv)) {
 		memcpy(&tlv, buf, sizeof(tlv));
@@ -166,8 +166,8 @@ tlv_decode_opt_init_prms(char *buf, uint16_t len)
 		}
 		buf += TLV_HDR_LEN + tlv_len;
 		len -= TLV_HDR_LEN + tlv_len;
-		cons += TLV_HDR_LEN + tlv_len;
+		total += TLV_HDR_LEN + tlv_len;
 	}
 
-	return (cons);
+	return (total);
 }
