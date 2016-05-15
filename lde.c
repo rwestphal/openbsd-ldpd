@@ -742,20 +742,18 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 	struct lde_wdraw	*lw;
 	struct map		 map;
 	struct fec		*f;
-	struct fec_nh		*fnh = NULL;
+	struct fec_nh		*fnh;
 	struct l2vpn_pw		*pw;
-
-	if (fn->fec.type == FEC_TYPE_PWID) {
-		fnh = fec_nh_find(fn, ln->id);
-		if (fnh == NULL)
-			/* not the other end of the pseudowire */
-			return;
-	}
 
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		map.label = fn->local_label;
 		if (fn->fec.type == FEC_TYPE_PWID) {
+			fnh = fec_nh_find(fn, ln->id);
+			if (fnh == NULL)
+				/* not the other end of the pseudowire */
+				return;
+
 			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CONTROLWORD)
 				map.flags |= F_MAP_PW_CWORD;
@@ -794,19 +792,17 @@ void
 lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 {
 	struct map		 map;
-	struct fec_nh		*fnh = NULL;
+	struct fec_nh		*fnh;
 	struct l2vpn_pw		*pw;
-
-	if (fn->fec.type == FEC_TYPE_PWID) {
-		fnh = fec_nh_find(fn, ln->id);
-		if (fnh == NULL)
-			/* not the other end of the pseudowire */
-			return;
-	}
 
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		if (fn->fec.type == FEC_TYPE_PWID) {
+			fnh = fec_nh_find(fn, ln->id);
+			if (fnh == NULL)
+				/* not the other end of the pseudowire */
+				return;
+
 			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CONTROLWORD)
 				map.flags |= F_MAP_PW_CWORD;
