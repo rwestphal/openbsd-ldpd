@@ -181,8 +181,9 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		    &map)) == -1)
 			goto err;
 		if (map.type == MAP_TYPE_PWID &&
-		    type == MSG_TYPE_LABELMAPPING &&
-		    !(map.flags & F_MAP_PW_ID)) {
+		    !(map.flags & F_MAP_PW_ID) &&
+		    type != MSG_TYPE_LABELWITHDRAW &&
+		    type != MSG_TYPE_LABELRELEASE) {
 			send_notification_nbr(nbr, S_MISS_MSG, lm.msgid,
 			    lm.type);
 			return (-1);
