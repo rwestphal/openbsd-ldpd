@@ -144,7 +144,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 
 			tnbr = tnbr_new(leconf, src);
 			tnbr->flags |= F_TNBR_DYNAMIC;
-			tnbr_init(leconf, tnbr);
+			tnbr_init(tnbr);
 			LIST_INSERT_HEAD(&leconf->tnbr_list, tnbr, entry);
 		}
 

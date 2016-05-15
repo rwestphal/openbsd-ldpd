@@ -102,85 +102,86 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (control_init() == -1)
 		fatalx("control socket setup failed");
 
-	leconf->pfkeysock = pfkey_init(&sysdep);
+	LIST_INIT(&global.addr_list);
+	global.pfkeysock = pfkey_init(&sysdep);
 
 	/* create the discovery UDP socket */
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = INADDR_ANY;
 
-	if ((xconf->ldp_discovery_socket = socket(AF_INET,
+	if ((global.ldp_discovery_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating discovery socket");
 
-	if (if_set_reuse(xconf->ldp_discovery_socket, 1) == -1)
+	if (if_set_reuse(global.ldp_discovery_socket, 1) == -1)
 		fatal("if_set_reuse");
 
-	if (bind(xconf->ldp_discovery_socket, (struct sockaddr *)&disc_addr,
+	if (bind(global.ldp_discovery_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding discovery socket");
 
 	/* set some defaults */
-	if (if_set_mcast_ttl(xconf->ldp_discovery_socket,
+	if (if_set_mcast_ttl(global.ldp_discovery_socket,
 	    IP_DEFAULT_MULTICAST_TTL) == -1)
 		fatal("if_set_mcast_ttl");
-	if (if_set_mcast_loop(xconf->ldp_discovery_socket) == -1)
+	if (if_set_mcast_loop(global.ldp_discovery_socket) == -1)
 		fatal("if_set_mcast_loop");
-	if (if_set_tos(xconf->ldp_discovery_socket,
+	if (if_set_tos(global.ldp_discovery_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	if (if_set_recvif(xconf->ldp_discovery_socket, 1) == -1)
+	if (if_set_recvif(global.ldp_discovery_socket, 1) == -1)
 		fatal("if_set_recvif");
-	if_set_recvbuf(xconf->ldp_discovery_socket);
+	if_set_recvbuf(global.ldp_discovery_socket);
 
 	/* create the extended discovery UDP socket */
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
 	disc_addr.sin_addr.s_addr = xconf->rtr_id.s_addr;
 
-	if ((xconf->ldp_ediscovery_socket = socket(AF_INET,
+	if ((global.ldp_ediscovery_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
 		fatal("error creating extended discovery socket");
 
-	if (if_set_reuse(xconf->ldp_ediscovery_socket, 1) == -1)
+	if (if_set_reuse(global.ldp_ediscovery_socket, 1) == -1)
 		fatal("if_set_reuse");
 
-	if (bind(xconf->ldp_ediscovery_socket, (struct sockaddr *)&disc_addr,
+	if (bind(global.ldp_ediscovery_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding extended discovery socket");
 
 	/* set some defaults */
-	if (if_set_tos(xconf->ldp_ediscovery_socket,
+	if (if_set_tos(global.ldp_ediscovery_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
-	if (if_set_recvif(xconf->ldp_ediscovery_socket, 1) == -1)
+	if (if_set_recvif(global.ldp_ediscovery_socket, 1) == -1)
 		fatal("if_set_recvif");
-	if_set_recvbuf(xconf->ldp_ediscovery_socket);
+	if_set_recvbuf(global.ldp_ediscovery_socket);
 
 	/* create the session TCP socket */
 	sess_addr.sin_family = AF_INET;
 	sess_addr.sin_port = htons(LDP_PORT);
 	sess_addr.sin_addr.s_addr = INADDR_ANY;
 
-	if ((xconf->ldp_session_socket = socket(AF_INET,
+	if ((global.ldp_session_socket = socket(AF_INET,
 	    SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_TCP)) == -1)
 		fatal("error creating session socket");
 
-	if (if_set_reuse(xconf->ldp_session_socket, 1) == -1)
+	if (if_set_reuse(global.ldp_session_socket, 1) == -1)
 		fatal("if_set_reuse");
 
-	if (bind(xconf->ldp_session_socket, (struct sockaddr *)&sess_addr,
+	if (bind(global.ldp_session_socket, (struct sockaddr *)&sess_addr,
 	    sizeof(sess_addr)) == -1)
 		fatal("error binding session socket");
 
-	if (listen(xconf->ldp_session_socket, LDP_BACKLOG) == -1)
+	if (listen(global.ldp_session_socket, LDP_BACKLOG) == -1)
 		fatal("error in listen on session socket");
 
 	opt = 1;
-	if (setsockopt(xconf->ldp_session_socket, IPPROTO_TCP, TCP_MD5SIG,
+	if (setsockopt(global.ldp_session_socket, IPPROTO_TCP, TCP_MD5SIG,
 	    &opt, sizeof(opt)) == -1) {
 		if (errno == ENOPROTOOPT) {	/* system w/o md5sig */
 			log_warnx("md5sig not available, disabling");
@@ -190,7 +191,7 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	}
 
 	/* set some defaults */
-	if (if_set_tos(xconf->ldp_session_socket,
+	if (if_set_tos(global.ldp_session_socket,
 	    IPTOS_PREC_INTERNETCONTROL) == -1)
 		fatal("if_set_tos");
 
@@ -243,19 +244,19 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    iev_main->handler, iev_main);
 	event_add(&iev_main->ev, NULL);
 
-	event_set(&pfkey_ev, leconf->pfkeysock, EV_READ | EV_PERSIST,
+	event_set(&pfkey_ev, global.pfkeysock, EV_READ | EV_PERSIST,
 	    ldpe_dispatch_pfkey, NULL);
 	event_add(&pfkey_ev, NULL);
 
-	event_set(&disc_ev, leconf->ldp_discovery_socket,
+	event_set(&disc_ev, global.ldp_discovery_socket,
 	    EV_READ|EV_PERSIST, disc_recv_packet, NULL);
 	event_add(&disc_ev, NULL);
 
-	event_set(&edisc_ev, leconf->ldp_ediscovery_socket,
+	event_set(&edisc_ev, global.ldp_ediscovery_socket,
 	    EV_READ|EV_PERSIST, disc_recv_packet, NULL);
 	event_add(&edisc_ev, NULL);
 
-	accept_add(leconf->ldp_session_socket, session_accept, NULL);
+	accept_add(global.ldp_session_socket, session_accept, NULL);
 	/* listen on ldpd control socket */
 	TAILQ_INIT(&ctl_conns);
 	control_listen();
@@ -265,11 +266,11 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 
 	/* initialize interfaces */
 	LIST_FOREACH(iface, &leconf->iface_list, entry)
-		if_init(xconf, iface);
+		if_init(iface);
 
 	/* start configured targeted neighbors */
 	LIST_FOREACH(tnbr, &leconf->tnbr_list, entry)
-		tnbr_init(xconf, tnbr);
+		tnbr_init(tnbr);
 
 	if (pledge("stdio cpath inet mcast", NULL) == -1)
 		fatal("pledge");
@@ -291,14 +292,14 @@ ldpe_shutdown(void)
 	event_del(&pfkey_ev);
 	event_del(&disc_ev);
 	event_del(&edisc_ev);
-	accept_del(leconf->ldp_session_socket);
-	close(leconf->pfkeysock);
-	close(leconf->ldp_discovery_socket);
-	close(leconf->ldp_ediscovery_socket);
-	close(leconf->ldp_session_socket);
+	accept_del(global.ldp_session_socket);
+	close(global.pfkeysock);
+	close(global.ldp_discovery_socket);
+	close(global.ldp_ediscovery_socket);
+	close(global.ldp_session_socket);
 
 	/* remove addresses from global list */
-	while ((if_addr = LIST_FIRST(&leconf->addr_list)) != NULL) {
+	while ((if_addr = LIST_FIRST(&global.addr_list)) != NULL) {
 		LIST_REMOVE(if_addr, entry);
 		free(if_addr);
 	}
@@ -393,10 +394,10 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 				fatalx("NEWADDR imsg with wrong len");
 			ka = imsg.data;
 
-			if (if_addr_lookup(&leconf->addr_list, ka) == NULL) {
+			if (if_addr_lookup(&global.addr_list, ka) == NULL) {
 				if_addr = if_addr_new(ka);
 
-				LIST_INSERT_HEAD(&leconf->addr_list, if_addr,
+				LIST_INSERT_HEAD(&global.addr_list, if_addr,
 				    entry);
 				RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
 					if (nbr->state != NBR_STA_OPER)
@@ -430,7 +431,7 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 				}
 			}
 
-			if_addr = if_addr_lookup(&leconf->addr_list, ka);
+			if_addr = if_addr_lookup(&global.addr_list, ka);
 			if (if_addr) {
 				RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
 					if (nbr->state != NBR_STA_OPER)
@@ -448,7 +449,6 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			memcpy(nconf, imsg.data, sizeof(struct ldpd_conf));
 
 			LIST_INIT(&nconf->iface_list);
-			LIST_INIT(&nconf->addr_list);
 			LIST_INIT(&nconf->tnbr_list);
 			LIST_INIT(&nconf->nbrp_list);
 			LIST_INIT(&nconf->l2vpn_list);

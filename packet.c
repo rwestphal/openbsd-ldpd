@@ -158,7 +158,7 @@ disc_recv_packet(int fd, short event, void *bula)
 	len = (uint16_t)r;
 
 	/* find a matching interface */
-	if ((fd == leconf->ldp_discovery_socket) &&
+	if ((fd == global.ldp_discovery_socket) &&
 	    (iface = disc_find_iface(ifindex, src.sin_addr)) == NULL) {
 		log_debug("disc_recv_packet: cannot find a matching subnet "
 		    "on interface index %d for %s", ifindex,

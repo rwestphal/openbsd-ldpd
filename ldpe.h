@@ -164,7 +164,7 @@ int		 if_update(struct iface *);
 
 struct iface	*if_new(struct kif *);
 void		 if_del(struct iface *);
-void		 if_init(struct ldpd_conf *, struct iface *);
+void		 if_init(struct iface *);
 struct iface	*if_lookup(struct ldpd_conf *, unsigned short);
 struct if_addr	*if_addr_new(struct kaddr *);
 struct if_addr	*if_addr_lookup(struct if_addr_head *, struct kaddr *);
@@ -190,7 +190,7 @@ void		 adj_stop_itimer(struct adj *);
 struct tnbr	*tnbr_new(struct ldpd_conf *, struct in_addr);
 void		 tnbr_del(struct tnbr *);
 struct tnbr	*tnbr_check(struct tnbr *);
-void		 tnbr_init(struct ldpd_conf *, struct tnbr *);
+void		 tnbr_init(struct tnbr *);
 struct tnbr	*tnbr_find(struct ldpd_conf *, struct in_addr);
 
 struct ctl_adj	*adj_to_ctl(struct adj *);

@@ -119,7 +119,7 @@ usage(void)
 	exit(1);
 }
 
-int	cmd_opts;
+struct ldpd_global global;
 
 int
 main(int argc, char *argv[])
@@ -148,12 +148,12 @@ main(int argc, char *argv[])
 			conffile = optarg;
 			break;
 		case 'n':
-			cmd_opts |= LDPD_OPT_NOACTION;
+			global.cmd_opts |= LDPD_OPT_NOACTION;
 			break;
 		case 'v':
-			if (cmd_opts & LDPD_OPT_VERBOSE)
-				cmd_opts |= LDPD_OPT_VERBOSE2;
-			cmd_opts |= LDPD_OPT_VERBOSE;
+			if (global.cmd_opts & LDPD_OPT_VERBOSE)
+				global.cmd_opts |= LDPD_OPT_VERBOSE2;
+			global.cmd_opts |= LDPD_OPT_VERBOSE;
 			break;
 		default:
 			usage();
@@ -168,8 +168,8 @@ main(int argc, char *argv[])
 	if ((ldpd_conf = parse_config(conffile)) == NULL )
 		exit(1);
 
-	if (cmd_opts & LDPD_OPT_NOACTION) {
-		if (cmd_opts & LDPD_OPT_VERBOSE)
+	if (global.cmd_opts & LDPD_OPT_NOACTION) {
+		if (global.cmd_opts & LDPD_OPT_VERBOSE)
 			print_config(ldpd_conf);
 		else
 			fprintf(stderr, "configuration OK\n");
@@ -185,7 +185,7 @@ main(int argc, char *argv[])
 		errx(1, "unknown user %s", LDPD_USER);
 
 	log_init(debug);
-	log_verbose(cmd_opts & (LDPD_OPT_VERBOSE | LDPD_OPT_VERBOSE2));
+	log_verbose(global.cmd_opts & (LDPD_OPT_VERBOSE | LDPD_OPT_VERBOSE2));
 
 	if (!debug)
 		daemon(1, 0);
@@ -643,7 +643,7 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 			LIST_REMOVE(xi, entry);
 			LIST_INSERT_HEAD(&conf->iface_list, xi, entry);
 			if (ldpd_process == PROC_LDP_ENGINE)
-				if_init(conf, xi);
+				if_init(xi);
 			continue;
 		}
 
@@ -677,7 +677,7 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 			LIST_REMOVE(xt, entry);
 			LIST_INSERT_HEAD(&conf->tnbr_list, xt, entry);
 			if (ldpd_process == PROC_LDP_ENGINE)
-				tnbr_init(conf, xt);
+				tnbr_init(xt);
 			continue;
 		}
 

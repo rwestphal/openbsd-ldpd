@@ -95,12 +95,12 @@ if_del(struct iface *iface)
 }
 
 void
-if_init(struct ldpd_conf *xconf, struct iface *iface)
+if_init(struct iface *iface)
 {
 	/* set event handlers for interface */
 	evtimer_set(&iface->hello_timer, if_hello_timer, iface);
 
-	iface->discovery_fd = xconf->ldp_discovery_socket;
+	iface->discovery_fd = global.ldp_discovery_socket;
 }
 
 struct iface *

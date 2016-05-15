@@ -152,7 +152,7 @@ lde(struct ldpd_conf *xconf, int pipe_parent2lde[2], int pipe_ldpe2lde[2],
 	event_add(&iev_main->ev, NULL);
 
 	gettimeofday(&now, NULL);
-	ldeconf->uptime = now.tv_sec;
+	global.uptime = now.tv_sec;
 
 	/* initialize l2vpns */
 	LIST_FOREACH(l2vpn, &ldeconf->l2vpn_list, entry)
@@ -464,7 +464,6 @@ lde_dispatch_parent(int fd, short event, void *bula)
 			memcpy(nconf, imsg.data, sizeof(struct ldpd_conf));
 
 			LIST_INIT(&nconf->iface_list);
-			LIST_INIT(&nconf->addr_list);
 			LIST_INIT(&nconf->tnbr_list);
 			LIST_INIT(&nconf->nbrp_list);
 			LIST_INIT(&nconf->l2vpn_list);

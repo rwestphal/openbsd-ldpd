@@ -48,9 +48,6 @@
 #define	MAX_RTSOCK_BUF		128 * 1024
 #define	LDP_BACKLOG		128
 
-#define	LDPD_FLAG_NO_FIB_UPDATE	0x0001
-#define	LDPD_FLAG_TH_ACCEPT	0x0002
-
 #define	F_LDPD_INSERTED		0x0001
 #define	F_CONNECTED		0x0002
 #define	F_STATIC		0x0004
@@ -326,23 +323,28 @@ enum hello_type {
 struct ldpd_conf {
 	struct in_addr		 rtr_id;
 	LIST_HEAD(, iface)	 iface_list;
-	struct if_addr_head	 addr_list;
 	LIST_HEAD(, tnbr)	 tnbr_list;
 	LIST_HEAD(, nbr_params)	 nbrp_list;
 	LIST_HEAD(, l2vpn)	 l2vpn_list;
+	uint16_t		 keepalive;
+	uint16_t		 thello_holdtime;
+	uint16_t		 thello_interval;
+	int			 flags;
+};
+#define	LDPD_FLAG_NO_FIB_UPDATE	0x0001
+#define	LDPD_FLAG_TH_ACCEPT	0x0002
 
+struct ldpd_global {
+	int			 cmd_opts;
 	time_t			 uptime;
 	int			 pfkeysock;
 	int			 ldp_discovery_socket;
 	int			 ldp_ediscovery_socket;
 	int			 ldp_session_socket;
-	int			 flags;
-	uint16_t		 keepalive;
-	uint16_t		 thello_holdtime;
-	uint16_t		 thello_interval;
+	struct if_addr_head	 addr_list;
 };
 
-extern int cmd_opts;
+extern struct ldpd_global global;
 
 /* kroute */
 struct kroute {
