@@ -427,7 +427,6 @@ pfkey_establish(struct nbr *nbr, struct nbr_params *nbrp)
 		strlcpy(nbr->auth.md5key, nbrp->auth.md5key,
 		    sizeof(nbr->auth.md5key));
 		return (pfkey_md5sig_establish(nbr, nbrp));
-		break;
 	default:
 		break;
 	}
@@ -444,7 +443,6 @@ pfkey_remove(struct nbr *nbr)
 	switch (nbr->auth.method) {
 	case AUTH_MD5SIG:
 		return (pfkey_md5sig_remove(nbr));
-		break;
 	default:
 		break;
 	}

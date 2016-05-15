@@ -204,7 +204,6 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 			send_notification_nbr(nbr, S_BAD_TLV_VAL,
 			    not.msgid, not.type);
 			return (-1);
-			break;
 		}
 	}
 

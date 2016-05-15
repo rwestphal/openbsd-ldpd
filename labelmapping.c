@@ -603,7 +603,6 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		    PREFIX_SIZE(map->fec.ipv4.prefixlen));
 
 		return (off + PREFIX_SIZE(map->fec.ipv4.prefixlen));
-		break;
 	case MAP_TYPE_PWID:
 		if (len < FEC_PWID_ELM_MIN_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, lm->msgid,
@@ -686,7 +685,6 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		}
 
 		return (off);
-		break;
 	default:
 		send_notification_nbr(nbr, S_UNKNOWN_FEC, lm->msgid, lm->type);
 		break;
