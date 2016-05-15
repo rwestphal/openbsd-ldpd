@@ -47,7 +47,7 @@ send_init(struct nbr *nbr)
 	struct ibuf		*buf;
 	uint16_t		 size;
 
-	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
+	log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
 
 	size = LDP_HDR_SIZE + LDP_MSG_SIZE + SESS_PRMS_SIZE;
 	if ((buf = ibuf_open(size)) == NULL)
@@ -69,7 +69,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 	struct sess_prms_tlv	sess;
 	uint16_t		max_pdu_len;
 
-	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
+	log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
 
 	memcpy(&init, buf, sizeof(init));
 	buf += LDP_MSG_SIZE;

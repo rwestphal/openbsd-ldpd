@@ -1486,7 +1486,7 @@ kmpw_set(struct kpw *kpw)
 
 	kif = kif_find(kpw->ifindex);
 	if (kif == NULL) {
-		log_warn("%s: failed to find mpw by index (%u)", __func__,
+		log_warnx("%s: failed to find mpw by index (%u)", __func__,
 		    kpw->ifindex);
 		return;
 	}
@@ -1505,13 +1505,13 @@ kmpw_unset(struct kpw *kpw)
 
 	kif = kif_find(kpw->ifindex);
 	if (kif == NULL) {
-		log_warn("%s: failed to find mpw by index (%u)", __func__,
+		log_warnx("%s: failed to find mpw by index (%u)", __func__,
 		    kpw->ifindex);
 		return;
 	}
 
 	if (kif->kpw == NULL) {
-		log_warn("%s: %s is not set", __func__, kif->k.ifname);
+		log_warnx("%s: %s is not set", __func__, kif->k.ifname);
 		return;
 	}
 
@@ -1536,7 +1536,7 @@ kmpw_install(const char *ifname, struct kpw *kpw)
 		imr.imr_type = IMR_TYPE_ETHERNET_TAGGED;
 		break;
 	default:
-		log_warn("%s: unhandled pseudowire type (%#X)", __func__,
+		log_warnx("%s: unhandled pseudowire type (%#X)", __func__,
 		    kpw->pw_type);
 		return;
 	}

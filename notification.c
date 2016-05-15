@@ -94,7 +94,7 @@ void
 send_notification_nbr(struct nbr *nbr, uint32_t status, uint32_t msgid,
     uint32_t type)
 {
-	log_debug("%s: nbr ID %s, status %s", __func__, inet_ntoa(nbr->id),
+	log_debug("%s: lsr-id %s, status %s", __func__, inet_ntoa(nbr->id),
 	     notification_name(status));
 
 	send_notification(status, nbr->tcp, msgid, type);

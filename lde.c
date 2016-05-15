@@ -256,7 +256,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 		case IMSG_LABEL_WITHDRAW:
 		case IMSG_LABEL_ABORT:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE != sizeof(map))
-				fatalx("invalid size of OE request");
+				fatalx("lde_dispatch_imsg: wrong imsg len");
 			memcpy(&map, imsg.data, sizeof(map));
 
 			ln = lde_nbr_find(imsg.hdr.peerid);
@@ -292,7 +292,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			break;
 		case IMSG_ADDRESS_ADD:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE != sizeof(addr))
-				fatalx("invalid size of OE request");
+				fatalx("lde_dispatch_imsg: wrong imsg len");
 			memcpy(&addr, imsg.data, sizeof(addr));
 
 			ln = lde_nbr_find(imsg.hdr.peerid);
@@ -311,7 +311,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			break;
 		case IMSG_ADDRESS_DEL:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE != sizeof(addr))
-				fatalx("invalid size of OE request");
+				fatalx("lde_dispatch_imsg: wrong imsg len");
 			memcpy(&addr, imsg.data, sizeof(addr));
 
 			ln = lde_nbr_find(imsg.hdr.peerid);
@@ -323,14 +323,14 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 
 			if (lde_address_del(ln, &addr) < 0) {
 				log_debug("%s: cannot delete address %s, it "
-				    "does not exists", __func__,
+				    "does not exist", __func__,
 				    inet_ntoa(addr));
 			}
 
 			break;
 		case IMSG_NOTIFICATION:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE != sizeof(nm))
-				fatalx("invalid size of OE request");
+				fatalx("lde_dispatch_imsg: wrong imsg len");
 			memcpy(&nm, imsg.data, sizeof(nm));
 
 			ln = lde_nbr_find(imsg.hdr.peerid);
@@ -350,7 +350,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			break;
 		case IMSG_NEIGHBOR_UP:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE != sizeof(addr))
-				fatalx("invalid size of OE request");
+				fatalx("lde_dispatch_imsg: wrong imsg len");
 			memcpy(&addr, imsg.data, sizeof(addr));
 
 			if (lde_nbr_find(imsg.hdr.peerid))

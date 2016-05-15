@@ -572,7 +572,7 @@ session_shutdown(struct nbr *nbr, uint32_t status, uint32_t msgid,
 	if (nbr->tcp == NULL)
 		return;
 
-	log_debug("%s: nbr ID %s", __func__, inet_ntoa(nbr->id));
+	log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
 
 	send_notification_nbr(nbr, status, msgid, type);
 
@@ -585,7 +585,7 @@ session_shutdown(struct nbr *nbr, uint32_t status, uint32_t msgid,
 void
 session_close(struct nbr *nbr)
 {
-	log_debug("%s: closing session with nbr ID %s", __func__,
+	log_debug("%s: closing session with lsr-id %s", __func__,
 	    inet_ntoa(nbr->id));
 
 	tcp_close(nbr->tcp);

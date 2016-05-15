@@ -84,7 +84,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 	enum imsg_type		type;
 
 	memcpy(&addr, buf, sizeof(addr));
-	log_debug("%s: neighbor ID %s%s", __func__, inet_ntoa(nbr->id),
+	log_debug("%s: lsr-id %s%s", __func__, inet_ntoa(nbr->id),
 	    ntohs(addr.type) == MSG_TYPE_ADDR ? "" : " address withdraw");
 	if (ntohs(addr.type) == MSG_TYPE_ADDR)
 		type = IMSG_ADDRESS_ADD;

@@ -107,12 +107,12 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 
 	r = tlv_decode_hello_prms(buf, len, &holdtime, &flags);
 	if (r == -1) {
-		log_debug("%s: neighbor %s: failed to decode params", __func__,
+		log_debug("%s: lsr-id %s: failed to decode params", __func__,
 		    inet_ntoa(lsr_id));
 		return;
 	}
 	if (holdtime != 0 && holdtime < MIN_HOLDTIME) {
-		log_debug("%s: neighbor %s: invalid hello holdtime (%u)",
+		log_debug("%s: lsr-id %s: invalid hello holdtime (%u)",
 		    __func__, inet_ntoa(lsr_id), holdtime);
 		return;
 	}
@@ -121,12 +121,12 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 
 	/* safety checks */
 	if (multicast && (flags & TARGETED_HELLO)) {
-		log_debug("%s: neighbor %s: multicast targeted hello", __func__,
+		log_debug("%s: lsr-id %s: multicast targeted hello", __func__,
 		    inet_ntoa(lsr_id));
 		return;
 	}
 	if (!multicast && !((flags & TARGETED_HELLO))) {
-		log_debug("%s: neighbor %s: unicast link hello", __func__,
+		log_debug("%s: lsr-id %s: unicast link hello", __func__,
 		    inet_ntoa(lsr_id));
 		return;
 	}
@@ -164,12 +164,12 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 	r = tlv_decode_opt_hello_prms(buf, len, &transport_addr,
 	    &conf_number);
 	if (r == -1) {
-		log_debug("%s: neighbor %s: failed to decode optional params",
+		log_debug("%s: lsr-id %s: failed to decode optional params",
 		    __func__, inet_ntoa(lsr_id));
 		return;
 	}
 	if (r != len) {
-		log_debug("%s: neighbor %s: unexpected data in message",
+		log_debug("%s: lsr-id %s: unexpected data in message",
 		    __func__, inet_ntoa(lsr_id));
 		return;
 	}
@@ -178,7 +178,7 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 	if (transport_addr.s_addr == INADDR_ANY)
 		transport_addr.s_addr = src.s_addr;
 	if (bad_ip_addr(transport_addr)) {
-		log_debug("%s: neighbor %s: invalid transport address %s",
+		log_debug("%s: lsr-id %s: invalid transport address %s",
 		    __func__, inet_ntoa(lsr_id), inet_ntoa(transport_addr));
 		return;
 	}
@@ -195,7 +195,7 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
 			adj = adj_new(nbr, &source, transport_addr);
 
 			if (nbr->raddr.s_addr != transport_addr.s_addr)
-				log_warnx("%s: neighbor %s: multiple "
+				log_warnx("%s: lsr-id %s: multiple "
 				    "adjacencies advertising different "
 				    "transport addresses", __func__,
 				    inet_ntoa(lsr_id));
