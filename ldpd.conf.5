@@ -48,6 +48,16 @@ Neighbor-specific parameters.
 .It Sy Layer 2 VPNs Configuration
 Layer 2 VPNs parameters as per RFC 4447.
 .El
+.Pp
+Argument names not beginning with a letter, digit, or underscore
+must be quoted.
+.Pp
+Additional configuration files can be included with the
+.Ic include
+keyword, for example:
+.Bd -literal -offset indent
+include "/etc/ldpd.sub.conf"
+.Ed
 .Sh MACROS
 Much like
 .Xr cpp 1
