@@ -85,6 +85,10 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 		return (-1);
 	}
 	memcpy(&sess, buf, sizeof(sess));
+	if (ntohs(sess.keepalive_time) < MIN_KEEPALIVE) {
+		session_shutdown(nbr, S_KEEPALIVE_BAD, init.msgid, init.type);
+		return (-1);
+	}
 
 	if (ntohs(sess.length) != SESS_PRMS_SIZE - TLV_HDR_LEN ||
 	    ntohs(sess.length) > len - TLV_HDR_LEN) {

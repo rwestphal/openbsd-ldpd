@@ -143,7 +143,7 @@ The maximum time
 .Xr ldpd 8
 will wait between two consecutive hello messages from a peer before it is
 marked as being down.
-The default value is 15.
+The default value is 15; valid range is 3\-65535.
 .It Ic link-hello-interval Ar seconds
 Set the hello interval in seconds.
 The default value is 5; valid range is 1\-65535.
@@ -187,7 +187,7 @@ Neighbor-specific parameters are listed below.
 .It Ic keepalive Ar seconds
 Set the keepalive timeout in seconds.
 Inherited from the global configuration if not given.
-The default value is 180; valid range is 1\-65535.
+The default value is 180; valid range is 3\-65535.
 .It Ic password Ar secret
 Enable TCP MD5 signatures per RFC 5036.
 .El
