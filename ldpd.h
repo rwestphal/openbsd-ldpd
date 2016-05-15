@@ -65,7 +65,6 @@ struct imsgev {
 	struct imsgbuf		 ibuf;
 	void			(*handler)(int, short, void *);
 	struct event		 ev;
-	void			*data;
 	short			 events;
 };
 
