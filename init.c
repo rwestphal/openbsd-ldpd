@@ -113,8 +113,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 	nbr->keepalive = min(nbr_get_keepalive(nbr->raddr),
 	    ntohs(sess.keepalive_time));
 
-	if (!nbr_pending_idtimer(nbr))
-		nbr_fsm(nbr, NBR_EVT_INIT_RCVD);
+	nbr_fsm(nbr, NBR_EVT_INIT_RCVD);
 
 	return (ntohs(init.length));
 }
