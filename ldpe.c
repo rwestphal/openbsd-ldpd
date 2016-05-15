@@ -167,7 +167,7 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 
 	sess_addr.sin_family = AF_INET;
 	sess_addr.sin_port = htons(LDP_PORT);
-	sess_addr.sin_addr.s_addr = INADDR_ANY;
+	sess_addr.sin_addr = xconf->trans_addr;
 	if (bind(global.ldp_session_socket, (struct sockaddr *)&sess_addr,
 	    sizeof(sess_addr)) == -1)
 		fatal("error binding session socket");
