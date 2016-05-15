@@ -623,6 +623,7 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	conf->keepalive = xconf->keepalive;
 	conf->thello_holdtime = xconf->thello_holdtime;
 	conf->thello_interval = xconf->thello_interval;
+	conf->trans_addr.s_addr = xconf->trans_addr.s_addr;
 
 	/* update flags */
 	if ((conf->flags & LDPD_FLAG_EXPNULL) !=

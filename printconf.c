@@ -56,6 +56,7 @@ print_mainconf(struct ldpd_conf *conf)
 		printf("explicit-null no\n");
 
 	printf("keepalive %u\n", conf->keepalive);
+	printf("transport-address %s\n", inet_ntoa(conf->trans_addr));
 }
 
 void

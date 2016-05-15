@@ -325,6 +325,7 @@ enum hello_type {
 
 struct ldpd_conf {
 	struct in_addr		 rtr_id;
+	struct in_addr		 trans_addr;
 	LIST_HEAD(, iface)	 iface_list;
 	LIST_HEAD(, tnbr)	 tnbr_list;
 	LIST_HEAD(, nbr_params)	 nbrp_list;

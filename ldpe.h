@@ -73,8 +73,9 @@ struct nbr {
 	struct mapping_head	 release_list;
 	struct mapping_head	 abortreq_list;
 
-	struct in_addr		 addr;
-	struct in_addr		 id;
+	struct in_addr		 laddr;		/* local address */
+	struct in_addr		 raddr;		/* remote address */
+	struct in_addr		 id;		/* lsr id */
 
 	time_t			 uptime;
 	uint32_t		 peerid;	/* unique ID in DB */
@@ -86,7 +87,6 @@ struct nbr {
 
 	struct {
 		uint8_t			established;
-		struct in_addr		local_addr;
 		uint32_t		spi_in;
 		uint32_t		spi_out;
 		enum auth_method	method;
@@ -152,7 +152,6 @@ void		 ldpe_dispatch_pfkey(int, short, void *);
 int		 ldpe_imsg_compose_parent(int, pid_t, void *, uint16_t);
 int		 ldpe_imsg_compose_lde(int, uint32_t, pid_t, void *,
 		     uint16_t);
-uint32_t	 ldpe_router_id(void);
 void		 mapping_list_add(struct mapping_head *, struct map *);
 void		 mapping_list_clr(struct mapping_head *);
 void		 ldpe_iface_ctl(struct ctl_conn *, unsigned int);

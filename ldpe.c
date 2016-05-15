@@ -138,7 +138,7 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	/* create the extended discovery UDP socket */
 	disc_addr.sin_family = AF_INET;
 	disc_addr.sin_port = htons(LDP_PORT);
-	disc_addr.sin_addr.s_addr = xconf->rtr_id.s_addr;
+	disc_addr.sin_addr.s_addr = xconf->trans_addr.s_addr;
 
 	if ((global.ldp_ediscovery_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
@@ -671,12 +671,6 @@ ldpe_dispatch_pfkey(int fd, short event, void *bula)
 			fatal("pfkey_read failed, exiting...");
 		}
 	}
-}
-
-uint32_t
-ldpe_router_id(void)
-{
-	return (leconf->rtr_id.s_addr);
 }
 
 void
