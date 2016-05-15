@@ -258,7 +258,7 @@ enum auth_method {
 /* neighbor specific parameters */
 struct nbr_params {
 	LIST_ENTRY(nbr_params)	 entry;
-	struct in_addr		 addr;
+	struct in_addr		 lsr_id;
 	uint16_t		 keepalive;
 	struct {
 		enum auth_method	 method;

@@ -738,9 +738,9 @@ merge_nbrps(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 
 	LIST_FOREACH_SAFE(nbrp, &conf->nbrp_list, entry, ntmp) {
 		/* find deleted nbrps */
-		if ((xn = nbr_params_find(xconf, nbrp->addr)) == NULL) {
+		if ((xn = nbr_params_find(xconf, nbrp->lsr_id)) == NULL) {
 			if (ldpd_process == PROC_LDP_ENGINE) {
-				nbr = nbr_find_ldpid(nbrp->addr.s_addr);
+				nbr = nbr_find_ldpid(nbrp->lsr_id.s_addr);
 				if (nbr) {
 					if (nbr->state == NBR_STA_OPER)
 						session_shutdown(nbr,
@@ -754,12 +754,12 @@ merge_nbrps(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	}
 	LIST_FOREACH_SAFE(xn, &xconf->nbrp_list, entry, ntmp) {
 		/* find new nbrps */
-		if ((nbrp = nbr_params_find(conf, xn->addr)) == NULL) {
+		if ((nbrp = nbr_params_find(conf, xn->lsr_id)) == NULL) {
 			LIST_REMOVE(xn, entry);
 			LIST_INSERT_HEAD(&conf->nbrp_list, xn, entry);
 
 			if (ldpd_process == PROC_LDP_ENGINE) {
-				nbr = nbr_find_ldpid(xn->addr.s_addr);
+				nbr = nbr_find_ldpid(xn->lsr_id.s_addr);
 				if (nbr) {
 					if (nbr->state == NBR_STA_OPER)
 						session_shutdown(nbr,
@@ -780,7 +780,7 @@ merge_nbrps(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 		nbrp->auth.md5key_len = xn->auth.md5key_len;
 
 		if (ldpd_process == PROC_LDP_ENGINE) {
-			nbr = nbr_find_ldpid(nbrp->addr.s_addr);
+			nbr = nbr_find_ldpid(nbrp->lsr_id.s_addr);
 			if (nbr &&
 			    (nbr->auth.method != nbrp->auth.method ||
 			    strcmp(nbr->auth.md5key, nbrp->auth.md5key) != 0)) {
