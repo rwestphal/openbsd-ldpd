@@ -151,9 +151,11 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	    iev_main->handler, iev_main);
 	event_add(&iev_main->ev, NULL);
 
-	event_set(&pfkey_ev, global.pfkeysock, EV_READ | EV_PERSIST,
-	    ldpe_dispatch_pfkey, NULL);
-	event_add(&pfkey_ev, NULL);
+	if (sysdep.no_pfkey == 0) {
+		event_set(&pfkey_ev, global.pfkeysock, EV_READ | EV_PERSIST,
+		    ldpe_dispatch_pfkey, NULL);
+		event_add(&pfkey_ev, NULL);
+	}
 
 	/* mark sockets as closed */
 	global.ldp_disc_socket = -1;
@@ -182,9 +184,10 @@ ldpe_shutdown(void)
 	control_cleanup();
 	config_clear(leconf);
 
-	event_del(&pfkey_ev);
-	close(global.pfkeysock);
-
+	if (sysdep.no_pfkey == 0) {
+		event_del(&pfkey_ev);
+		close(global.pfkeysock);
+	}
 	ldpe_close_sockets();
 
 	/* remove addresses from global list */
