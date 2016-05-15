@@ -19,9 +19,8 @@
 #ifndef _CONTROL_H_
 #define	_CONTROL_H_
 
+#include <sys/types.h>
 #include <sys/queue.h>
-#include <sys/time.h>
-#include <event.h>
 
 struct ctl_conn {
 	TAILQ_ENTRY(ctl_conn)	entry;

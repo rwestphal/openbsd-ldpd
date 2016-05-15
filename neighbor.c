@@ -19,29 +19,18 @@
  */
 
 #include <sys/types.h>
-#include <sys/ioctl.h>
 #include <sys/time.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
-#include <net/if.h>
-
-#include <ctype.h>
-#include <err.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <event.h>
 #include <unistd.h>
 
 #include "ldpd.h"
-#include "ldp.h"
 #include "ldpe.h"
-#include "control.h"
-#include "log.h"
 #include "lde.h"
+#include "log.h"
 
 static __inline int	 nbr_id_compare(struct nbr *, struct nbr *);
 static __inline int	 nbr_addr_compare(struct nbr *, struct nbr *);

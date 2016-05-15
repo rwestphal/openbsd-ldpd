@@ -22,7 +22,7 @@
 #ifndef _LDP_H_
 #define _LDP_H_
 
-#include <netinet/in.h>
+#include <sys/types.h>
 
 /* misc */
 #define LDP_VERSION		1

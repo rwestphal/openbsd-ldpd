@@ -19,19 +19,18 @@
  */
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
-#include <sys/queue.h>
 #include <netinet/in.h>
 #include <netmpls/mpls.h>
 #include <arpa/inet.h>
-#include <err.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
 #include <pwd.h>
 #include <unistd.h>
-#include <event.h>
+#include <limits.h>
 
 #include "ldp.h"
 #include "ldpd.h"

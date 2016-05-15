@@ -19,16 +19,12 @@
  */
 
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
-
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "ldpd.h"
 #include "ldpe.h"
-#include "control.h"
 #include "log.h"
 
 static void	 adj_itimer(int, short, void *);

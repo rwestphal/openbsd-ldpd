@@ -17,26 +17,15 @@
  */
 
 #include <sys/types.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
 #include <sys/socket.h>
-#include <net/if.h>
-#include <net/if_types.h>
-#include <netinet/in.h>
 #include <netmpls/mpls.h>
-#include <arpa/inet.h>
-#include <ctype.h>
-#include <err.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <event.h>
+#include <limits.h>
 
 #include "ldpd.h"
-#include "ldp.h"
-#include "log.h"
 #include "lde.h"
+#include "log.h"
 
 static __inline int	 fec_compare(struct fec *, struct fec *);
 static int		 lde_nbr_is_nexthop(struct fec_node *,
