@@ -229,10 +229,8 @@ if_reset(struct iface *iface)
 
 	log_debug("%s: %s", __func__, iface->name);
 
-	while ((adj = LIST_FIRST(&iface->adj_list)) != NULL) {
-		LIST_REMOVE(adj, iface_entry);
+	while ((adj = LIST_FIRST(&iface->adj_list)) != NULL)
 		adj_del(adj);
-	}
 
 	if_stop_hello_timer(iface);
 
