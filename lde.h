@@ -44,7 +44,7 @@ struct fec {
 		struct {
 			uint16_t	type;
 			uint32_t	pwid;
-			struct in_addr	nexthop;
+			struct in_addr	lsr_id;
 		} pwid;
 	} u;
 };
@@ -96,17 +96,17 @@ struct fec_nh {
 	LIST_ENTRY(fec_nh)	 entry;
 	struct in_addr		 nexthop;
 	uint32_t		 remote_label;
-	void			*data;		/* fec specific data */
 };
 
 struct fec_node {
-	struct fec		fec;
+	struct fec		 fec;
 
-	LIST_HEAD(, fec_nh)	nexthops;	/* fib nexthops */
-	LIST_HEAD(, lde_map)	downstream;	/* recv mappings */
-	LIST_HEAD(, lde_map)	upstream;	/* sent mappings */
+	LIST_HEAD(, fec_nh)	 nexthops;	/* fib nexthops */
+	LIST_HEAD(, lde_map)	 downstream;	/* recv mappings */
+	LIST_HEAD(, lde_map)	 upstream;	/* sent mappings */
 
-	uint32_t		local_label;
+	uint32_t		 local_label;
+	void			*data;		/* fec specific data */
 };
 
 /* lde.c */
@@ -124,14 +124,14 @@ void	lde_send_labelwithdraw(struct lde_nbr *, struct fec_node *, uint32_t);
 void	lde_send_labelwithdraw_all(struct fec_node *, uint32_t);
 void	lde_send_labelrelease(struct lde_nbr *, struct fec_node *, uint32_t);
 void	lde_send_notification(uint32_t, uint32_t, uint32_t, uint16_t);
-
+struct lde_nbr	*lde_nbr_find_by_lsrid(struct in_addr);
+struct lde_nbr	*lde_nbr_find_by_addr(struct in_addr);
 struct lde_map *lde_map_add(struct lde_nbr *, struct fec_node *, int);
 void		lde_map_del(struct lde_nbr *, struct lde_map *, int);
 struct lde_req *lde_req_add(struct lde_nbr *, struct fec *, int);
 void		lde_req_del(struct lde_nbr *, struct lde_req *, int);
 struct lde_wdraw *lde_wdraw_add(struct lde_nbr *, struct fec_node *);
 void		  lde_wdraw_del(struct lde_nbr *, struct lde_wdraw *);
-struct lde_nbr *lde_find_address(struct in_addr);
 void		lde_change_egress_label(int);
 
 int			 lde_address_add(struct lde_nbr *, struct in_addr *);

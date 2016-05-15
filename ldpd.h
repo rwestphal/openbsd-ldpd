@@ -279,7 +279,7 @@ struct l2vpn_if {
 struct l2vpn_pw {
 	LIST_ENTRY(l2vpn_pw)	 entry;
 	struct l2vpn		*l2vpn;
-	struct in_addr		 addr;
+	struct in_addr		 lsr_id;
 	uint32_t		 pwid;
 	char			 ifname[IF_NAMESIZE];
 	unsigned int		 ifindex;
@@ -431,7 +431,7 @@ struct ctl_pw {
 	uint16_t		 type;
 	char			 ifname[IF_NAMESIZE];
 	uint32_t		 pwid;
-	struct in_addr		 nexthop;
+	struct in_addr		 lsr_id;
 	uint32_t		 local_label;
 	uint32_t		 local_gid;
 	uint16_t		 local_ifmtu;

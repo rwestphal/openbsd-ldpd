@@ -368,7 +368,7 @@ pwopts		: PWID NUMBER {
 			}
 			free($2);
 
-			pw->addr.s_addr = addr.s_addr;
+			pw->lsr_id = addr;
 
 			t = tnbr_find(conf, addr);
 			if (t == NULL) {
@@ -413,7 +413,7 @@ pseudowire	: PSEUDOWIRE STRING {
 				yyerror("missing pseudowire id");
 				YYERROR;
 			}
-			if (pw->addr.s_addr == INADDR_ANY) {
+			if (pw->lsr_id.s_addr == INADDR_ANY) {
 				yyerror("missing pseudowore neighbor");
 				YYERROR;
 			}
@@ -422,7 +422,7 @@ pseudowire	: PSEUDOWIRE STRING {
 				LIST_FOREACH(p, &l->pw_list, entry)
 					if (pw != p &&
 					    pw->pwid == p->pwid &&
-					    pw->addr.s_addr == p->addr.s_addr) {
+					    pw->lsr_id.s_addr == p->lsr_id.s_addr) {
 						yyerror("pseudowire already "
 						    "configured");
 						YYERROR;

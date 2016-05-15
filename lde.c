@@ -582,7 +582,7 @@ lde_send_change_klabel(struct fec_node *fn, struct fec_nh *fnh)
 		    fnh->remote_label == NO_LABEL)
 			return;
 
-		pw = (struct l2vpn_pw *) fnh->data;
+		pw = (struct l2vpn_pw *) fn->data;
 		pw->flags |= F_PW_STATUS_UP;
 
 		memset(&kpw, 0, sizeof(kpw));
@@ -622,7 +622,7 @@ lde_send_delete_klabel(struct fec_node *fn, struct fec_nh *fnh)
 			l2vpn_sync_pws(fn->fec.u.ipv4.prefix);
 		break;
 	case FEC_TYPE_PWID:
-		pw = (struct l2vpn_pw *) fnh->data;
+		pw = (struct l2vpn_pw *) fn->data;
 		if (!(pw->flags & F_PW_STATUS_UP))
 			return;
 		pw->flags &= ~F_PW_STATUS_UP;
@@ -663,7 +663,7 @@ lde_fec2map(struct fec *fec, struct map *map)
 }
 
 void
-lde_map2fec(struct map *map, struct in_addr nbrid, struct fec *fec)
+lde_map2fec(struct map *map, struct in_addr lsr_id, struct fec *fec)
 {
 	memset(fec, 0, sizeof(*fec));
 
@@ -677,7 +677,7 @@ lde_map2fec(struct map *map, struct in_addr nbrid, struct fec *fec)
 		fec->type = FEC_TYPE_PWID;
 		fec->u.pwid.type = map->fec.pwid.type;
 		fec->u.pwid.pwid = map->fec.pwid.pwid;
-		fec->u.pwid.nexthop.s_addr = nbrid.s_addr;
+		fec->u.pwid.lsr_id = lsr_id;
 		break;
 	}
 }
@@ -688,7 +688,6 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn, int single)
 	struct lde_req	*lre;
 	struct lde_map	*me;
 	struct map	 map;
-	struct fec_nh	*fnh;
 	struct l2vpn_pw	*pw;
 
 	/*
@@ -699,12 +698,11 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn, int single)
 
 	lde_fec2map(&fn->fec, &map);
 	if (fn->fec.type == FEC_TYPE_PWID) {
-		fnh = fec_nh_find(fn, ln->id);
-		if (fnh == NULL)
-			/* not the other end of the pseudowire */
+		pw = (struct l2vpn_pw *) fn->data;
+		if (pw == NULL || pw->lsr_id.s_addr != ln->id.s_addr)
+			/* not the remote end of the pseudowire */
 			return;
 
-		pw = (struct l2vpn_pw *) fnh->data;
 		map.flags |= F_MAP_PW_IFMTU;
 		map.fec.pwid.ifmtu = pw->l2vpn->mtu;
 		if (pw->flags & F_PW_CWORD)
@@ -748,19 +746,17 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 	struct lde_wdraw	*lw;
 	struct map		 map;
 	struct fec		*f;
-	struct fec_nh		*fnh;
 	struct l2vpn_pw		*pw;
 
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		map.label = fn->local_label;
 		if (fn->fec.type == FEC_TYPE_PWID) {
-			fnh = fec_nh_find(fn, ln->id);
-			if (fnh == NULL)
-				/* not the other end of the pseudowire */
+			pw = (struct l2vpn_pw *) fn->data;
+			if (pw == NULL || pw->lsr_id.s_addr != ln->id.s_addr)
+				/* not the remote end of the pseudowire */
 				return;
 
-			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CWORD)
 				map.flags |= F_MAP_PW_CWORD;
 		}
@@ -807,18 +803,16 @@ void
 lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 {
 	struct map		 map;
-	struct fec_nh		*fnh;
 	struct l2vpn_pw		*pw;
 
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		if (fn->fec.type == FEC_TYPE_PWID) {
-			fnh = fec_nh_find(fn, ln->id);
-			if (fnh == NULL)
-				/* not the other end of the pseudowire */
+			pw = (struct l2vpn_pw *) fn->data;
+			if (pw == NULL || pw->lsr_id.s_addr != ln->id.s_addr)
+				/* not the remote end of the pseudowire */
 				return;
 
-			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CWORD)
 				map.flags |= F_MAP_PW_CWORD;
 		}
@@ -894,10 +888,21 @@ lde_nbr_del(struct lde_nbr *ln)
 		fn = (struct fec_node *)f;
 
 		LIST_FOREACH(fnh, &fn->nexthops, entry) {
-			if (lde_address_find(ln, &fnh->nexthop)) {
-				lde_send_delete_klabel(fn, fnh);
-				fnh->remote_label = NO_LABEL;
+			switch (f->type) {
+			case FEC_TYPE_IPV4:
+				if (!lde_address_find(ln, &fnh->nexthop))
+					continue;
+				break;
+			case FEC_TYPE_PWID:
+				if (f->u.pwid.lsr_id.s_addr != ln->id.s_addr)
+					continue;
+				break;
+			default:
+				break;
 			}
+
+			lde_send_delete_klabel(fn, fnh);
+			fnh->remote_label = NO_LABEL;
 		}
 	}
 
@@ -922,6 +927,30 @@ lde_nbr_find(uint32_t peerid)
 	ln.peerid = peerid;
 
 	return (RB_FIND(nbr_tree, &lde_nbrs, &ln));
+}
+
+struct lde_nbr *
+lde_nbr_find_by_lsrid(struct in_addr addr)
+{
+	struct lde_nbr		*ln;
+
+	RB_FOREACH(ln, nbr_tree, &lde_nbrs)
+		if (ln->id.s_addr == addr.s_addr)
+			return (ln);
+
+	return (NULL);
+}
+
+struct lde_nbr *
+lde_nbr_find_by_addr(struct in_addr addr)
+{
+	struct lde_nbr		*ln;
+
+	RB_FOREACH(ln, nbr_tree, &lde_nbrs)
+		if (lde_address_find(ln, &addr) != NULL)
+			return (ln);
+
+	return (NULL);
 }
 
 void
@@ -1129,17 +1158,4 @@ lde_address_list_free(struct lde_nbr *ln)
 		TAILQ_REMOVE(&ln->addr_list, addr, entry);
 		free(addr);
 	}
-}
-
-struct lde_nbr *
-lde_find_address(struct in_addr address)
-{
-	struct lde_nbr	*ln;
-
-	RB_FOREACH(ln, nbr_tree, &lde_nbrs) {
-		if (lde_address_find(ln, &address) != NULL)
-			return (ln);
-	}
-
-	return (NULL);
 }
