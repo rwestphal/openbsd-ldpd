@@ -1316,7 +1316,7 @@ get_rtr_id(void)
 		cur = ((struct sockaddr_in *)ifa->ifa_addr)->sin_addr.s_addr;
 		if ((cur & localnet) == localnet)	/* skip 127/8 */
 			continue;
-		if (cur > ip || ip == 0)
+		if (ntohl(cur) < ntohl(ip) || ip == 0)
 			ip = cur;
 	}
 	freeifaddrs(ifap);
