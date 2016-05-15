@@ -163,6 +163,7 @@ void		 ldpe_dispatch_lde(int, short, void *);
 void		 ldpe_dispatch_pfkey(int, short, void *);
 void		 ldpe_setup_sockets(int, int, int);
 void		 ldpe_close_sockets(void);
+void		 ldpe_reset_nbrs(void);
 void		 ldpe_remove_dynamic_tnbrs(void);
 void		 ldpe_stop_init_backoff(void);
 void		 ldpe_iface_ctl(struct ctl_conn *, unsigned int);
