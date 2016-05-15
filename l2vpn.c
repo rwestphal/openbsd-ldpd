@@ -160,9 +160,6 @@ l2vpn_pw_init(struct l2vpn_pw *pw)
 {
 	struct fec	 fec;
 
-	if (pw->pwid == 0 || pw->addr.s_addr == INADDR_ANY)
-		return;
-
 	l2vpn_pw_fec(pw, &fec);
 	lde_kernel_insert(&fec, pw->addr, 0, (void *)pw);
 }
@@ -171,9 +168,6 @@ void
 l2vpn_pw_del(struct l2vpn_pw *pw)
 {
 	struct fec	 fec;
-
-	if (pw->pwid == 0 || pw->addr.s_addr == INADDR_ANY)
-		return;
 
 	l2vpn_pw_fec(pw, &fec);
 	lde_kernel_remove(&fec, pw->addr);
@@ -471,9 +465,6 @@ ldpe_l2vpn_pw_init(struct l2vpn_pw *pw)
 {
 	struct tnbr		*tnbr;
 
-	if (pw->pwid == 0 || pw->addr.s_addr == INADDR_ANY)
-		return;
-
 	tnbr = tnbr_find(leconf, pw->addr);
 	if (!event_initialized(&tnbr->hello_timer))
 		tnbr_init(tnbr);
@@ -483,9 +474,6 @@ void
 ldpe_l2vpn_pw_exit(struct l2vpn_pw *pw)
 {
 	struct tnbr		*tnbr;
-
-	if (pw->pwid == 0 || pw->addr.s_addr == INADDR_ANY)
-		return;
 
 	tnbr = tnbr_find(leconf, pw->addr);
 	if (tnbr) {
