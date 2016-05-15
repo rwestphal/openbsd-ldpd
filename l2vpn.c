@@ -52,13 +52,16 @@ l2vpn_new(const char *name)
 
 	/* set default values */
 	l2vpn->mtu = DEFAULT_L2VPN_MTU;
-	l2vpn->pw_type = PW_TYPE_ETHERNET;
+	l2vpn->pw_type = DEFAULT_PW_TYPE;
+
+	LIST_INIT(&l2vpn->if_list);
+	LIST_INIT(&l2vpn->pw_list);
 
 	return (l2vpn);
 }
 
 struct l2vpn *
-l2vpn_find(struct ldpd_conf *xconf, char *name)
+l2vpn_find(struct ldpd_conf *xconf, const char *name)
 {
 	struct l2vpn	*l2vpn;
 
@@ -77,7 +80,7 @@ l2vpn_del(struct l2vpn *l2vpn)
 
 	while ((lif = LIST_FIRST(&l2vpn->if_list)) != NULL) {
 		LIST_REMOVE(lif, entry);
-		l2vpn_if_del(lif);
+		free(lif);
 	}
 	while ((pw = LIST_FIRST(&l2vpn->pw_list)) != NULL) {
 		LIST_REMOVE(pw, entry);
@@ -123,12 +126,6 @@ l2vpn_if_find(struct l2vpn *l2vpn, unsigned int ifindex)
 			return (lif);
 
 	return (NULL);
-}
-
-void
-l2vpn_if_del(struct l2vpn_if *lif)
-{
-	free(lif);
 }
 
 struct l2vpn_pw *
