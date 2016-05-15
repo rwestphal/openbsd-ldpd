@@ -332,6 +332,7 @@ struct ldpd_conf {
 #define LDPD_OPT_VERBOSE2	0x00000002
 #define LDPD_OPT_NOACTION	0x00000004
 	time_t			uptime;
+	int			pfkeysock;
 	int			ldp_discovery_socket;
 	int			ldp_ediscovery_socket;
 	int			ldp_session_socket;
