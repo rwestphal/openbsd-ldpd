@@ -93,29 +93,17 @@ send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 }
 
 void
-recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
+recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, struct in_addr src,
+    struct iface *iface, int multicast, char *buf, uint16_t len)
 {
-	struct ldp_msg		 hello;
-	struct ldp_hdr		 ldp;
 	struct adj		*adj;
 	struct nbr		*nbr;
-	struct in_addr		 lsr_id;
+	uint16_t		 holdtime, flags;
 	struct in_addr		 transport_addr;
 	uint32_t		 conf_number;
-	uint16_t		 holdtime, flags;
 	int			 r;
 	struct hello_source	 source;
 	struct tnbr		*tnbr = NULL;
-
-	memcpy(&ldp, buf, sizeof(ldp));
-	buf += LDP_HDR_SIZE;
-	len -= LDP_HDR_SIZE;
-
-	memcpy(&hello, buf, sizeof(hello));
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
-
-	lsr_id.s_addr = ldp.lsr_id;
 
 	r = tlv_decode_hello_prms(buf, len, &holdtime, &flags);
 	if (r == -1) {
@@ -126,6 +114,20 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 	if (holdtime != 0 && holdtime < MIN_HOLDTIME) {
 		log_debug("%s: neighbor %s: invalid hello holdtime (%u)",
 		    __func__, inet_ntoa(lsr_id), holdtime);
+		return;
+	}
+	buf += r;
+	len -= r;
+
+	/* safety checks */
+	if (multicast && (flags & TARGETED_HELLO)) {
+		log_debug("%s: neighbor %s: multicast targeted hello", __func__,
+		    inet_ntoa(lsr_id));
+		return;
+	}
+	if (!multicast && !((flags & TARGETED_HELLO))) {
+		log_debug("%s: neighbor %s: unicast link hello", __func__,
+		    inet_ntoa(lsr_id));
 		return;
 	}
 
@@ -154,18 +156,10 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 		source.type = HELLO_TARGETED;
 		source.target = tnbr;
 	} else {
-		if (ldp.lspace_id != 0) {
-			log_debug("%s: invalid label space ID %u, interface %s",
-			    __func__, ldp.lspace_id, iface->name);
-			return;
-		}
 		source.type = HELLO_LINK;
 		source.link.iface = iface;
 		source.link.src_addr.s_addr = src.s_addr;
 	}
-
-	buf += r;
-	len -= r;
 
 	r = tlv_decode_opt_hello_prms(buf, len, &transport_addr,
 	    &conf_number);
@@ -174,16 +168,22 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 		    __func__, inet_ntoa(lsr_id));
 		return;
 	}
-	if (transport_addr.s_addr == INADDR_ANY)
-		transport_addr.s_addr = src.s_addr;
-
 	if (r != len) {
 		log_debug("%s: neighbor %s: unexpected data in message",
 		    __func__, inet_ntoa(lsr_id));
 		return;
 	}
 
-	nbr = nbr_find_ldpid(ldp.lsr_id);
+	/* implicit transport address */
+	if (transport_addr.s_addr == INADDR_ANY)
+		transport_addr.s_addr = src.s_addr;
+	if (bad_ip_addr(transport_addr)) {
+		log_debug("%s: neighbor %s: invalid transport address %s",
+		    __func__, inet_ntoa(lsr_id), inet_ntoa(transport_addr));
+		return;
+	}
+
+	nbr = nbr_find_ldpid(lsr_id.s_addr);
 	if (!nbr) {
 		/* create new adjacency and new neighbor */
 		nbr = nbr_new(lsr_id, transport_addr);
@@ -216,7 +216,6 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 
 		adj->holdtime = min(tnbr->hello_holdtime, holdtime);
 	}
-
 	if (adj->holdtime != INFINITE_HOLDTIME)
 		adj_start_itimer(adj);
 	else
@@ -264,10 +263,9 @@ tlv_decode_hello_prms(char *buf, uint16_t len, uint16_t *holdtime,
 		return (-1);
 	memcpy(&tlv, buf, sizeof(tlv));
 
-	if (ntohs(tlv.length) != sizeof(tlv) - TLV_HDR_LEN)
-		return (-1);
-
 	if (tlv.type != htons(TLV_TYPE_COMMONHELLO))
+		return (-1);
+	if (ntohs(tlv.length) != sizeof(tlv) - TLV_HDR_LEN)
 		return (-1);
 
 	*holdtime = ntohs(tlv.holdtime);

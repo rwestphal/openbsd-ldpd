@@ -114,7 +114,8 @@ void	accept_unpause(void);
 
 /* hello.c */
 int	 send_hello(enum hello_type, struct iface *, struct tnbr *);
-void	 recv_hello(struct iface *,  struct in_addr, char *, uint16_t);
+void	 recv_hello(struct in_addr, struct ldp_msg *, struct in_addr,
+	    struct iface *, int, char *, uint16_t);
 
 /* init.c */
 void	 send_init(struct nbr *);

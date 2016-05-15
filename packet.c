@@ -42,7 +42,7 @@
 extern struct ldpd_conf        *leconf;
 extern struct ldpd_sysdep	sysdep;
 
-struct iface	*disc_find_iface(unsigned int, struct in_addr);
+struct iface	*disc_find_iface(unsigned int, struct in_addr, int);
 ssize_t		 session_get_pdu(struct ibuf_read *, char **);
 
 static int	 msgcnt = 0;
@@ -105,20 +105,24 @@ void
 disc_recv_packet(int fd, short event, void *bula)
 {
 	union {
-		struct cmsghdr hdr;
+		struct	cmsghdr hdr;
 		char	buf[CMSG_SPACE(sizeof(struct sockaddr_dl))];
 	} cmsgbuf;
 	struct sockaddr_in	 src;
 	struct msghdr		 msg;
 	struct iovec		 iov;
-	struct ldp_hdr		 ldp_hdr;
-	struct ldp_msg		 ldp_msg;
-	struct iface		*iface = NULL;
 	char			*buf;
 	struct cmsghdr		*cmsg;
 	ssize_t			 r;
-	uint16_t		 len;
+	int			 multicast;
 	unsigned int		 ifindex = 0;
+	struct iface		*iface;
+	uint16_t		 len;
+	struct ldp_hdr		 ldp_hdr;
+	uint16_t		 pdu_len;
+	struct ldp_msg		 ldp_msg;
+	uint16_t		 msg_len;
+	struct in_addr		 lsr_id;
 
 	if (event != EV_READ)
 		return;
@@ -140,6 +144,14 @@ disc_recv_packet(int fd, short event, void *bula)
 			    strerror(errno));
 		return;
 	}
+
+	multicast = (msg.msg_flags & MSG_MCAST) ? 1 : 0;
+	if (bad_ip_addr(src.sin_addr)) {
+		log_debug("%s: invalid source address: %s", __func__,
+		    inet_ntoa(src.sin_addr));
+		return;
+	}
+
 	for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL;
 	    cmsg = CMSG_NXTHDR(&msg, cmsg)) {
 		if (cmsg->cmsg_level == IPPROTO_IP &&
@@ -150,49 +162,66 @@ disc_recv_packet(int fd, short event, void *bula)
 		}
 	}
 
-	len = (uint16_t)r;
-
 	/* find a matching interface */
-	if ((fd == global.ldp_discovery_socket) &&
-	    (iface = disc_find_iface(ifindex, src.sin_addr)) == NULL) {
-		log_debug("%s: cannot find a matching subnet on interface "
-		    "index %d for %s", __func__, ifindex,
+	iface = disc_find_iface(ifindex, src.sin_addr, multicast);
+	if (iface == NULL)
+		return;
+
+	/* check packet size */
+	len = (uint16_t)r;
+	if (len < (LDP_HDR_SIZE + LDP_MSG_SIZE) || len > LDP_MAX_LEN) {
+		log_debug("%s: bad packet size, source %s", __func__,
 		    inet_ntoa(src.sin_addr));
 		return;
 	}
 
 	/* LDP header sanity checks */
-	if (len < LDP_HDR_SIZE || len > LDP_MAX_LEN) {
-		log_debug("%s: bad packet size", __func__);
-		return;
-	}
 	memcpy(&ldp_hdr, buf, sizeof(ldp_hdr));
-
 	if (ntohs(ldp_hdr.version) != LDP_VERSION) {
-		log_debug("%s: invalid LDP version %d", __func__,
-		    ldp_hdr.version);
+		log_debug("%s: invalid LDP version %d, source %s", __func__,
+		    ntohs(ldp_hdr.version), inet_ntoa(src.sin_addr));
 		return;
 	}
-
-	if (ntohs(ldp_hdr.length) >
-	    len - sizeof(ldp_hdr.version) - sizeof(ldp_hdr.length)) {
-		log_debug("%s: invalid LDP packet length %u", __func__,
-		    ntohs(ldp_hdr.length));
+	if (ntohs(ldp_hdr.lspace_id) != 0) {
+		log_debug("%s: invalid label space %u, source %s", __func__,
+		    ntohs(ldp_hdr.lspace_id), inet_ntoa(src.sin_addr));
 		return;
 	}
-
-	if (len < LDP_HDR_SIZE + LDP_MSG_LEN) {
-		log_debug("%s: invalid LDP packet length %d", __func__,
-		    ntohs(ldp_hdr.length));
+	/* check "PDU Length" field */
+	pdu_len = ntohs(ldp_hdr.length);
+	if ((pdu_len < (LDP_HDR_PDU_LEN + LDP_MSG_SIZE)) ||
+	    (pdu_len > (len - LDP_HDR_DEAD_LEN))) {
+		log_debug("%s: invalid LDP packet length %u, source %s",
+		    __func__, ntohs(ldp_hdr.length), inet_ntoa(src.sin_addr));
 		return;
 	}
+	buf += LDP_HDR_SIZE;
+	len -= LDP_HDR_SIZE;
 
-	memcpy(&ldp_msg, buf + LDP_HDR_SIZE, sizeof(ldp_msg));
+	lsr_id.s_addr = ldp_hdr.lsr_id;
+
+	/*
+	 * For UDP, we process only the first message of each packet. This does
+	 * not impose any restrictions since LDP uses UDP only for sending Hello
+	 * packets.
+	 */
+	memcpy(&ldp_msg, buf, sizeof(ldp_msg));
+
+	/* check "Message Length" field */
+	msg_len = ntohs(ldp_msg.length);
+	if (msg_len < LDP_MSG_LEN || ((msg_len + LDP_MSG_DEAD_LEN) > pdu_len)) {
+		log_debug("%s: invalid LDP message length %u, source %s",
+		    __func__, ntohs(ldp_msg.length), inet_ntoa(src.sin_addr));
+		return;
+	}
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	/* switch LDP packet type */
 	switch (ntohs(ldp_msg.type)) {
 	case MSG_TYPE_HELLO:
-		recv_hello(iface, src.sin_addr, buf, len);
+		recv_hello(lsr_id, &ldp_msg, src.sin_addr, iface, multicast,
+		    buf, len);
 		break;
 	default:
 		log_debug("%s: unknown LDP packet type, source %s", __func__,
@@ -201,27 +230,34 @@ disc_recv_packet(int fd, short event, void *bula)
 }
 
 struct iface *
-disc_find_iface(unsigned int ifindex, struct in_addr src)
+disc_find_iface(unsigned int ifindex, struct in_addr src,
+    int multicast)
 {
 	struct iface	*iface;
 	struct if_addr	*if_addr;
 
-	LIST_FOREACH(iface, &leconf->iface_list, entry)
-		LIST_FOREACH(if_addr, &iface->addr_list, entry)
-			switch (iface->type) {
-			case IF_TYPE_POINTOPOINT:
-				if (ifindex == iface->ifindex &&
-				    if_addr->dstbrd.s_addr == src.s_addr)
-					return (iface);
-				break;
-			default:
-				if (ifindex == iface->ifindex &&
-				    (if_addr->addr.s_addr &
-					if_addr->mask.s_addr) ==
-				    (src.s_addr & if_addr->mask.s_addr))
-					return (iface);
-				break;
-			}
+	iface = if_lookup(leconf, ifindex);
+	if (iface == NULL)
+		return (NULL);
+
+	if (!multicast)
+		return (iface);
+
+	LIST_FOREACH(if_addr, &iface->addr_list, entry) {
+		switch (iface->type) {
+		case IF_TYPE_POINTOPOINT:
+			if (ifindex == iface->ifindex &&
+			    if_addr->dstbrd.s_addr == src.s_addr)
+				return (iface);
+			break;
+		default:
+			if (ifindex == iface->ifindex &&
+			    (if_addr->addr.s_addr & if_addr->mask.s_addr) ==
+			    (src.s_addr & if_addr->mask.s_addr))
+				return (iface);
+			break;
+		}
+	}
 
 	return (NULL);
 }

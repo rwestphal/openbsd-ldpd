@@ -474,6 +474,9 @@ const char	*if_state_name(int);
 const char	*if_type_name(enum iface_type);
 const char	*notification_name(uint32_t);
 
+/* util.c */
+int		 bad_ip_addr(struct in_addr);
+
 /* ldpd.c */
 void	main_imsg_compose_ldpe(int, pid_t, void *, uint16_t);
 void	main_imsg_compose_lde(int, pid_t, void *, uint16_t);
