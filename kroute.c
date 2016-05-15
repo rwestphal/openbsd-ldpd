@@ -102,7 +102,6 @@ void			 kroute_clear(void);
 struct kif_node		*kif_find(unsigned short);
 struct kif_node		*kif_insert(unsigned short);
 int			 kif_remove(struct kif_node *);
-void			 kif_clear(void);
 struct kif_node		*kif_update(unsigned short, int, struct if_data *,
 			    struct sockaddr_dl *, int *);
 

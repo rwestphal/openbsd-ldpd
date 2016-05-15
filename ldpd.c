@@ -170,14 +170,17 @@ main(int argc, char *argv[])
 	kif_init();
 
 	/* parse config file */
-	if ((ldpd_conf = parse_config(conffile)) == NULL )
+	if ((ldpd_conf = parse_config(conffile)) == NULL ) {
+		kif_clear();
 		exit(1);
+	}
 
 	if (global.cmd_opts & LDPD_OPT_NOACTION) {
 		if (global.cmd_opts & LDPD_OPT_VERBOSE)
 			print_config(ldpd_conf);
 		else
 			fprintf(stderr, "configuration OK\n");
+		kif_clear();
 		exit(0);
 	}
 
