@@ -54,8 +54,8 @@ int		check_child(pid_t, const char *);
 void	main_dispatch_ldpe(int, short, void *);
 void	main_dispatch_lde(int, short, void *);
 
-int	ldp_reload(void);
 int	ldp_sendboth(enum imsg_type, void *, uint16_t);
+int	ldp_reload(void);
 void	merge_l2vpns(struct ldpd_conf *, struct l2vpn *, struct l2vpn *);
 
 int	pipe_parent2ldpe[2];
@@ -484,6 +484,16 @@ main_imsg_compose_lde(int type, pid_t pid, void *data, uint16_t datalen)
 	imsg_compose_event(iev_lde, type, 0, pid, -1, data, datalen);
 }
 
+int
+ldp_sendboth(enum imsg_type type, void *buf, uint16_t len)
+{
+	if (imsg_compose_event(iev_ldpe, type, 0, 0, -1, buf, len) == -1)
+		return (-1);
+	if (imsg_compose_event(iev_lde, type, 0, 0, -1, buf, len) == -1)
+		return (-1);
+	return (0);
+}
+
 void
 imsg_event_add(struct imsgev *iev)
 {
@@ -596,16 +606,6 @@ ldp_reload(void)
 
 	merge_config(ldpd_conf, xconf);
 
-	return (0);
-}
-
-int
-ldp_sendboth(enum imsg_type type, void *buf, uint16_t len)
-{
-	if (imsg_compose_event(iev_ldpe, type, 0, 0, -1, buf, len) == -1)
-		return (-1);
-	if (imsg_compose_event(iev_lde, type, 0, 0, -1, buf, len) == -1)
-		return (-1);
 	return (0);
 }
 

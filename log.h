@@ -36,5 +36,7 @@ const char *log_map(struct map *);
 struct fec;
 const char *log_fec(struct fec *);
 void	log_rtmsg(unsigned char);
+struct hello_source;
+char	*log_hello_src(const struct hello_source *);
 
 #endif /* _LOG_H_ */

@@ -50,10 +50,8 @@ static __inline int nbr_id_compare(struct nbr *, struct nbr *);
 static __inline int nbr_pid_compare(struct nbr *, struct nbr *);
 
 RB_HEAD(nbr_id_head, nbr);
-RB_PROTOTYPE(nbr_id_head, nbr, id_tree, nbr_id_compare)
 RB_GENERATE(nbr_id_head, nbr, id_tree, nbr_id_compare)
 RB_HEAD(nbr_pid_head, nbr);
-RB_PROTOTYPE(nbr_pid_head, nbr, pid_tree, nbr_pid_compare)
 RB_GENERATE(nbr_pid_head, nbr, pid_tree, nbr_pid_compare)
 
 static __inline int
@@ -290,19 +288,19 @@ nbr_update_peerid(struct nbr *nbr)
 }
 
 struct nbr *
+nbr_find_ldpid(uint32_t lsr_id)
+{
+	struct nbr	n;
+	n.id.s_addr = lsr_id;
+	return (RB_FIND(nbr_id_head, &nbrs_by_id, &n));
+}
+
+struct nbr *
 nbr_find_peerid(uint32_t peerid)
 {
 	struct nbr	n;
 	n.peerid = peerid;
 	return (RB_FIND(nbr_pid_head, &nbrs_by_pid, &n));
-}
-
-struct nbr *
-nbr_find_ldpid(uint32_t rtr_id)
-{
-	struct nbr	n;
-	n.id.s_addr = rtr_id;
-	return (RB_FIND(nbr_id_head, &nbrs_by_id, &n));
 }
 
 int
@@ -628,18 +626,4 @@ nbr_to_ctl(struct nbr *nbr)
 		nctl.uptime = 0;
 
 	return (&nctl);
-}
-
-void
-ldpe_nbr_ctl(struct ctl_conn *c)
-{
-	struct nbr	*nbr;
-	struct ctl_nbr	*nctl;
-
-	RB_FOREACH(nbr, nbr_pid_head, &nbrs_by_pid) {
-		nctl = nbr_to_ctl(nbr);
-		imsg_compose_event(&c->iev, IMSG_CTL_SHOW_NBR, 0, 0, -1, nctl,
-		    sizeof(struct ctl_nbr));
-	}
-	imsg_compose_event(&c->iev, IMSG_CTL_END, 0, 0, -1, NULL, 0);
 }

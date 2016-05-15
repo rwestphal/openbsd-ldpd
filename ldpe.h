@@ -152,9 +152,11 @@ void		 ldpe_dispatch_pfkey(int, short, void *);
 int		 ldpe_imsg_compose_parent(int, pid_t, void *, uint16_t);
 int		 ldpe_imsg_compose_lde(int, uint32_t, pid_t, void *,
 		     uint16_t);
+void		 ldpe_iface_ctl(struct ctl_conn *, unsigned int);
+void		 ldpe_adj_ctl(struct ctl_conn *);
+void		 ldpe_nbr_ctl(struct ctl_conn *);
 void		 mapping_list_add(struct mapping_head *, struct map *);
 void		 mapping_list_clr(struct mapping_head *);
-void		 ldpe_iface_ctl(struct ctl_conn *, unsigned int);
 
 /* interface.c */
 int		 if_start(struct iface *);
@@ -167,6 +169,8 @@ void		 if_init(struct iface *);
 struct iface	*if_lookup(struct ldpd_conf *, unsigned short);
 struct if_addr	*if_addr_new(struct kaddr *);
 struct if_addr	*if_addr_lookup(struct if_addr_head *, struct kaddr *);
+void		 if_addr_add(struct kaddr *);
+void		 if_addr_del(struct kaddr *);
 
 struct ctl_iface	*if_to_ctl(struct iface *);
 
@@ -193,7 +197,6 @@ void		 tnbr_init(struct tnbr *);
 struct tnbr	*tnbr_find(struct ldpd_conf *, struct in_addr);
 
 struct ctl_adj	*adj_to_ctl(struct adj *);
-void		 ldpe_adj_ctl(struct ctl_conn *);
 
 /* neighbor.c */
 struct nbr	*nbr_new(struct in_addr, struct in_addr);
@@ -224,7 +227,11 @@ struct nbr_params	*nbr_params_new(struct in_addr);
 struct nbr_params	*nbr_params_find(struct ldpd_conf *, struct in_addr);
 
 struct ctl_nbr	*nbr_to_ctl(struct nbr *);
-void		 ldpe_nbr_ctl(struct ctl_conn *);
+
+extern struct nbr_id_head	nbrs_by_id;
+RB_PROTOTYPE(nbr_id_head, nbr, id_tree, nbr_id_compare)
+extern struct nbr_pid_head	nbrs_by_pid;
+RB_PROTOTYPE(nbr_pid_head, nbr, pid_tree, nbr_pid_compare)
 
 /* packet.c */
 int	 gen_ldp_hdr(struct ibuf *, uint16_t);

@@ -43,9 +43,6 @@
 #include "control.h"
 #include "log.h"
 
-extern struct nbr_id_head	nbrs_by_id;
-RB_PROTOTYPE(nbr_id_head, nbr, id_tree, nbr_id_compare)
-
 void	 ldpe_sig_handler(int, short, void *);
 void	 ldpe_shutdown(void);
 
@@ -106,10 +103,6 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	global.pfkeysock = pfkey_init(&sysdep);
 
 	/* create the discovery UDP socket */
-	disc_addr.sin_family = AF_INET;
-	disc_addr.sin_port = htons(LDP_PORT);
-	disc_addr.sin_addr.s_addr = INADDR_ANY;
-
 	if ((global.ldp_discovery_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
@@ -118,6 +111,9 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (if_set_reuse(global.ldp_discovery_socket, 1) == -1)
 		fatal("if_set_reuse");
 
+	disc_addr.sin_family = AF_INET;
+	disc_addr.sin_port = htons(LDP_PORT);
+	disc_addr.sin_addr.s_addr = INADDR_ANY;
 	if (bind(global.ldp_discovery_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding discovery socket");
@@ -136,10 +132,6 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if_set_recvbuf(global.ldp_discovery_socket);
 
 	/* create the extended discovery UDP socket */
-	disc_addr.sin_family = AF_INET;
-	disc_addr.sin_port = htons(LDP_PORT);
-	disc_addr.sin_addr.s_addr = xconf->trans_addr.s_addr;
-
 	if ((global.ldp_ediscovery_socket = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_UDP)) == -1)
@@ -148,6 +140,9 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (if_set_reuse(global.ldp_ediscovery_socket, 1) == -1)
 		fatal("if_set_reuse");
 
+	disc_addr.sin_family = AF_INET;
+	disc_addr.sin_port = htons(LDP_PORT);
+	disc_addr.sin_addr.s_addr = xconf->trans_addr.s_addr;
 	if (bind(global.ldp_ediscovery_socket, (struct sockaddr *)&disc_addr,
 	    sizeof(disc_addr)) == -1)
 		fatal("error binding extended discovery socket");
@@ -161,10 +156,6 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if_set_recvbuf(global.ldp_ediscovery_socket);
 
 	/* create the session TCP socket */
-	sess_addr.sin_family = AF_INET;
-	sess_addr.sin_port = htons(LDP_PORT);
-	sess_addr.sin_addr.s_addr = INADDR_ANY;
-
 	if ((global.ldp_session_socket = socket(AF_INET,
 	    SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC,
 	    IPPROTO_TCP)) == -1)
@@ -173,6 +164,9 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	if (if_set_reuse(global.ldp_session_socket, 1) == -1)
 		fatal("if_set_reuse");
 
+	sess_addr.sin_family = AF_INET;
+	sess_addr.sin_port = htons(LDP_PORT);
+	sess_addr.sin_addr.s_addr = INADDR_ANY;
 	if (bind(global.ldp_session_socket, (struct sockaddr *)&sess_addr,
 	    sizeof(sess_addr)) == -1)
 		fatal("error binding session socket");
@@ -347,11 +341,8 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 	struct imsgev		*iev = bula;
 	struct imsgbuf		*ibuf = &iev->ibuf;
 	struct iface		*iface = NULL;
-	struct if_addr		*if_addr = NULL;
 	struct kif		*kif;
-	struct kaddr		*ka;
 	int			 n, shut = 0;
-	struct nbr		*nbr;
 
 	if (event & EV_READ) {
 		if ((n = imsg_read(ibuf)) == -1 && errno != EAGAIN)
@@ -391,55 +382,15 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			if (imsg.hdr.len != IMSG_HEADER_SIZE +
 			    sizeof(struct kaddr))
 				fatalx("NEWADDR imsg with wrong len");
-			ka = imsg.data;
 
-			if (if_addr_lookup(&global.addr_list, ka) == NULL) {
-				if_addr = if_addr_new(ka);
-
-				LIST_INSERT_HEAD(&global.addr_list, if_addr,
-				    entry);
-				RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
-					if (nbr->state != NBR_STA_OPER)
-						continue;
-					send_address(nbr, if_addr);
-				}
-			}
-
-			iface = if_lookup(leconf, ka->ifindex);
-			if (iface &&
-			    if_addr_lookup(&iface->addr_list, ka) == NULL) {
-				if_addr = if_addr_new(ka);
-				LIST_INSERT_HEAD(&iface->addr_list, if_addr,
-				    entry);
-				if_update(iface);
-			}
+			if_addr_add(imsg.data);
 			break;
 		case IMSG_DELADDR:
 			if (imsg.hdr.len != IMSG_HEADER_SIZE +
 			    sizeof(struct kaddr))
 				fatalx("DELADDR imsg with wrong len");
-			ka = imsg.data;
 
-			iface = if_lookup(leconf, ka->ifindex);
-			if (iface) {
-				if_addr = if_addr_lookup(&iface->addr_list, ka);
-				if (if_addr) {
-					LIST_REMOVE(if_addr, entry);
-					free(if_addr);
-					if_update(iface);
-				}
-			}
-
-			if_addr = if_addr_lookup(&global.addr_list, ka);
-			if (if_addr) {
-				RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
-					if (nbr->state != NBR_STA_OPER)
-						continue;
-					send_address_withdraw(nbr, if_addr);
-				}
-				LIST_REMOVE(if_addr, entry);
-				free(if_addr);
-			}
+			if_addr_del(imsg.data);
 			break;
 		case IMSG_RECONF_CONF:
 			if ((nconf = malloc(sizeof(struct ldpd_conf))) ==
@@ -674,6 +625,63 @@ ldpe_dispatch_pfkey(int fd, short event, void *bula)
 }
 
 void
+ldpe_iface_ctl(struct ctl_conn *c, unsigned int idx)
+{
+	struct iface		*iface;
+	struct ctl_iface	*ictl;
+
+	LIST_FOREACH(iface, &leconf->iface_list, entry) {
+		if (idx == 0 || idx == iface->ifindex) {
+			ictl = if_to_ctl(iface);
+			imsg_compose_event(&c->iev,
+			     IMSG_CTL_SHOW_INTERFACE,
+			    0, 0, -1, ictl, sizeof(struct ctl_iface));
+		}
+	}
+}
+
+void
+ldpe_adj_ctl(struct ctl_conn *c)
+{
+	struct adj	*adj;
+	struct iface	*iface;
+	struct tnbr	*tnbr;
+	struct ctl_adj	*actl;
+
+	/* basic discovery mechanism */
+	LIST_FOREACH(iface, &leconf->iface_list, entry)
+		LIST_FOREACH(adj, &iface->adj_list, iface_entry) {
+			actl = adj_to_ctl(adj);
+			imsg_compose_event(&c->iev, IMSG_CTL_SHOW_DISCOVERY,
+			    0, 0, -1, actl, sizeof(struct ctl_adj));
+		}
+
+	/* extended discovery mechanism */
+	LIST_FOREACH(tnbr, &leconf->tnbr_list, entry)
+		if (tnbr->adj) {
+			actl = adj_to_ctl(tnbr->adj);
+			imsg_compose_event(&c->iev, IMSG_CTL_SHOW_DISCOVERY,
+			    0, 0, -1, actl, sizeof(struct ctl_adj));
+		}
+
+	imsg_compose_event(&c->iev, IMSG_CTL_END, 0, 0, -1, NULL, 0);
+}
+
+void
+ldpe_nbr_ctl(struct ctl_conn *c)
+{
+	struct nbr	*nbr;
+	struct ctl_nbr	*nctl;
+
+	RB_FOREACH(nbr, nbr_pid_head, &nbrs_by_pid) {
+		nctl = nbr_to_ctl(nbr);
+		imsg_compose_event(&c->iev, IMSG_CTL_SHOW_NBR, 0, 0, -1, nctl,
+		    sizeof(struct ctl_nbr));
+	}
+	imsg_compose_event(&c->iev, IMSG_CTL_END, 0, 0, -1, NULL, 0);
+}
+
+void
 mapping_list_add(struct mapping_head *mh, struct map *map)
 {
 	struct mapping_entry	*me;
@@ -694,21 +702,5 @@ mapping_list_clr(struct mapping_head *mh)
 	while ((me = TAILQ_FIRST(mh)) != NULL) {
 		TAILQ_REMOVE(mh, me, entry);
 		free(me);
-	}
-}
-
-void
-ldpe_iface_ctl(struct ctl_conn *c, unsigned int idx)
-{
-	struct iface		*iface;
-	struct ctl_iface	*ictl;
-
-	LIST_FOREACH(iface, &leconf->iface_list, entry) {
-		if (idx == 0 || idx == iface->ifindex) {
-			ictl = if_to_ctl(iface);
-			imsg_compose_event(&c->iev,
-			     IMSG_CTL_SHOW_INTERFACE,
-			    0, 0, -1, ictl, sizeof(struct ctl_iface));
-		}
 	}
 }

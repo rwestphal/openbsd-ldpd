@@ -859,16 +859,6 @@ lde_nbr_compare(struct lde_nbr *a, struct lde_nbr *b)
 }
 
 struct lde_nbr *
-lde_nbr_find(uint32_t peerid)
-{
-	struct lde_nbr	n;
-
-	n.peerid = peerid;
-
-	return (RB_FIND(nbr_tree, &lde_nbrs, &n));
-}
-
-struct lde_nbr *
 lde_nbr_new(uint32_t peerid, struct in_addr *id)
 {
 	struct lde_nbr	*nbr;
@@ -925,6 +915,16 @@ lde_nbr_del(struct lde_nbr *nbr)
 	RB_REMOVE(nbr_tree, &lde_nbrs, nbr);
 
 	free(nbr);
+}
+
+struct lde_nbr *
+lde_nbr_find(uint32_t peerid)
+{
+	struct lde_nbr	n;
+
+	n.peerid = peerid;
+
+	return (RB_FIND(nbr_tree, &lde_nbrs, &n));
 }
 
 void
@@ -1043,81 +1043,6 @@ lde_wdraw_del(struct lde_nbr *ln, struct lde_wdraw *lw)
 	free(lw);
 }
 
-int
-lde_address_add(struct lde_nbr *lr, struct in_addr *addr)
-{
-	struct lde_nbr_address	*address;
-
-	if (lde_address_find(lr, addr) != NULL)
-		return (-1);
-
-	if ((address = calloc(1, sizeof(*address))) == NULL)
-		fatal(__func__);
-
-	address->addr.s_addr = addr->s_addr;
-
-	TAILQ_INSERT_TAIL(&lr->addr_list, address, entry);
-
-	log_debug("%s: added %s", __func__, inet_ntoa(*addr));
-
-	return (0);
-}
-
-struct lde_nbr_address *
-lde_address_find(struct lde_nbr *lr, struct in_addr *addr)
-{
-	struct lde_nbr_address	*address = NULL;
-
-	TAILQ_FOREACH(address, &lr->addr_list, entry) {
-		if (address->addr.s_addr == addr->s_addr)
-			return (address);
-	}
-
-	return (NULL);
-}
-
-int
-lde_address_del(struct lde_nbr *lr, struct in_addr *addr)
-{
-	struct lde_nbr_address	*address;
-
-	address = lde_address_find(lr, addr);
-	if (address == NULL)
-		return (-1);
-
-	TAILQ_REMOVE(&lr->addr_list, address, entry);
-
-	free(address);
-
-	log_debug("%s: deleted %s", __func__, inet_ntoa(*addr));
-
-	return (0);
-}
-
-void
-lde_address_list_free(struct lde_nbr *nbr)
-{
-	struct lde_nbr_address	*addr;
-
-	while ((addr = TAILQ_FIRST(&nbr->addr_list)) != NULL) {
-		TAILQ_REMOVE(&nbr->addr_list, addr, entry);
-		free(addr);
-	}
-}
-
-struct lde_nbr *
-lde_find_address(struct in_addr address)
-{
-	struct lde_nbr	*ln;
-
-	RB_FOREACH(ln, nbr_tree, &lde_nbrs) {
-		if (lde_address_find(ln, &address) != NULL)
-			return (ln);
-	}
-
-	return (NULL);
-}
-
 void
 lde_change_egress_label(int was_implicit)
 {
@@ -1147,4 +1072,79 @@ lde_change_egress_label(int was_implicit)
 			lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END,
 			    ln->peerid, 0, NULL, 0);
 	}
+}
+
+int
+lde_address_add(struct lde_nbr *lr, struct in_addr *addr)
+{
+	struct lde_nbr_address	*address;
+
+	if (lde_address_find(lr, addr) != NULL)
+		return (-1);
+
+	if ((address = calloc(1, sizeof(*address))) == NULL)
+		fatal(__func__);
+
+	address->addr.s_addr = addr->s_addr;
+
+	TAILQ_INSERT_TAIL(&lr->addr_list, address, entry);
+
+	log_debug("%s: added %s", __func__, inet_ntoa(*addr));
+
+	return (0);
+}
+
+int
+lde_address_del(struct lde_nbr *lr, struct in_addr *addr)
+{
+	struct lde_nbr_address	*address;
+
+	address = lde_address_find(lr, addr);
+	if (address == NULL)
+		return (-1);
+
+	TAILQ_REMOVE(&lr->addr_list, address, entry);
+
+	free(address);
+
+	log_debug("%s: deleted %s", __func__, inet_ntoa(*addr));
+
+	return (0);
+}
+
+struct lde_nbr_address *
+lde_address_find(struct lde_nbr *lr, struct in_addr *addr)
+{
+	struct lde_nbr_address	*address = NULL;
+
+	TAILQ_FOREACH(address, &lr->addr_list, entry) {
+		if (address->addr.s_addr == addr->s_addr)
+			return (address);
+	}
+
+	return (NULL);
+}
+
+void
+lde_address_list_free(struct lde_nbr *nbr)
+{
+	struct lde_nbr_address	*addr;
+
+	while ((addr = TAILQ_FIRST(&nbr->addr_list)) != NULL) {
+		TAILQ_REMOVE(&nbr->addr_list, addr, entry);
+		free(addr);
+	}
+}
+
+struct lde_nbr *
+lde_find_address(struct in_addr address)
+{
+	struct lde_nbr	*ln;
+
+	RB_FOREACH(ln, nbr_tree, &lde_nbrs) {
+		if (lde_address_find(ln, &address) != NULL)
+			return (ln);
+	}
+
+	return (NULL);
 }
