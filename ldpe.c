@@ -290,6 +290,7 @@ ldpe_shutdown(void)
 
 	event_del(&disc_ev);
 	event_del(&edisc_ev);
+	accept_del(leconf->ldp_session_socket);
 	event_del(&pfkey_ev);
 	close(leconf->ldp_discovery_socket);
 	close(leconf->ldp_ediscovery_socket);
