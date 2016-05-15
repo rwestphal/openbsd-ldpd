@@ -215,7 +215,6 @@ tnbr_init(struct tnbr *tnbr)
 	/* set event handlers for targeted neighbor */
 	evtimer_set(&tnbr->hello_timer, tnbr_hello_timer, tnbr);
 
-	tnbr->discovery_fd = global.ldp_edisc_socket;
 	send_hello(HELLO_TARGETED, NULL, tnbr);
 	tnbr_start_hello_timer(tnbr);
 }

@@ -99,8 +99,6 @@ if_init(struct iface *iface)
 {
 	/* set event handlers for interface */
 	evtimer_set(&iface->hello_timer, if_hello_timer, iface);
-
-	iface->discovery_fd = global.ldp_disc_socket;
 }
 
 struct iface *
@@ -400,8 +398,8 @@ if_join_group(struct iface *iface, struct in_addr *addr)
 	mreq.imr_multiaddr.s_addr = addr->s_addr;
 	mreq.imr_interface.s_addr = if_addr->addr.s_addr;
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-	    (void *)&mreq, sizeof(mreq)) < 0) {
+	if (setsockopt(global.ldp_disc_socket, IPPROTO_IP,
+	    IP_ADD_MEMBERSHIP, (void *)&mreq, sizeof(mreq)) < 0) {
 		log_warn("%s: error IP_ADD_MEMBERSHIP, interface %s address %s",
 		     __func__, iface->name, inet_ntoa(*addr));
 		return (-1);
@@ -425,8 +423,8 @@ if_leave_group(struct iface *iface, struct in_addr *addr)
 	mreq.imr_multiaddr.s_addr = addr->s_addr;
 	mreq.imr_interface.s_addr = if_addr->addr.s_addr;
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_DROP_MEMBERSHIP,
-	    (void *)&mreq, sizeof(mreq)) < 0) {
+	if (setsockopt(global.ldp_disc_socket, IPPROTO_IP,
+	    IP_DROP_MEMBERSHIP, (void *)&mreq, sizeof(mreq)) < 0) {
 		log_warn("%s: error IP_DROP_MEMBERSHIP, interface %s "
 		    "address %s", __func__, iface->name, inet_ntoa(*addr));
 		return (-1);
@@ -442,7 +440,7 @@ if_set_mcast(struct iface *iface)
 
 	if_addr = LIST_FIRST(&iface->addr_list);
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_MULTICAST_IF,
+	if (setsockopt(global.ldp_disc_socket, IPPROTO_IP, IP_MULTICAST_IF,
 	    &if_addr->addr.s_addr, sizeof(if_addr->addr.s_addr)) < 0) {
 		log_debug("%s: error setting IP_MULTICAST_IF, interface %s",
 		    __func__, iface->name);
