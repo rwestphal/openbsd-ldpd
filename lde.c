@@ -245,7 +245,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("%s: cannot find lde neighbor",
 				    __func__);
-				return;
+				break;
 			}
 
 			fec_snap(nbr);
@@ -263,7 +263,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("%s: cannot find lde neighbor",
 				    __func__);
-				return;
+				break;
 			}
 
 			switch (imsg.hdr.type) {
@@ -299,7 +299,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("%s: cannot find lde neighbor",
 				    __func__);
-				return;
+				break;
 			}
 
 			if (lde_address_add(nbr, &addr) < 0) {
@@ -318,7 +318,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("%s: cannot find lde neighbor",
 				    __func__);
-				return;
+				break;
 			}
 
 			if (lde_address_del(nbr, &addr) < 0) {
@@ -337,7 +337,7 @@ lde_dispatch_imsg(int fd, short event, void *bula)
 			if (nbr == NULL) {
 				log_debug("%s: cannot find lde neighbor",
 				    __func__);
-				return;
+				break;
 			}
 
 			switch (nm.status) {
