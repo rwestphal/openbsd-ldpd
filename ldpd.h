@@ -37,6 +37,10 @@
 #define	LDPD_SOCKET		"/var/run/ldpd.sock"
 #define LDPD_USER		"_ldpd"
 
+#define LDPD_OPT_VERBOSE	0x00000001
+#define LDPD_OPT_VERBOSE2	0x00000002
+#define LDPD_OPT_NOACTION	0x00000004
+
 #define TCP_MD5_KEY_LEN		80
 #define L2VPN_NAME_LEN		32
 
@@ -327,10 +331,6 @@ struct ldpd_conf {
 	LIST_HEAD(, nbr_params)	 nbrp_list;
 	LIST_HEAD(, l2vpn)	 l2vpn_list;
 
-	uint32_t		 opts;
-#define LDPD_OPT_VERBOSE	0x00000001
-#define LDPD_OPT_VERBOSE2	0x00000002
-#define LDPD_OPT_NOACTION	0x00000004
 	time_t			 uptime;
 	int			 pfkeysock;
 	int			 ldp_discovery_socket;
@@ -341,6 +341,8 @@ struct ldpd_conf {
 	uint16_t		 thello_holdtime;
 	uint16_t		 thello_interval;
 };
+
+extern int cmd_opts;
 
 /* kroute */
 struct kroute {
@@ -435,7 +437,7 @@ struct ctl_pw {
 };
 
 /* parse.y */
-struct ldpd_conf	*parse_config(char *, int);
+struct ldpd_conf	*parse_config(char *);
 int			 cmdline_symset(char *);
 
 /* kroute.c */

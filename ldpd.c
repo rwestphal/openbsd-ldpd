@@ -119,11 +119,13 @@ usage(void)
 	exit(1);
 }
 
+int	cmd_opts;
+
 int
 main(int argc, char *argv[])
 {
 	struct event		 ev_sigint, ev_sigterm, ev_sigchld, ev_sighup;
-	int			 ch, opts = 0;
+	int			 ch;
 	int			 debug = 0;
 
 	conffile = CONF_FILE;
@@ -146,12 +148,12 @@ main(int argc, char *argv[])
 			conffile = optarg;
 			break;
 		case 'n':
-			opts |= LDPD_OPT_NOACTION;
+			cmd_opts |= LDPD_OPT_NOACTION;
 			break;
 		case 'v':
-			if (opts & LDPD_OPT_VERBOSE)
-				opts |= LDPD_OPT_VERBOSE2;
-			opts |= LDPD_OPT_VERBOSE;
+			if (cmd_opts & LDPD_OPT_VERBOSE)
+				cmd_opts |= LDPD_OPT_VERBOSE2;
+			cmd_opts |= LDPD_OPT_VERBOSE;
 			break;
 		default:
 			usage();
@@ -163,11 +165,11 @@ main(int argc, char *argv[])
 	kif_init();
 
 	/* parse config file */
-	if ((ldpd_conf = parse_config(conffile, opts)) == NULL )
+	if ((ldpd_conf = parse_config(conffile)) == NULL )
 		exit(1);
 
-	if (ldpd_conf->opts & LDPD_OPT_NOACTION) {
-		if (ldpd_conf->opts & LDPD_OPT_VERBOSE)
+	if (cmd_opts & LDPD_OPT_NOACTION) {
+		if (cmd_opts & LDPD_OPT_VERBOSE)
 			print_config(ldpd_conf);
 		else
 			fprintf(stderr, "configuration OK\n");
@@ -183,7 +185,7 @@ main(int argc, char *argv[])
 		errx(1, "unknown user %s", LDPD_USER);
 
 	log_init(debug);
-	log_verbose(opts & (LDPD_OPT_VERBOSE | LDPD_OPT_VERBOSE2));
+	log_verbose(cmd_opts & (LDPD_OPT_VERBOSE | LDPD_OPT_VERBOSE2));
 
 	if (!debug)
 		daemon(1, 0);
@@ -550,7 +552,7 @@ ldp_reload(void)
 	struct l2vpn_pw		*pw;
 	struct ldpd_conf	*xconf;
 
-	if ((xconf = parse_config(conffile, ldpd_conf->opts)) == NULL)
+	if ((xconf = parse_config(conffile)) == NULL)
 		return (-1);
 
 	if (ldp_sendboth(IMSG_RECONF_CONF, xconf, sizeof(*xconf)) == -1)
