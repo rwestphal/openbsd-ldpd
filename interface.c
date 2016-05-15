@@ -340,53 +340,23 @@ if_set_reuse(int fd, int enable)
 	return (0);
 }
 
-/*
- * only one JOIN or DROP per interface and address is allowed so we need
- * to keep track of what is added and removed.
- */
-struct if_group_count {
-	LIST_ENTRY(if_group_count)	entry;
-	struct in_addr			addr;
-	unsigned int			ifindex;
-	int				count;
-};
-
-LIST_HEAD(,if_group_count) ifglist = LIST_HEAD_INITIALIZER(ifglist);
-
 int
 if_join_group(struct iface *iface, struct in_addr *addr)
 {
 	struct ip_mreq		 mreq;
-	struct if_group_count	*ifg;
 	struct if_addr		*if_addr;
 
-	LIST_FOREACH(ifg, &ifglist, entry)
-		if (iface->ifindex == ifg->ifindex &&
-		    addr->s_addr == ifg->addr.s_addr)
-			break;
-	if (ifg == NULL) {
-		if ((ifg = calloc(1, sizeof(*ifg))) == NULL)
-			fatal(__func__);
-		ifg->addr.s_addr = addr->s_addr;
-		ifg->ifindex = iface->ifindex;
-		LIST_INSERT_HEAD(&ifglist, ifg, entry);
-	}
-
-	if (ifg->count++ != 0)
-		/* already joined */
-		return (0);
+	log_debug("%s: interface %s addr %s", __func__, iface->name,
+	    inet_ntoa(*addr));
 
 	if_addr = LIST_FIRST(&iface->addr_list);
 	mreq.imr_multiaddr.s_addr = addr->s_addr;
 	mreq.imr_interface.s_addr = if_addr->addr.s_addr;
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP,
-	    IP_ADD_MEMBERSHIP, (void *)&mreq, sizeof(mreq)) < 0) {
-		log_warn("%s: error IP_ADD_MEMBERSHIP, "
-		    "interface %s address %s", __func__, iface->name,
-		    inet_ntoa(*addr));
-		LIST_REMOVE(ifg, entry);
-		free(ifg);
+	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+	    (void *)&mreq, sizeof(mreq)) < 0) {
+		log_warn("%s: error IP_ADD_MEMBERSHIP, interface %s address %s",
+		     __func__, iface->name, inet_ntoa(*addr));
 		return (-1);
 	}
 	return (0);
@@ -396,23 +366,10 @@ int
 if_leave_group(struct iface *iface, struct in_addr *addr)
 {
 	struct ip_mreq		 mreq;
-	struct if_group_count	*ifg;
 	struct if_addr		*if_addr;
 
-	LIST_FOREACH(ifg, &ifglist, entry)
-		if (iface->ifindex == ifg->ifindex &&
-		    addr->s_addr == ifg->addr.s_addr)
-			break;
-
-	/* if interface is not found just try to drop membership */
-	if (ifg) {
-		if (--ifg->count != 0)
-			/* others still joined */
-			return (0);
-
-		LIST_REMOVE(ifg, entry);
-		free(ifg);
-	}
+	log_debug("%s: interface %s addr %s", __func__, iface->name,
+	    inet_ntoa(*addr));
 
 	if_addr = LIST_FIRST(&iface->addr_list);
 	if (!if_addr)
@@ -421,8 +378,8 @@ if_leave_group(struct iface *iface, struct in_addr *addr)
 	mreq.imr_multiaddr.s_addr = addr->s_addr;
 	mreq.imr_interface.s_addr = if_addr->addr.s_addr;
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP,
-	    IP_DROP_MEMBERSHIP, (void *)&mreq, sizeof(mreq)) < 0) {
+	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_DROP_MEMBERSHIP,
+	    (void *)&mreq, sizeof(mreq)) < 0) {
 		log_warn("%s: error IP_DROP_MEMBERSHIP, interface %s "
 		    "address %s", __func__, iface->name, inet_ntoa(*addr));
 		return (-1);
