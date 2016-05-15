@@ -1155,8 +1155,7 @@ parse_config(char *filename)
 {
 	struct sym	*sym, *next;
 
-	if ((conf = calloc(1, sizeof(struct ldpd_conf))) == NULL)
-		fatal(__func__);
+	conf = config_new_empty();
 	conf->trans_pref = DUAL_STACK_LDPOV6;
 
 	defs = &globaldefs;
@@ -1173,11 +1172,6 @@ parse_config(char *filename)
 		return (NULL);
 	}
 	topfile = file;
-
-	LIST_INIT(&conf->iface_list);
-	LIST_INIT(&conf->tnbr_list);
-	LIST_INIT(&conf->nbrp_list);
-	LIST_INIT(&conf->l2vpn_list);
 
 	yyparse();
 	errors = file->errors;
