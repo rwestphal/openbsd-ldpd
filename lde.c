@@ -159,6 +159,10 @@ lde(struct ldpd_conf *xconf, int pipe_parent2lde[2], int pipe_ldpe2lde[2],
 	    iev_main->handler, iev_main);
 	event_add(&iev_main->ev, NULL);
 
+	/* setup and start the LIB garbage collector */
+	evtimer_set(&gc_timer, lde_gc_timer, NULL);
+	lde_gc_start_timer();
+
 	gettimeofday(&now, NULL);
 	global.uptime = now.tv_sec;
 
@@ -177,6 +181,7 @@ lde(struct ldpd_conf *xconf, int pipe_parent2lde[2], int pipe_ldpe2lde[2],
 void
 lde_shutdown(void)
 {
+	lde_gc_stop_timer();
 	lde_nbr_clear();
 	fec_tree_clear();
 
