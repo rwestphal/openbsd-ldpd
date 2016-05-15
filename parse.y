@@ -327,22 +327,16 @@ nbr_opts	: KEEPALIVE NUMBER {
 		;
 
 pw_defaults	: STATUSTLV yesno {
-			if ($2 == 1) {
+			if ($2 == 1)
 				defs->pwflags |= F_PW_STATUSTLV_CONF;
-				defs->pwflags |= F_PW_STATUSTLV;
-			} else {
+			else
 				defs->pwflags &= ~F_PW_STATUSTLV_CONF;
-				defs->pwflags &= ~F_PW_STATUSTLV;
-			}
 		}
 		| CONTROLWORD yesno {
-			if ($2 == 1) {
+			if ($2 == 1)
 				defs->pwflags |= F_PW_CWORD_CONF;
-				defs->pwflags |= F_PW_CWORD;
-			} else {
+			else
 				defs->pwflags &= ~F_PW_CWORD_CONF;
-				defs->pwflags &= ~F_PW_CWORD;
-			}
 		}
 		;
 
@@ -1064,10 +1058,7 @@ parse_config(char *filename)
 	defs->thello_interval = DEFAULT_HELLO_INTERVAL;
 	conf->thello_holdtime = TARGETED_DFLT_HOLDTIME;
 	conf->thello_interval = DEFAULT_HELLO_INTERVAL;
-	defs->pwflags |= F_PW_STATUSTLV_CONF;
-	defs->pwflags |= F_PW_STATUSTLV;
-	defs->pwflags |= F_PW_CWORD_CONF;
-	defs->pwflags |= F_PW_CWORD;
+	defs->pwflags = F_PW_STATUSTLV_CONF|F_PW_CWORD_CONF;
 
 	if ((file = pushfile(filename,
 	    !(global.cmd_opts & LDPD_OPT_NOACTION))) == NULL) {
