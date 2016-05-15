@@ -84,6 +84,7 @@ struct nbr {
 	int			 state;
 	int			 idtimer_cnt;
 	uint16_t		 keepalive;
+	uint16_t		 max_pdu_len;
 
 	struct {
 		uint8_t			established;
