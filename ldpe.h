@@ -220,6 +220,7 @@ int	 nbr_pending_idtimer(struct nbr *);
 int	 nbr_pending_connect(struct nbr *);
 int	 nbr_establish_connection(struct nbr *);
 
+uint16_t		 nbr_get_keepalive(struct in_addr);
 struct nbr_params	*nbr_params_new(struct in_addr);
 struct nbr_params	*nbr_params_find(struct ldpd_conf *, struct in_addr);
 

@@ -260,12 +260,15 @@ enum auth_method {
 struct nbr_params {
 	LIST_ENTRY(nbr_params)	 entry;
 	struct in_addr		 addr;
+	uint16_t		 keepalive;
 	struct {
 		enum auth_method	 method;
 		char			 md5key[TCP_MD5_KEY_LEN];
 		uint8_t			 md5key_len;
 	} auth;
+	uint8_t			 flags;
 };
+#define F_NBRP_KEEPALIVE	 0x01
 
 struct l2vpn_if {
 	LIST_ENTRY(l2vpn_if)	 entry;

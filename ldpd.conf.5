@@ -179,6 +179,10 @@ neighbor A.B.C.D {
 .Pp
 Neighbor-specific parameters are listed below.
 .Bl -tag -width Ds
+.It Ic keepalive Ar seconds
+Set the keepalive timeout in seconds.
+Inherited from the global configuration if not given.
+The default value is 180; valid range is 1\-65535.
 .It Ic password Ar secret
 Enable TCP MD5 signatures per RFC 5036.
 .El
