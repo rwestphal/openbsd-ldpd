@@ -220,6 +220,7 @@ tnbr_init(struct tnbr *tnbr)
 	evtimer_set(&tnbr->hello_timer, tnbr_hello_timer, tnbr);
 
 	tnbr->discovery_fd = global.ldp_ediscovery_socket;
+	send_hello(HELLO_TARGETED, NULL, tnbr);
 	tnbr_start_hello_timer(tnbr);
 }
 
@@ -229,24 +230,16 @@ tnbr_init(struct tnbr *tnbr)
 void
 tnbr_hello_timer(int fd, short event, void *arg)
 {
-	struct tnbr *tnbr = arg;
-	struct timeval tv;
+	struct tnbr	*tnbr = arg;
 
 	send_hello(HELLO_TARGETED, NULL, tnbr);
-
-	/* reschedule hello_timer */
-	timerclear(&tv);
-	tv.tv_sec = tnbr->hello_interval;
-	if (evtimer_add(&tnbr->hello_timer, &tv) == -1)
-		fatal(__func__);
+	tnbr_start_hello_timer(tnbr);
 }
 
 void
 tnbr_start_hello_timer(struct tnbr *tnbr)
 {
-	struct timeval tv;
-
-	send_hello(HELLO_TARGETED, NULL, tnbr);
+	struct timeval	 tv;
 
 	timerclear(&tv);
 	tv.tv_sec = tnbr->hello_interval;
