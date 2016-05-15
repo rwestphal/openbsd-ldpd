@@ -56,7 +56,12 @@ void	main_dispatch_lde(int, short, void *);
 
 int	ldp_sendboth(enum imsg_type, void *, uint16_t);
 int	ldp_reload(void);
-void	merge_l2vpns(struct ldpd_conf *, struct l2vpn *, struct l2vpn *);
+void	merge_global(struct ldpd_conf *, struct ldpd_conf *);
+void	merge_ifaces(struct ldpd_conf *, struct ldpd_conf *);
+void	merge_tnbrs(struct ldpd_conf *, struct ldpd_conf *);
+void	merge_nbrps(struct ldpd_conf *, struct ldpd_conf *);
+void	merge_l2vpns(struct ldpd_conf *, struct ldpd_conf *);
+void	merge_l2vpn(struct ldpd_conf *, struct l2vpn *, struct l2vpn *);
 
 int	pipe_parent2ldpe[2];
 int	pipe_parent2lde[2];
@@ -612,11 +617,17 @@ ldp_reload(void)
 void
 merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 {
-	struct iface		*iface, *itmp, *xi;
-	struct tnbr		*tnbr, *ttmp, *xt;
-	struct nbr_params	*nbrp, *ntmp, *xn;
-	struct l2vpn		*l2vpn, *ltmp, *xl;
-	struct nbr		*nbr;
+	merge_global(conf, xconf);
+	merge_ifaces(conf, xconf);
+	merge_tnbrs(conf, xconf);
+	merge_nbrps(conf, xconf);
+	merge_l2vpns(conf, xconf);
+	free(xconf);
+}
+
+void
+merge_global(struct ldpd_conf *conf, struct ldpd_conf *xconf)
+{
 	int			 egress_label_changed = 0;
 
 	/* change of rtr_id needs a restart */
@@ -644,8 +655,13 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 			break;
 		}
 	}
+}
 
-	/* merge interfaces */
+void
+merge_ifaces(struct ldpd_conf *conf, struct ldpd_conf *xconf)
+{
+	struct iface		*iface, *itmp, *xi;
+
 	LIST_FOREACH_SAFE(iface, &conf->iface_list, entry, itmp) {
 		/* find deleted interfaces */
 		if ((xi = if_lookup(xconf, iface->ifindex)) == NULL) {
@@ -673,8 +689,13 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	/* resend addresses to activate new interfaces */
 	if (ldpd_process == PROC_MAIN)
 		kif_redistribute();
+}
 
-	/* merge tnbrs */
+void
+merge_tnbrs(struct ldpd_conf *conf, struct ldpd_conf *xconf)
+{
+	struct tnbr		*tnbr, *ttmp, *xt;
+
 	LIST_FOREACH_SAFE(tnbr, &conf->tnbr_list, entry, ttmp) {
 		if (!(tnbr->flags & F_TNBR_CONFIGURED))
 			continue;
@@ -706,8 +727,14 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 		tnbr->hello_holdtime = xt->hello_holdtime;
 		tnbr->hello_interval = xt->hello_interval;
 	}
+}
 
-	/* merge neighbor parameters */
+void
+merge_nbrps(struct ldpd_conf *conf, struct ldpd_conf *xconf)
+{
+	struct nbr_params	*nbrp, *ntmp, *xn;
+	struct nbr		*nbr;
+
 	LIST_FOREACH_SAFE(nbrp, &conf->nbrp_list, entry, ntmp) {
 		/* find deleted nbrps */
 		if ((xn = nbr_params_find(xconf, nbrp->addr)) == NULL) {
@@ -765,8 +792,13 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 			}
 		}
 	}
+}
 
-	/* merge l2vpns */
+void
+merge_l2vpns(struct ldpd_conf *conf, struct ldpd_conf *xconf)
+{
+	struct l2vpn		*l2vpn, *ltmp, *xl;
+
 	LIST_FOREACH_SAFE(l2vpn, &conf->l2vpn_list, entry, ltmp) {
 		/* find deleted l2vpns */
 		if ((xl = l2vpn_find(xconf, l2vpn->name)) == NULL) {
@@ -806,14 +838,12 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 		}
 
 		/* update existing l2vpns */
-		merge_l2vpns(conf, l2vpn, xl);
+		merge_l2vpn(conf, l2vpn, xl);
 	}
-
-	free(xconf);
 }
 
 void
-merge_l2vpns(struct ldpd_conf *xconf, struct l2vpn *l2vpn, struct l2vpn *xl)
+merge_l2vpn(struct ldpd_conf *xconf, struct l2vpn *l2vpn, struct l2vpn *xl)
 {
 	struct l2vpn_if		*lif, *ftmp, *xf;
 	struct l2vpn_pw		*pw, *ptmp, *xp;
