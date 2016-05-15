@@ -146,7 +146,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 	struct mapping_head	 mh;
 	struct map		 map;
 
-	bcopy(buf, &lm, sizeof(lm));
+	memcpy(&lm, buf, sizeof(lm));
 
 	buf += sizeof(struct ldp_msg);
 	len -= sizeof(struct ldp_msg);
@@ -157,7 +157,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		return (-1);
 	}
 
-	bcopy(buf, &ft, sizeof(ft));
+	memcpy(&ft, buf, sizeof(ft));
 	if (ntohs(ft.type) != TLV_TYPE_FEC) {
 		send_notification_nbr(nbr, S_MISS_MSG, lm.msgid, lm.type);
 		return (-1);
@@ -244,7 +244,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 			goto err;
 		}
 
-		bcopy(buf, &tlv, sizeof(tlv));
+		memcpy(&tlv, buf, sizeof(tlv));
 		if (ntohs(tlv.length) > len - TLV_HDR_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, lm.msgid,
 			    lm.type);
@@ -420,7 +420,7 @@ tlv_decode_label(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		session_shutdown(nbr, S_BAD_TLV_LEN, lm->msgid, lm->type);
 		return (-1);
 	}
-	bcopy(buf, &lt, sizeof(lt));
+	memcpy(&lt, buf, sizeof(lt));
 
 	if (!(ntohs(lt.type) & TLV_TYPE_GENERICLABEL)) {
 		send_notification_nbr(nbr, S_MISS_MSG, lm->msgid, lm->type);
@@ -578,7 +578,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		}
 
 		/* Address Family */
-		bcopy(buf + off, &family, sizeof(family));
+		memcpy(&family, buf + off, sizeof(family));
 		off += sizeof(family);
 
 		if (family != htons(AF_IPV4)) {
@@ -599,7 +599,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 
 		/* Prefix */
 		map->fec.ipv4.prefix.s_addr = 0;
-		bcopy(buf + off, &map->fec.ipv4.prefix,
+		memcpy(&map->fec.ipv4.prefix, buf + off,
 		    PREFIX_SIZE(map->fec.ipv4.prefixlen));
 
 		return (off + PREFIX_SIZE(map->fec.ipv4.prefixlen));
@@ -612,7 +612,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		}
 
 		/* PW type */
-		bcopy(buf + off, &map->fec.pwid.type, sizeof(uint16_t));
+		memcpy(&map->fec.pwid.type, buf + off, sizeof(uint16_t));
 		map->fec.pwid.type = ntohs(map->fec.pwid.type);
 		if (map->fec.pwid.type & CONTROL_WORD_FLAG) {
 			map->flags |= F_MAP_PW_CWORD;
@@ -631,7 +631,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 		}
 
 		/* Group ID */
-		bcopy(buf + off, &map->fec.pwid.group_id, sizeof(uint32_t));
+		memcpy(&map->fec.pwid.group_id, buf + off, sizeof(uint32_t));
 		map->fec.pwid.group_id = ntohl(map->fec.pwid.group_id);
 		off += sizeof(uint32_t);
 
@@ -645,7 +645,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 			return (-1);
 		}
 
-		bcopy(buf + off, &map->fec.pwid.pwid, sizeof(uint32_t));
+		memcpy(&map->fec.pwid.pwid, buf + off, sizeof(uint32_t));
 		map->fec.pwid.pwid = ntohl(map->fec.pwid.pwid);
 		map->flags |= F_MAP_PW_ID;
 		off += sizeof(uint32_t);
@@ -661,7 +661,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 				return (-1);
 			}
 
-			bcopy(buf + off, &stlv, sizeof(stlv));
+			memcpy(&stlv, buf + off, sizeof(stlv));
 			off += SUBTLV_HDR_LEN;
 			pw_len -= SUBTLV_HDR_LEN;
 
@@ -672,7 +672,7 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *lm, char *buf,
 					    lm->msgid, lm->type);
 					return (-1);
 				}
-				bcopy(buf + off, &map->fec.pwid.ifmtu,
+				memcpy(&map->fec.pwid.ifmtu, buf + off,
 				    sizeof(uint16_t));
 				map->fec.pwid.ifmtu = ntohs(map->fec.pwid.ifmtu);
 				map->flags |= F_MAP_PW_IFMTU;

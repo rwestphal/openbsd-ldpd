@@ -89,7 +89,7 @@ send_notification(uint32_t status, struct tcp_conn *tcp, uint32_t msgid,
 {
 	struct notify_msg	 nm;
 
-	bzero(&nm, sizeof(nm));
+	memset(&nm, 0, sizeof(nm));
 	nm.status = status;
 	nm.messageid = msgid;
 	nm.type = type;
@@ -113,7 +113,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 	struct notify_msg	nm;
 	int			tlen;
 
-	bcopy(buf, &not, sizeof(not));
+	memcpy(&not, buf, sizeof(not));
 
 	buf += sizeof(struct ldp_msg);
 	len -= sizeof(struct ldp_msg);
@@ -122,7 +122,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 		session_shutdown(nbr, S_BAD_MSG_LEN, not.msgid, not.type);
 		return (-1);
 	}
-	bcopy(buf, &st, sizeof(st));
+	memcpy(&st, buf, sizeof(st));
 
 	if (ntohs(st.length) > STATUS_SIZE - TLV_HDR_LEN ||
 	    ntohs(st.length) > len - TLV_HDR_LEN) {
@@ -132,7 +132,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 	buf += STATUS_SIZE;
 	len -= STATUS_SIZE;
 
-	bzero(&nm, sizeof(nm));
+	memset(&nm, 0, sizeof(nm));
 	nm.status = ntohl(st.status_code);
 
 	/* Optional Parameters */
@@ -145,7 +145,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 			return (-1);
 		}
 
-		bcopy(buf, &tlv, sizeof(tlv));
+		memcpy(&tlv, buf, sizeof(tlv));
 		if (ntohs(tlv.length) > len - TLV_HDR_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, not.msgid,
 			    not.type);
@@ -246,7 +246,7 @@ gen_status_tlv(struct ibuf *buf, uint32_t status, uint32_t msgid, uint32_t type)
 {
 	struct status_tlv	st;
 
-	bzero(&st, sizeof(st));
+	memset(&st, 0, sizeof(st));
 
 	st.type = htons(TLV_TYPE_STATUS);
 	st.length = htons(STATUS_TLV_LEN);

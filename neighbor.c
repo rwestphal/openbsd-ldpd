@@ -510,7 +510,7 @@ nbr_establish_connection(struct nbr *nbr)
 		}
 	}
 
-	bzero(&local_sa, sizeof(local_sa));
+	memset(&local_sa, 0, sizeof(local_sa));
 	local_sa.sin_family = AF_INET;
 	local_sa.sin_port = htons(0);
 	local_sa.sin_addr.s_addr = ldpe_router_id();
@@ -523,7 +523,7 @@ nbr_establish_connection(struct nbr *nbr)
 		return (-1);
 	}
 
-	bzero(&remote_sa, sizeof(remote_sa));
+	memset(&remote_sa, 0, sizeof(remote_sa));
 	remote_sa.sin_family = AF_INET;
 	remote_sa.sin_port = htons(LDP_PORT);
 	remote_sa.sin_addr.s_addr = nbr->addr.s_addr;

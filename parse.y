@@ -1001,7 +1001,7 @@ parse_config(char *filename, int opts)
 	conf->opts = opts;
 	conf->keepalive = DEFAULT_KEEPALIVE;
 
-	bzero(&globaldefs, sizeof(globaldefs));
+	memset(&globaldefs, 0, sizeof(globaldefs));
 	defs = &globaldefs;
 	defs->lhello_holdtime = LINK_DFLT_HOLDTIME;
 	defs->lhello_interval = DEFAULT_HELLO_INTERVAL;
@@ -1325,7 +1325,7 @@ host(const char *s, struct in_addr *addr, struct in_addr *mask)
 	struct in_addr		 ina;
 	int			 bits = 32;
 
-	bzero(&ina, sizeof(struct in_addr));
+	memset(&ina, 0, sizeof(struct in_addr));
 	if (strrchr(s, '/') != NULL) {
 		if ((bits = inet_net_pton(AF_INET, s, &ina, sizeof(ina))) == -1)
 			return (0);

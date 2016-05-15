@@ -558,7 +558,7 @@ lde_send_change_klabel(struct fec_node *fn, struct fec_nh *fnh)
 
 	switch (fn->fec.type) {
 	case FEC_TYPE_IPV4:
-		bzero(&kr, sizeof(kr));
+		memset(&kr, 0, sizeof(kr));
 		kr.prefix.s_addr = fn->fec.u.ipv4.prefix.s_addr;
 		kr.prefixlen = fn->fec.u.ipv4.prefixlen;
 		kr.local_label = fn->local_label;
@@ -582,7 +582,7 @@ lde_send_change_klabel(struct fec_node *fn, struct fec_nh *fnh)
 			return;
 		pw->flags |= F_PW_STATUS_UP;
 
-		bzero(&kpw, sizeof(kpw));
+		memset(&kpw, 0, sizeof(kpw));
 		kpw.ifindex = pw->ifindex;
 		kpw.pw_type = fn->fec.u.pwid.type;
 		kpw.nexthop.s_addr = fnh->nexthop.s_addr;
@@ -605,7 +605,7 @@ lde_send_delete_klabel(struct fec_node *fn, struct fec_nh *fnh)
 
 	switch (fn->fec.type) {
 	case FEC_TYPE_IPV4:
-		bzero(&kr, sizeof(kr));
+		memset(&kr, 0, sizeof(kr));
 		kr.prefix.s_addr = fn->fec.u.ipv4.prefix.s_addr;
 		kr.prefixlen = fn->fec.u.ipv4.prefixlen;
 		kr.local_label = fn->local_label;
@@ -624,7 +624,7 @@ lde_send_delete_klabel(struct fec_node *fn, struct fec_nh *fnh)
 			return;
 		pw->flags &= ~F_PW_STATUS_UP;
 
-		bzero(&kpw, sizeof(kpw));
+		memset(&kpw, 0, sizeof(kpw));
 		kpw.ifindex = pw->ifindex;
 		kpw.pw_type = fn->fec.u.pwid.type;
 		kpw.nexthop.s_addr = fnh->nexthop.s_addr;
@@ -641,7 +641,7 @@ lde_send_delete_klabel(struct fec_node *fn, struct fec_nh *fnh)
 void
 lde_fec2map(struct fec *fec, struct map *map)
 {
-	bzero(map, sizeof(*map));
+	memset(map, 0, sizeof(*map));
 
 	switch (fec->type) {
 	case FEC_TYPE_IPV4:
@@ -662,7 +662,7 @@ lde_fec2map(struct fec *fec, struct map *map)
 void
 lde_map2fec(struct map *map, struct in_addr nbrid, struct fec *fec)
 {
-	bzero(fec, sizeof(*fec));
+	memset(fec, 0, sizeof(*fec));
 
 	switch (map->type) {
 	case FEC_PREFIX:
@@ -694,7 +694,7 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn, int single)
 	 * ldpd).
 	 */
 
-	bzero(&map, sizeof(map));
+	memset(&map, 0, sizeof(map));
 	lde_fec2map(&fn->fec, &map);
 
 	if (fn->fec.type == FEC_TYPE_PWID) {
@@ -757,7 +757,7 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 			return;
 	}
 
-	bzero(&map, sizeof(map));
+	memset(&map, 0, sizeof(map));
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		map.label = fn->local_label;
@@ -810,7 +810,7 @@ lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 			return;
 	}
 
-	bzero(&map, sizeof(map));
+	memset(&map, 0, sizeof(map));
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 
@@ -834,7 +834,7 @@ lde_send_notification(uint32_t peerid, uint32_t code, uint32_t msgid,
 {
 	struct notify_msg nm;
 
-	bzero(&nm, sizeof(nm));
+	memset(&nm, 0, sizeof(nm));
 
 	/* Every field is in host byte order, to keep things clear */
 	nm.status = code;

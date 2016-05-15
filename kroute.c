@@ -723,7 +723,7 @@ kif_find(unsigned short ifindex)
 {
 	struct kif_node	s;
 
-	bzero(&s, sizeof(s));
+	memset(&s, 0, sizeof(s));
 	s.k.ifindex = ifindex;
 
 	return (RB_FIND(kif_tree, &kit, &s));
@@ -1031,7 +1031,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 		return (0);
 
 	/* initialize header */
-	bzero(&hdr, sizeof(hdr));
+	memset(&hdr, 0, sizeof(hdr));
 	hdr.rtm_version = RTM_VERSION;
 
 	hdr.rtm_type = action;
@@ -1046,7 +1046,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 	iov[iovcnt++].iov_len = sizeof(hdr);
 
 	if (family == AF_MPLS) {
-		bzero(&label_in, sizeof(label_in));
+		memset(&label_in, 0, sizeof(label_in));
 		label_in.smpls_len = sizeof(label_in);
 		label_in.smpls_family = AF_MPLS;
 		label_in.smpls_label =
@@ -1059,7 +1059,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 		iov[iovcnt].iov_base = &label_in;
 		iov[iovcnt++].iov_len = sizeof(label_in);
 	} else {
-		bzero(&dst, sizeof(dst));
+		memset(&dst, 0, sizeof(dst));
 		dst.sin_len = sizeof(dst);
 		dst.sin_family = AF_INET;
 		dst.sin_addr.s_addr = kroute->prefix.s_addr;
@@ -1071,7 +1071,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 		iov[iovcnt++].iov_len = sizeof(dst);
 	}
 
-	bzero(&nexthop, sizeof(nexthop));
+	memset(&nexthop, 0, sizeof(nexthop));
 	nexthop.sin_len = sizeof(nexthop);
 	nexthop.sin_family = AF_INET;
 	nexthop.sin_addr.s_addr = kroute->nexthop.s_addr;
@@ -1084,7 +1084,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 	iov[iovcnt++].iov_len = sizeof(nexthop);
 
 	if (family == AF_INET) {
-		bzero(&mask, sizeof(mask));
+		memset(&mask, 0, sizeof(mask));
 		mask.sin_len = sizeof(mask);
 		mask.sin_family = AF_INET;
 		mask.sin_addr.s_addr = prefixlen2mask(kroute->prefixlen);
@@ -1098,7 +1098,7 @@ send_rtmsg(int fd, int action, struct kroute *kroute, uint32_t family)
 
 	/* If action is RTM_DELETE we have to get rid of MPLS infos */
 	if (kroute->remote_label != NO_LABEL && action != RTM_DELETE) {
-		bzero(&label_out, sizeof(label_out));
+		memset(&label_out, 0, sizeof(label_out));
 		label_out.smpls_len = sizeof(label_out);
 		label_out.smpls_family = AF_MPLS;
 		label_out.smpls_label =

@@ -61,7 +61,7 @@ recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg ka;
 
-	bcopy(buf, &ka, sizeof(ka));
+	memcpy(&ka, buf, sizeof(ka));
 
 	if (len != LDP_MSG_LEN) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, ka.msgid, ka.type);

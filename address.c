@@ -82,7 +82,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 	struct address_list_tlv	alt;
 	enum imsg_type		type;
 
-	bcopy(buf, &addr, sizeof(addr));
+	memcpy(&addr, buf, sizeof(addr));
 	log_debug("recv_address: neighbor ID %s%s", inet_ntoa(nbr->id),
 	    ntohs(addr.type) == MSG_TYPE_ADDR ? "" : " address withdraw");
 	if (ntohs(addr.type) == MSG_TYPE_ADDR)
@@ -98,7 +98,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 		return (-1);
 	}
 
-	bcopy(buf, &alt, sizeof(alt));
+	memcpy(&alt, buf, sizeof(alt));
 
 	if (ntohs(alt.length) != len - TLV_HDR_LEN) {
 		session_shutdown(nbr, S_BAD_TLV_LEN, addr.msgid, addr.type);
@@ -143,7 +143,7 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr, uint16_t size)
 	/* We want just the size of the value */
 	size -= TLV_HDR_LEN;
 
-	bzero(&alt, sizeof(alt));
+	memset(&alt, 0, sizeof(alt));
 	alt.type = TLV_TYPE_ADDRLIST;
 	alt.length = htons(size);
 	/* XXX: just ipv4 for now */

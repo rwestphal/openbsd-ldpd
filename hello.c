@@ -109,11 +109,11 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 	struct hello_source	 source;
 	struct tnbr		*tnbr = NULL;
 
-	bcopy(buf, &ldp, sizeof(ldp));
+	memcpy(&ldp, buf, sizeof(ldp));
 	buf += LDP_HDR_SIZE;
 	len -= LDP_HDR_SIZE;
 
-	bcopy(buf, &hello, sizeof(hello));
+	memcpy(&hello, buf, sizeof(hello));
 	buf += sizeof(struct ldp_msg);
 	len -= sizeof(struct ldp_msg);
 
@@ -126,7 +126,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, uint16_t len)
 		return;
 	}
 
-	bzero(&source, sizeof(source));
+	memset(&source, 0, sizeof(source));
 	if (flags & TARGETED_HELLO) {
 		tnbr = tnbr_find(leconf, src);
 
@@ -229,7 +229,7 @@ gen_hello_prms_tlv(struct ibuf *buf, uint16_t holdtime, uint16_t flags)
 {
 	struct hello_prms_tlv	parms;
 
-	bzero(&parms, sizeof(parms));
+	memset(&parms, 0, sizeof(parms));
 	parms.type = htons(TLV_TYPE_COMMONHELLO);
 	parms.length = htons(sizeof(parms.holdtime) + sizeof(parms.flags));
 	parms.holdtime = htons(holdtime);
@@ -243,7 +243,7 @@ gen_opt4_hello_prms_tlv(struct ibuf *buf, uint16_t type, uint32_t value)
 {
 	struct hello_prms_opt4_tlv	parms;
 
-	bzero(&parms, sizeof(parms));
+	memset(&parms, 0, sizeof(parms));
 	parms.type = htons(type);
 	parms.length = htons(4);
 	parms.value = value;
@@ -259,7 +259,7 @@ tlv_decode_hello_prms(char *buf, uint16_t len, uint16_t *holdtime,
 
 	if (len < sizeof(tlv))
 		return (-1);
-	bcopy(buf, &tlv, sizeof(tlv));
+	memcpy(&tlv, buf, sizeof(tlv));
 
 	if (ntohs(tlv.length) != sizeof(tlv) - TLV_HDR_LEN)
 		return (-1);
@@ -281,22 +281,23 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, struct in_addr *addr,
 	int		cons = 0;
 	uint16_t	tlv_len;
 
-	bzero(addr, sizeof(*addr));
+	memset(addr, 0, sizeof(*addr));
 	*conf_number = 0;
 
 	while (len >= sizeof(tlv)) {
-		bcopy(buf, &tlv, sizeof(tlv));
+		memcpy(&tlv, buf, sizeof(tlv));
 		tlv_len = ntohs(tlv.length);
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_IPV4TRANSADDR:
 			if (tlv_len != sizeof(uint32_t))
 				return (-1);
-			bcopy(buf + TLV_HDR_LEN, addr, sizeof(uint32_t));
+			memcpy(addr, buf + TLV_HDR_LEN, sizeof(uint32_t));
 			break;
 		case TLV_TYPE_CONFIG:
 			if (tlv_len != sizeof(uint32_t))
 				return (-1);
-			bcopy(buf + TLV_HDR_LEN, conf_number, sizeof(uint32_t));
+			memcpy(conf_number, buf + TLV_HDR_LEN,
+			    sizeof(uint32_t));
 			break;
 		default:
 			/* if unknown flag set, ignore TLV */

@@ -75,7 +75,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 
 	log_debug("recv_init: neighbor ID %s", inet_ntoa(nbr->id));
 
-	bcopy(buf, &init, sizeof(init));
+	memcpy(&init, buf, sizeof(init));
 
 	buf += sizeof(struct ldp_msg);
 	len -= sizeof(struct ldp_msg);
@@ -84,7 +84,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 		session_shutdown(nbr, S_BAD_MSG_LEN, init.msgid, init.type);
 		return (-1);
 	}
-	bcopy(buf, &sess, sizeof(sess));
+	memcpy(&sess, buf, sizeof(sess));
 
 	if (ntohs(sess.length) != SESS_PRMS_SIZE - TLV_HDR_LEN ||
 	    ntohs(sess.length) > len - TLV_HDR_LEN) {
@@ -122,7 +122,7 @@ gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, uint16_t size)
 	/* We want just the size of the value */
 	size -= TLV_HDR_LEN;
 
-	bzero(&parms, sizeof(parms));
+	memset(&parms, 0, sizeof(parms));
 	parms.type = htons(TLV_TYPE_COMMONSESSION);
 	parms.length = htons(size);
 	parms.proto_version = htons(LDP_VERSION);
@@ -144,7 +144,7 @@ tlv_decode_opt_init_prms(char *buf, uint16_t len)
 	uint16_t	tlv_len;
 
 	 while (len >= sizeof(tlv)) {
-		bcopy(buf, &tlv, sizeof(tlv));
+		memcpy(&tlv, buf, sizeof(tlv));
 		tlv_len = ntohs(tlv.length);
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_ATMSESSIONPAR:

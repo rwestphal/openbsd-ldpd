@@ -52,7 +52,7 @@ gen_ldp_hdr(struct ibuf *buf, uint16_t size)
 {
 	struct ldp_hdr	ldp_hdr;
 
-	bzero(&ldp_hdr, sizeof(ldp_hdr));
+	memset(&ldp_hdr, 0, sizeof(ldp_hdr));
 	ldp_hdr.version = htons(LDP_VERSION);
 
 	/* We want just the size of the value */
@@ -73,7 +73,7 @@ gen_msg_tlv(struct ibuf *buf, uint32_t type, uint16_t size)
 	/* We want just the size of the value */
 	size -= TLV_HDR_LEN;
 
-	bzero(&msg, sizeof(msg));
+	memset(&msg, 0, sizeof(msg));
 	msg.type = htons(type);
 	msg.length = htons(size);
 	if (type != MSG_TYPE_HELLO)
@@ -129,7 +129,7 @@ disc_recv_packet(int fd, short event, void *bula)
 		return;
 
 	/* setup buffer */
-	bzero(&msg, sizeof(msg));
+	memset(&msg, 0, sizeof(msg));
 	iov.iov_base = buf = pkt_ptr;
 	iov.iov_len = IBUF_READ_SIZE;
 	msg.msg_name = &src;
@@ -171,7 +171,7 @@ disc_recv_packet(int fd, short event, void *bula)
 		log_debug("disc_recv_packet: bad packet size");
 		return;
 	}
-	bcopy(buf, &ldp_hdr, sizeof(ldp_hdr));
+	memcpy(&ldp_hdr, buf, sizeof(ldp_hdr));
 
 	if (ntohs(ldp_hdr.version) != LDP_VERSION) {
 		log_debug("dsc_recv_packet: invalid LDP version %d",
@@ -192,7 +192,7 @@ disc_recv_packet(int fd, short event, void *bula)
 		return;
 	}
 
-	bcopy(buf + LDP_HDR_SIZE, &ldp_msg, sizeof(ldp_msg));
+	memcpy(&ldp_msg, buf + LDP_HDR_SIZE, sizeof(ldp_msg));
 
 	/* switch LDP packet type */
 	switch (ntohs(ldp_msg.type)) {

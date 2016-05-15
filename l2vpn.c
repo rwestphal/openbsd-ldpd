@@ -186,7 +186,7 @@ l2vpn_pw_init(struct l2vpn_pw *pw)
 void
 l2vpn_pw_fec(struct l2vpn_pw *pw, struct fec *fec)
 {
-	bzero(fec, sizeof(*fec));
+	memset(fec, 0, sizeof(*fec));
 	fec->type = FEC_TYPE_PWID;
 	fec->u.pwid.type = pw->l2vpn->pw_type;
 	fec->u.pwid.pwid = pw->pwid;
@@ -224,7 +224,7 @@ l2vpn_pw_ok(struct l2vpn_pw *pw, struct fec_nh *fnh)
 		return (0);
 
 	/* check for a working lsp to the nexthop */
-	bzero(&fec, sizeof(fec));
+	memset(&fec, 0, sizeof(fec));
 	fec.type = FEC_TYPE_IPV4;
 	fec.u.ipv4.prefix.s_addr = pw->addr.s_addr;
 	fec.u.ipv4.prefixlen = 32;
@@ -293,7 +293,7 @@ l2vpn_send_pw_status(uint32_t peerid, uint32_t status, struct fec *fec)
 {
 	struct notify_msg	 nm;
 
-	bzero(&nm, sizeof(nm));
+	memset(&nm, 0, sizeof(nm));
 	nm.status = S_PW_STATUS;
 
 	nm.pw_status = status;
@@ -379,7 +379,7 @@ l2vpn_pw_ctl(pid_t pid)
 
 	LIST_FOREACH(l2vpn, &ldeconf->l2vpn_list, entry)
 		LIST_FOREACH(pw, &l2vpn->pw_list, entry) {
-			bzero(&pwctl, sizeof(pwctl));
+			memset(&pwctl, 0, sizeof(pwctl));
 			strlcpy(pwctl.ifname, pw->ifname,
 			    sizeof(pwctl.ifname));
 			pwctl.pwid = pw->pwid;
@@ -416,7 +416,7 @@ l2vpn_binding_ctl(pid_t pid)
 		else
 			pw = NULL;
 
-		bzero(&pwctl, sizeof(pwctl));
+		memset(&pwctl, 0, sizeof(pwctl));
 		pwctl.type = f->u.pwid.type;
 		pwctl.pwid = f->u.pwid.pwid;
 		pwctl.nexthop = f->u.pwid.nexthop;
