@@ -123,7 +123,7 @@ void	lde_send_labelmapping(struct lde_nbr *, struct fec_node *, int);
 void	lde_send_labelwithdraw(struct lde_nbr *, struct fec_node *, uint32_t);
 void	lde_send_labelwithdraw_all(struct fec_node *, uint32_t);
 void	lde_send_labelrelease(struct lde_nbr *, struct fec_node *, uint32_t);
-void	lde_send_notification(uint32_t, uint32_t, uint32_t, uint32_t);
+void	lde_send_notification(uint32_t, uint32_t, uint32_t, uint16_t);
 
 struct lde_map *lde_map_add(struct lde_nbr *, struct fec_node *, int);
 void		lde_map_del(struct lde_nbr *, struct lde_map *, int);

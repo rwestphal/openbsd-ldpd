@@ -502,7 +502,7 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 	fn = (struct fec_node *)fec_find(&ft, &fec);
 	if (fn == NULL || LIST_EMPTY(&fn->nexthops)) {
 		lde_send_notification(ln->peerid, S_NO_ROUTE, map->messageid,
-		    MSG_TYPE_LABELREQUEST);
+		    htons(MSG_TYPE_LABELREQUEST));
 		return;
 	}
 
@@ -510,7 +510,7 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 	LIST_FOREACH(fnh, &fn->nexthops, entry) {
 		if (lde_address_find(ln, &fnh->nexthop)) {
 			lde_send_notification(ln->peerid, S_LOOP_DETECTED,
-			    map->messageid, MSG_TYPE_LABELREQUEST);
+			    map->messageid, htons(MSG_TYPE_LABELREQUEST));
 			return;
 		}
 	}

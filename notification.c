@@ -247,8 +247,9 @@ gen_status_tlv(struct ibuf *buf, uint32_t status, uint32_t msgid, uint32_t type)
 	st.length = htons(STATUS_TLV_LEN);
 	st.status_code = htonl(status);
 
-	st.msg_id = htonl(msgid);
-	st.msg_type = htonl(type);
+	/* for convenience, msgid and type are already in network byte order */
+	st.msg_id = msgid;
+	st.msg_type = type;
 
 	return (ibuf_add(buf, &st, STATUS_SIZE));
 }

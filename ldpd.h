@@ -196,9 +196,9 @@ struct map {
 #define F_MAP_PW_STATUS	0x10	/* pseudowire status */
 
 struct notify_msg {
-	uint32_t	messageid;
 	uint32_t	status;
-	uint32_t	type;
+	uint32_t	messageid;	/* network byte order */
+	uint16_t	type;		/* network byte order */
 	uint32_t	pw_status;
 	struct map	fec;
 	uint8_t		flags;

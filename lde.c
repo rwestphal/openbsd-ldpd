@@ -837,15 +837,14 @@ lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 
 void
 lde_send_notification(uint32_t peerid, uint32_t code, uint32_t msgid,
-    uint32_t type)
+    uint16_t type)
 {
 	struct notify_msg nm;
 
 	memset(&nm, 0, sizeof(nm));
-
-	/* Every field is in host byte order, to keep things clear */
 	nm.status = code;
-	nm.messageid = ntohl(msgid);
+	/* 'msgid' and 'type' should be in network byte order */
+	nm.messageid = msgid;
 	nm.type = type;
 
 	lde_imsg_compose_ldpe(IMSG_NOTIFICATION_SEND, peerid, 0,
