@@ -583,8 +583,6 @@ lde_send_change_klabel(struct fec_node *fn, struct fec_nh *fnh)
 			return;
 
 		pw = (struct l2vpn_pw *) fnh->data;
-		if (pw->flags & F_PW_STATUS_UP)
-			return;
 		pw->flags |= F_PW_STATUS_UP;
 
 		memset(&kpw, 0, sizeof(kpw));
