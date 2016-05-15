@@ -49,19 +49,14 @@ send_init(struct nbr *nbr)
 
 	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
 
-	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
+	size = LDP_HDR_SIZE + LDP_MSG_SIZE + SESS_PRMS_SIZE;
+	if ((buf = ibuf_open(size)) == NULL)
 		fatal(__func__);
 
-	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) + SESS_PRMS_SIZE;
-
 	gen_ldp_hdr(buf, size);
-
 	size -= LDP_HDR_SIZE;
-
-	gen_msg_tlv(buf, MSG_TYPE_INIT, size);
-
-	size -= sizeof(struct ldp_msg);
-
+	gen_msg_hdr(buf, MSG_TYPE_INIT, size);
+	size -= LDP_MSG_SIZE;
 	gen_init_prms_tlv(buf, nbr, size);
 
 	evbuf_enqueue(&nbr->tcp->wbuf, buf);
@@ -77,9 +72,8 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
 
 	memcpy(&init, buf, sizeof(init));
-
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	if (len < SESS_PRMS_SIZE) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, init.msgid, init.type);
@@ -91,8 +85,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 		return (-1);
 	}
 
-	if (ntohs(sess.length) != SESS_PRMS_SIZE - TLV_HDR_LEN ||
-	    ntohs(sess.length) > len - TLV_HDR_LEN) {
+	if (ntohs(sess.length) != SESS_PRMS_SIZE - TLV_HDR_LEN) {
 		session_shutdown(nbr, S_BAD_TLV_LEN, init.msgid, init.type);
 		return (-1);
 	}
@@ -126,7 +119,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 
 	nbr_fsm(nbr, NBR_EVT_INIT_RCVD);
 
-	return (ntohs(init.length));
+	return (0);
 }
 
 int
@@ -134,12 +127,9 @@ gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, uint16_t size)
 {
 	struct sess_prms_tlv	parms;
 
-	/* We want just the size of the value */
-	size -= TLV_HDR_LEN;
-
 	memset(&parms, 0, sizeof(parms));
 	parms.type = htons(TLV_TYPE_COMMONSESSION);
-	parms.length = htons(size);
+	parms.length = htons(size - TLV_HDR_LEN);
 	parms.proto_version = htons(LDP_VERSION);
 	parms.keepalive_time = htons(nbr_get_keepalive(nbr->raddr));
 	parms.reserved = 0;

@@ -235,7 +235,7 @@ RB_PROTOTYPE(nbr_pid_head, nbr, pid_tree, nbr_pid_compare)
 
 /* packet.c */
 int	 gen_ldp_hdr(struct ibuf *, uint16_t);
-int	 gen_msg_tlv(struct ibuf *, uint32_t, uint16_t);
+int	 gen_msg_hdr(struct ibuf *, uint32_t, uint16_t);
 int	 send_packet(int, struct iface *, void *, size_t, struct sockaddr_in *);
 void	 disc_recv_packet(int, short, void *);
 void	 session_accept(int, short, void *);

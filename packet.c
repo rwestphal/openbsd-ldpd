@@ -54,11 +54,8 @@ gen_ldp_hdr(struct ibuf *buf, uint16_t size)
 
 	memset(&ldp_hdr, 0, sizeof(ldp_hdr));
 	ldp_hdr.version = htons(LDP_VERSION);
-
-	/* We want just the size of the value */
-	size -= TLV_HDR_LEN;
-
-	ldp_hdr.length = htons(size);
+	/* exclude the 'Version' and 'PDU Length' fields from the total */
+	ldp_hdr.length = htons(size - LDP_HDR_DEAD_LEN);
 	ldp_hdr.lsr_id = leconf->rtr_id.s_addr;
 	ldp_hdr.lspace_id = 0;
 
@@ -66,16 +63,14 @@ gen_ldp_hdr(struct ibuf *buf, uint16_t size)
 }
 
 int
-gen_msg_tlv(struct ibuf *buf, uint32_t type, uint16_t size)
+gen_msg_hdr(struct ibuf *buf, uint32_t type, uint16_t size)
 {
 	struct ldp_msg	msg;
 
-	/* We want just the size of the value */
-	size -= TLV_HDR_LEN;
-
 	memset(&msg, 0, sizeof(msg));
 	msg.type = htons(type);
-	msg.length = htons(size);
+	/* exclude the 'Type' and 'Length' fields from the total */
+	msg.length = htons(size - LDP_MSG_DEAD_LEN);
 	if (type != MSG_TYPE_HELLO)
 		msg.msgid = htonl(++msgcnt);
 
@@ -291,8 +286,8 @@ session_read(int fd, short event, void *arg)
 	struct ldp_msg	*ldp_msg;
 	char		*buf, *pdu;
 	ssize_t		 n, len;
-	int		 msg_size, max_pdu_len;
-	uint16_t	 pdu_len;
+	uint16_t	 pdu_len, msg_len, msg_size, max_pdu_len;
+	int		 ret;
 
 	if (event != EV_READ) {
 		log_debug("%s: spurious event", __func__);
@@ -344,11 +339,11 @@ session_read(int fd, short event, void *arg)
 		 * "Prior to completion of the negotiation, the maximum
 		 * allowable length is 4096 bytes".
 		 */
-		if (nbr->state == NBR_STA_OPER)
+		if (nbr && nbr->state == NBR_STA_OPER)
 			max_pdu_len = nbr->max_pdu_len;
 		else
 			max_pdu_len = LDP_MAX_LEN;
-		if (pdu_len < (LDP_HDR_PDU_LEN + LDP_MSG_LEN) ||
+		if (pdu_len < (LDP_HDR_PDU_LEN + LDP_MSG_SIZE) ||
 		    pdu_len > max_pdu_len) {
 			if (nbr)
 				session_shutdown(nbr, S_BAD_PDU_LEN, 0, 0);
@@ -360,6 +355,7 @@ session_read(int fd, short event, void *arg)
 			free(buf);
 			return;
 		}
+		pdu_len -= LDP_HDR_PDU_LEN;
 
 		if (nbr) {
 			if (ldp_hdr->lsr_id != nbr->id.s_addr ||
@@ -395,20 +391,20 @@ session_read(int fd, short event, void *arg)
 		if (nbr->state == NBR_STA_OPER)
 			nbr_fsm(nbr, NBR_EVT_PDU_RCVD);
 
-		while (len >= LDP_MSG_LEN) {
+		while (len >= LDP_MSG_SIZE) {
 			uint16_t type;
 
 			ldp_msg = (struct ldp_msg *)pdu;
 			type = ntohs(ldp_msg->type);
-
-			pdu_len = ntohs(ldp_msg->length) + TLV_HDR_LEN;
-			if (pdu_len > len ||
-			    pdu_len < LDP_MSG_LEN - TLV_HDR_LEN) {
+			msg_len = ntohs(ldp_msg->length);
+			msg_size = msg_len + LDP_MSG_DEAD_LEN;
+			if (msg_len < LDP_MSG_LEN || msg_size > pdu_len) {
 				session_shutdown(nbr, S_BAD_TLV_LEN,
 				    ldp_msg->msgid, ldp_msg->type);
 				free(buf);
 				return;
 			}
+			pdu_len -= msg_size;
 
 			/* check for error conditions earlier */
 			switch (type) {
@@ -451,25 +447,25 @@ session_read(int fd, short event, void *arg)
 			/* switch LDP packet type */
 			switch (type) {
 			case MSG_TYPE_NOTIFICATION:
-				msg_size = recv_notification(nbr, pdu, pdu_len);
+				ret = recv_notification(nbr, pdu, msg_size);
 				break;
 			case MSG_TYPE_INIT:
-				msg_size = recv_init(nbr, pdu, pdu_len);
+				ret = recv_init(nbr, pdu, msg_size);
 				break;
 			case MSG_TYPE_KEEPALIVE:
-				msg_size = recv_keepalive(nbr, pdu, pdu_len);
+				ret = recv_keepalive(nbr, pdu, msg_size);
 				break;
 			case MSG_TYPE_ADDR:
 			case MSG_TYPE_ADDRWITHDRAW:
-				msg_size = recv_address(nbr, pdu, pdu_len);
+				ret = recv_address(nbr, pdu, msg_size);
 				break;
 			case MSG_TYPE_LABELMAPPING:
 			case MSG_TYPE_LABELREQUEST:
 			case MSG_TYPE_LABELWITHDRAW:
 			case MSG_TYPE_LABELRELEASE:
 			case MSG_TYPE_LABELABORTREQ:
-				msg_size = recv_labelmessage(nbr, pdu,
-				    pdu_len, type);
+				ret = recv_labelmessage(nbr, pdu, msg_size,
+				    type);
 				break;
 			default:
 				log_debug("%s: unknown LDP packet from nbr %s",
@@ -481,19 +477,19 @@ session_read(int fd, short event, void *arg)
 					return;
 				}
 				/* unknown flag is set, ignore the message */
-				msg_size = ntohs(ldp_msg->length);
+				ret = 0;
 				break;
 			}
 
-			if (msg_size == -1) {
+			if (ret == -1) {
 				/* parser failed, giving up */
 				free(buf);
 				return;
 			}
 
 			/* Analyse the next message */
-			pdu += msg_size + TLV_HDR_LEN;
-			len -= msg_size + TLV_HDR_LEN;
+			pdu += msg_size;
+			len -= msg_size;
 		}
 		free(buf);
 		if (len != 0) {
@@ -558,7 +554,7 @@ session_get_pdu(struct ibuf_read *r, char **b)
 		return (0);
 
 	memcpy(&l, r->buf, sizeof(l));
-	dlen = ntohs(l.length) + TLV_HDR_LEN;
+	dlen = ntohs(l.length) + LDP_HDR_DEAD_LEN;
 	if (dlen > av)
 		return (0);
 

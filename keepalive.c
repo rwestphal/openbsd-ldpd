@@ -42,16 +42,13 @@ send_keepalive(struct nbr *nbr)
 	struct ibuf	*buf;
 	uint16_t	 size;
 
-	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
+	size = LDP_HDR_SIZE + LDP_MSG_SIZE;
+	if ((buf = ibuf_open(size)) == NULL)
 		fatal(__func__);
 
-	size = LDP_HDR_SIZE + sizeof(struct ldp_msg);
-
 	gen_ldp_hdr(buf, size);
-
 	size -= LDP_HDR_SIZE;
-
-	gen_msg_tlv(buf, MSG_TYPE_KEEPALIVE, size);
+	gen_msg_hdr(buf, MSG_TYPE_KEEPALIVE, size);
 
 	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 }
@@ -62,8 +59,7 @@ recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 	struct ldp_msg ka;
 
 	memcpy(&ka, buf, sizeof(ka));
-
-	if (len != LDP_MSG_LEN) {
+	if (len != LDP_MSG_SIZE) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, ka.msgid, ka.type);
 		return (-1);
 	}
@@ -71,5 +67,5 @@ recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 	if (nbr->state != NBR_STA_OPER)
 		nbr_fsm(nbr, NBR_EVT_KEEPALIVE_RCVD);
 
-	return (ntohs(ka.length));
+	return (0);
 }

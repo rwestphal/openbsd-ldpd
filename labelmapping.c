@@ -60,13 +60,14 @@ send_labelmessage(struct nbr *nbr, uint16_t type, struct mapping_head *mh)
 {
 	struct ibuf		*buf = NULL;
 	struct mapping_entry	*me;
-	uint16_t		 tlv_size, size = 0;
+	uint16_t		 msg_size, size = 0;
 	int			 first = 1;
 
 	while ((me = TAILQ_FIRST(mh)) != NULL) {
 		/* generate pdu */
 		if (first) {
-			if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
+			if ((buf = ibuf_open(nbr->max_pdu_len +
+			    LDP_HDR_DEAD_LEN)) == NULL)
 				fatal(__func__);
 
 			/* real size will be set up later */
@@ -77,44 +78,44 @@ send_labelmessage(struct nbr *nbr, uint16_t type, struct mapping_head *mh)
 		}
 
 		/* calculate size */
-		tlv_size = LDP_MSG_LEN + TLV_HDR_LEN;
+		msg_size = LDP_MSG_SIZE + TLV_HDR_LEN;
 
 		switch (me->map.type) {
 		case FEC_WILDCARD:
-			tlv_size += FEC_ELM_WCARD_LEN;
+			msg_size += FEC_ELM_WCARD_LEN;
 			break;
 		case FEC_PREFIX:
-			tlv_size += FEC_ELM_PREFIX_MIN_LEN +
+			msg_size += FEC_ELM_PREFIX_MIN_LEN +
 			    PREFIX_SIZE(me->map.fec.ipv4.prefixlen);
 			break;
 		case FEC_PWID:
-			tlv_size += FEC_PWID_ELM_MIN_LEN;
+			msg_size += FEC_PWID_ELM_MIN_LEN;
 
 			if (me->map.flags & F_MAP_PW_ID)
-				tlv_size += sizeof(uint32_t);
+				msg_size += sizeof(uint32_t);
 			if (me->map.flags & F_MAP_PW_IFMTU)
-				tlv_size += FEC_SUBTLV_IFMTU_LEN;
+				msg_size += FEC_SUBTLV_IFMTU_LEN;
 	    		if (me->map.flags & F_MAP_PW_STATUS)
-				tlv_size += PW_STATUS_TLV_LEN;
+				msg_size += PW_STATUS_TLV_LEN;
 			break;
 		}
 
 		if (me->map.label != NO_LABEL)
-			tlv_size += LABEL_TLV_LEN;
+			msg_size += LABEL_TLV_LEN;
 		if (me->map.flags & F_MAP_REQ_ID)
-			tlv_size += REQID_TLV_LEN;
+			msg_size += REQID_TLV_LEN;
 
 		/* maximum pdu length exceeded, we need a new ldp pdu */
-		if (size + tlv_size > LDP_MAX_LEN) {
+		if (size + msg_size > nbr->max_pdu_len) {
 			enqueue_pdu(nbr, buf, size);
 			first = 1;
 			continue;
 		}
 
-		size += tlv_size;
+		size += msg_size;
 
 		/* append message and tlvs */
-		gen_msg_tlv(buf, type, tlv_size);
+		gen_msg_hdr(buf, type, msg_size);
 		gen_fec_tlv(buf, &me->map);
 		if (me->map.label != NO_LABEL)
 			gen_label_tlv(buf, me->map.label);
@@ -147,9 +148,8 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 	struct map		 map;
 
 	memcpy(&lm, buf, sizeof(lm));
-
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	/* FEC TLV */
 	if (len < sizeof(ft)) {
@@ -245,7 +245,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		}
 
 		memcpy(&tlv, buf, sizeof(tlv));
-		if (ntohs(tlv.length) > len - TLV_HDR_LEN) {
+		if (ntohs(tlv.length) != len - TLV_HDR_LEN) {
 			session_shutdown(nbr, S_BAD_TLV_LEN, lm.msgid,
 			    lm.type);
 			goto err;
@@ -389,7 +389,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		free(me);
 	}
 
-	return (ntohs(lm.length));
+	return (0);
 
 err:
 	mapping_list_clr(&mh);

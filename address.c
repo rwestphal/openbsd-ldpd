@@ -45,37 +45,34 @@ send_address(struct nbr *nbr, struct if_addr *if_addr, int withdraw)
 {
 	struct ibuf	*buf;
 	uint32_t	 msg_type;
-	uint16_t	 size, iface_count = 0;
+	uint16_t	 size;
+	int		 iface_count = 0;
 
 	if (!withdraw)
 		msg_type = MSG_TYPE_ADDR;
 	else
 		msg_type = MSG_TYPE_ADDRWITHDRAW;
 
-	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal(__func__);
-
-	if (if_addr == NULL)
+	if (if_addr == NULL) {
 		LIST_FOREACH(if_addr, &global.addr_list, entry)
 			iface_count++;
-	else
+	} else
 		iface_count = 1;
 
-	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) +
-	    sizeof(struct address_list_tlv) +
+	size = LDP_HDR_SIZE + LDP_MSG_SIZE + sizeof(struct address_list_tlv) +
 	    iface_count * sizeof(struct in_addr);
 
+	if ((buf = ibuf_open(size)) == NULL)
+		fatal(__func__);
+
 	gen_ldp_hdr(buf, size);
-
 	size -= LDP_HDR_SIZE;
-
-	gen_msg_tlv(buf, msg_type, size);
-
-	size -= sizeof(struct ldp_msg);
-
+	gen_msg_hdr(buf, msg_type, size);
+	size -= LDP_MSG_SIZE;
 	gen_address_list_tlv(buf, if_addr, size);
 
 	evbuf_enqueue(&nbr->tcp->wbuf, buf);
+
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
 
@@ -94,8 +91,8 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 	else
 		type = IMSG_ADDRESS_DEL;
 
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	if (len < sizeof(alt)) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, addr.msgid, addr.type);
@@ -136,7 +133,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 		return (-1);
 	}
 
-	return (ntohs(addr.length));
+	return (0);
 }
 
 void
@@ -144,20 +141,18 @@ gen_address_list_tlv(struct ibuf *buf, struct if_addr *if_addr, uint16_t size)
 {
 	struct address_list_tlv	 alt;
 
-	/* We want just the size of the value */
-	size -= TLV_HDR_LEN;
 
 	memset(&alt, 0, sizeof(alt));
 	alt.type = TLV_TYPE_ADDRLIST;
-	alt.length = htons(size);
+	alt.length = htons(size - TLV_HDR_LEN);
 	/* XXX: just ipv4 for now */
 	alt.family = htons(AF_IPV4);
 
 	ibuf_add(buf, &alt, sizeof(alt));
 
-	if (if_addr == NULL)
+	if (if_addr == NULL) {
 		LIST_FOREACH(if_addr, &global.addr_list, entry)
 			ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
-	else
+	} else
 		ibuf_add(buf, &if_addr->addr, sizeof(if_addr->addr));
 }

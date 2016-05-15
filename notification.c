@@ -48,11 +48,8 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 		log_debug("%s: nbr ID %s, status %s", __func__,
 		    inet_ntoa(tcp->nbr->id), notification_name(nm->status));
 
-	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal(__func__);
-
 	/* calculate size */
-	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) + STATUS_SIZE;
+	size = LDP_HDR_SIZE + LDP_MSG_SIZE + STATUS_SIZE;
 	if (nm->flags & F_NOTIF_PW_STATUS)
 		size += PW_STATUS_TLV_LEN;
 	if (nm->flags & F_NOTIF_FEC) {
@@ -66,12 +63,12 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 		}
 	}
 
+	if ((buf = ibuf_open(size)) == NULL)
+		fatal(__func__);
+
 	gen_ldp_hdr(buf, size);
-
 	size -= LDP_HDR_SIZE;
-
-	gen_msg_tlv(buf, MSG_TYPE_NOTIFICATION, size);
-
+	gen_msg_hdr(buf, MSG_TYPE_NOTIFICATION, size);
 	gen_status_tlv(buf, nm->status, nm->messageid, nm->type);
 	/* optional tlvs */
 	if (nm->flags & F_NOTIF_PW_STATUS)
@@ -114,9 +111,8 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 	int			tlen;
 
 	memcpy(&not, buf, sizeof(not));
-
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	if (len < STATUS_SIZE) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, not.msgid, not.type);
@@ -239,7 +235,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 		ldpe_imsg_compose_lde(IMSG_NOTIFICATION, nbr->peerid, 0,
 		    &nm, sizeof(nm));
 
-	return (ntohs(not.length));
+	return (0);
 }
 
 int
