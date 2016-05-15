@@ -220,8 +220,12 @@ l2vpn_pw_ok(struct l2vpn_pw *pw, struct fec_nh *fnh)
 	fec.u.ipv4.prefix.s_addr = pw->addr.s_addr;
 	fec.u.ipv4.prefixlen = 32;
 	fn = (struct fec_node *)fec_find(&ft, &fec);
-	if (fn == NULL)
+	if (fn == NULL || fn->local_label == NO_LABEL)
 		return (0);
+	/*
+	 * Need to ensure that there's a label binding for all nexthops.
+	 * Otherwise, ECMP for this route could render the pseudowire unusable.
+	 */
 	LIST_FOREACH(fnh, &fn->nexthops, entry)
 		if (fnh->remote_label == NO_LABEL)
 			return (0);
