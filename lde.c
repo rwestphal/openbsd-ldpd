@@ -694,9 +694,7 @@ lde_send_labelmapping(struct lde_nbr *ln, struct fec_node *fn, int single)
 	 * ldpd).
 	 */
 
-	memset(&map, 0, sizeof(map));
 	lde_fec2map(&fn->fec, &map);
-
 	if (fn->fec.type == FEC_TYPE_PWID) {
 		fnh = fec_nh_find(fn, ln->id);
 		if (fnh == NULL)
@@ -757,17 +755,16 @@ lde_send_labelwithdraw(struct lde_nbr *ln, struct fec_node *fn)
 			return;
 	}
 
-	memset(&map, 0, sizeof(map));
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
 		map.label = fn->local_label;
-
 		if (fn->fec.type == FEC_TYPE_PWID) {
 			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CONTROLWORD)
 				map.flags |= F_MAP_PW_CWORD;
 		}
 	} else {
+		memset(&map, 0, sizeof(map));
 		map.type = FEC_WILDCARD;
 		map.label = NO_LABEL;
 	}
@@ -810,17 +807,17 @@ lde_send_labelrelease(struct lde_nbr *ln, struct fec_node *fn, uint32_t label)
 			return;
 	}
 
-	memset(&map, 0, sizeof(map));
 	if (fn) {
 		lde_fec2map(&fn->fec, &map);
-
 		if (fn->fec.type == FEC_TYPE_PWID) {
 			pw = (struct l2vpn_pw *) fnh->data;
 			if (pw->flags & F_PW_CONTROLWORD)
 				map.flags |= F_MAP_PW_CWORD;
 		}
-	} else
+	} else {
+		memset(&map, 0, sizeof(map));
 		map.type = FEC_WILDCARD;
+	}
 	map.label = label;
 
 	lde_imsg_compose_ldpe(IMSG_RELEASE_ADD, ln->peerid, 0,
