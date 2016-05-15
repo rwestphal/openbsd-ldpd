@@ -473,7 +473,7 @@ ldpe_l2vpn_pw_init(struct l2vpn_pw *pw)
 
 	tnbr = tnbr_find(leconf, pw->lsr_id);
 	if (!event_initialized(&tnbr->hello_timer))
-		tnbr_init(tnbr);
+		tnbr_update(tnbr);
 }
 
 void

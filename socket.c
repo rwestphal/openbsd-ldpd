@@ -31,7 +31,7 @@
 #include "ldpe.h"
 #include "log.h"
 
-extern struct ldpd_conf		*leconf;
+extern struct ldpd_conf		*ldpd_conf;
 extern struct ldpd_sysdep	 sysdep;
 
 int
@@ -72,7 +72,7 @@ ldp_create_socket(enum socket_type type)
 		break;
 	case LDP_SOCKET_EDISC:
 	case LDP_SOCKET_SESSION:
-		local_sa.sin_addr = leconf->trans_addr;
+		local_sa.sin_addr = ldpd_conf->trans_addr;
 		break;
 	}
 	if (sock_set_reuse(fd, 1) == -1) {
