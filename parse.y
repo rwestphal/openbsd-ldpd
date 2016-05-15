@@ -997,7 +997,7 @@ parse_config(char *filename)
 	struct sym	*sym, *next;
 
 	if ((conf = calloc(1, sizeof(struct ldpd_conf))) == NULL)
-		fatal("parse_config");
+		fatal(__func__);
 	conf->keepalive = DEFAULT_KEEPALIVE;
 
 	memset(&globaldefs, 0, sizeof(globaldefs));

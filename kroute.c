@@ -170,14 +170,14 @@ kr_init(int fs)
 
 	if ((kr_state.fd = socket(AF_ROUTE,
 	    SOCK_RAW | SOCK_CLOEXEC | SOCK_NONBLOCK, 0)) == -1) {
-		log_warn("kr_init: socket");
+		log_warn("%s: socket", __func__);
 		return (-1);
 	}
 
 	/* not interested in my own messages */
 	if (setsockopt(kr_state.fd, SOL_SOCKET, SO_USELOOPBACK,
 	    &opt, sizeof(opt)) == -1)
-		log_warn("kr_init: setsockopt(SO_USELOOPBACK)");
+		log_warn("%s: setsockopt(SO_USELOOPBACK)", __func__);
 
 	/* filter out unwanted messages */
 	rtfilter = ROUTE_FILTER(RTM_ADD) | ROUTE_FILTER(RTM_GET) |
@@ -187,13 +187,13 @@ kr_init(int fs)
 
 	if (setsockopt(kr_state.fd, PF_ROUTE, ROUTE_MSGFILTER,
 	    &rtfilter, sizeof(rtfilter)) == -1)
-		log_warn("kr_init: setsockopt(ROUTE_MSGFILTER)");
+		log_warn("%s: setsockopt(ROUTE_MSGFILTER)", __func__);
 
 	/* grow receive buffer, don't wanna miss messages */
 	optlen = sizeof(default_rcvbuf);
 	if (getsockopt(kr_state.fd, SOL_SOCKET, SO_RCVBUF,
 	    &default_rcvbuf, &optlen) == -1)
-		log_warn("kr_init getsockopt SOL_SOCKET SO_RCVBUF");
+		log_warn("%s: getsockopt SOL_SOCKET SO_RCVBUF", __func__);
 	else
 		for (rcvbuf = MAX_RTSOCK_BUF;
 		    rcvbuf > default_rcvbuf &&
@@ -214,7 +214,7 @@ kr_init(int fs)
 
 	if ((kr_state.ioctl_fd = socket(AF_INET,
 	    SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0)) == -1) {
-		log_warn("kr_init: ioctl socket");
+		log_warn("%s: ioctl socket", __func__);
 		return (-1);
 	}
 
@@ -231,7 +231,7 @@ kr_change(struct kroute *kroute)
 	kn = kroute_find_gw(kroute->prefix.s_addr, kroute->prefixlen,
 	    RTP_ANY, kroute->nexthop);
 	if (kn == NULL) {
-		log_warnx("kr_change: lost FEC %s/%d nexthop %s",
+		log_warnx("%s: lost FEC %s/%d nexthop %s", __func__,
 		    inet_ntoa(kroute->prefix), kroute->prefixlen,
 		    inet_ntop(AF_INET, &kroute->nexthop, buf, sizeof(buf)));
 		return (-1);
@@ -399,7 +399,7 @@ kr_show_route(struct imsg *imsg)
 	switch (imsg->hdr.type) {
 	case IMSG_CTL_KROUTE:
 		if (imsg->hdr.len != IMSG_HEADER_SIZE + sizeof(flags)) {
-			log_warnx("kr_show_route: wrong imsg len");
+			log_warnx("%s: wrong imsg len", __func__);
 			return;
 		}
 		memcpy(&flags, imsg->data, sizeof(flags));
@@ -417,7 +417,7 @@ kr_show_route(struct imsg *imsg)
 	case IMSG_CTL_KROUTE_ADDR:
 		if (imsg->hdr.len != IMSG_HEADER_SIZE +
 		    sizeof(struct in_addr)) {
-			log_warnx("kr_show_route: wrong imsg len");
+			log_warnx("%s: wrong imsg len", __func__);
 			return;
 		}
 		memcpy(&addr, imsg->data, sizeof(addr));
@@ -428,7 +428,7 @@ kr_show_route(struct imsg *imsg)
 			    &kn->r, sizeof(kn->r));
 		break;
 	default:
-		log_debug("kr_show_route: error handling imsg");
+		log_debug("%s: error handling imsg", __func__);
 		break;
 	}
 	main_imsg_compose_ldpe(IMSG_CTL_END, imsg->hdr.pid, NULL, 0);
@@ -599,7 +599,7 @@ kroute_insert(struct kroute *kr)
 	if (kp == NULL) {
 		kp = calloc(1, sizeof(struct kroute_prefix));
 		if (kp == NULL)
-			fatal("kroute_insert");
+			fatal(__func__);
 		kp->prefix.s_addr = kr->prefix.s_addr;
 		kp->prefixlen = kr->prefixlen;
 		TAILQ_INIT(&kp->priorities);
@@ -611,7 +611,7 @@ kroute_insert(struct kroute *kr)
 	if (kprio == NULL) {
 		kprio = calloc(1, sizeof(struct kroute_priority));
 		if (kprio == NULL)
-			fatal("kroute_insert");
+			fatal(__func__);
 		kprio->kp = kp;
 		kprio->priority = kr->priority;
 		TAILQ_INIT(&kprio->nexthops);
@@ -632,7 +632,7 @@ done:
 	if (kn == NULL) {
 		kn = calloc(1, sizeof(struct kroute_node));
 		if (kn == NULL)
-			fatal("kroute_insert");
+			fatal(__func__);
 		kn->kprio = kprio;
 		memcpy(&kn->r, kr, sizeof(struct kroute));
 		TAILQ_INSERT_TAIL(&kprio->nexthops, kn, entry);
@@ -664,7 +664,7 @@ kroute_remove(struct kroute *kr)
 	kn = kroute_find_gw(kr->prefix.s_addr, kr->prefixlen, kr->priority,
 	    kr->nexthop);
 	if (kn == NULL) {
-		log_warnx("kroute_remove failed to find %s/%u",
+		log_warnx("%s failed to find %s/%u", __func__,
 		    inet_ntoa(kr->prefix), kr->prefixlen);
 		return (-1);
 	}
@@ -684,7 +684,7 @@ kroute_remove(struct kroute *kr)
 
 	if (TAILQ_EMPTY(&kp->priorities)) {
 		if (RB_REMOVE(kroute_tree, &krt, kp) == NULL) {
-			log_warnx("kroute_remove failed for %s/%u",
+			log_warnx("%s failed for %s/%u", __func__,
 			    inet_ntoa(kp->prefix), kp->prefixlen);
 			return (-1);
 		}
@@ -900,7 +900,7 @@ if_change(unsigned short ifindex, int flags, struct if_data *ifd,
 
 	kif = kif_update(ifindex, flags, ifd, sdl, &link_old);
 	if (!kif) {
-		log_warn("if_change: kif_update(%u)", ifindex);
+		log_warn("%s: kif_update(%u)", __func__, ifindex);
 		return;
 	}
 	link_new = (kif->k.flags & IFF_UP) &&
@@ -935,7 +935,8 @@ if_newaddr(unsigned short ifindex, struct sockaddr_in *ifa,
 	if (ifa == NULL || ifa->sin_family != AF_INET)
 		return;
 	if ((kif = kif_find(ifindex)) == NULL) {
-		log_warnx("if_newaddr: corresponding if %d not found", ifindex);
+		log_warnx("%s: corresponding if %d not found", __func__,
+		    ifindex);
 		return;
 	}
 	a = ntohl(ifa->sin_addr.s_addr);
@@ -944,7 +945,7 @@ if_newaddr(unsigned short ifindex, struct sockaddr_in *ifa,
 		return;
 
 	if ((ka = calloc(1, sizeof(struct kif_addr))) == NULL)
-		fatal("if_newaddr");
+		fatal(__func__);
 	ka->addr.ifindex = ifindex;
 	ka->addr.addr.s_addr = ifa->sin_addr.s_addr;
 	if (mask)
@@ -973,7 +974,8 @@ if_deladdr(unsigned short ifindex, struct sockaddr_in *ifa,
 	if (ifa == NULL || ifa->sin_family != AF_INET)
 		return;
 	if ((kif = kif_find(ifindex)) == NULL) {
-		log_warnx("if_deladdr: corresponding if %d not found", ifindex);
+		log_warnx("%s: corresponding if %d not found", __func__,
+		    ifindex);
 		return;
 	}
 
@@ -1137,7 +1139,7 @@ retry:
 				return (0);
 			}
 		}
-		log_warn("send_rtmsg: action %u, AF %d, prefix %s/%u",
+		log_warn("%s action %u, AF %d, prefix %s/%u", __func__,
 		    hdr.rtm_type, family, inet_ntoa(kroute->prefix),
 		    kroute->prefixlen);
 		return (0);
@@ -1167,7 +1169,7 @@ fetchtable(void)
 		return (-1);
 	}
 	if ((buf = malloc(len)) == NULL) {
-		log_warn("fetchtable");
+		log_warn(__func__);
 		return (-1);
 	}
 	if (sysctl(mib, 7, buf, &len, NULL, 0) == -1) {
@@ -1202,7 +1204,7 @@ fetchifs(unsigned short ifindex)
 		return (-1);
 	}
 	if ((buf = malloc(len)) == NULL) {
-		log_warn("fetchif");
+		log_warn(__func__);
 		return (-1);
 	}
 	if (sysctl(mib, 6, buf, &len, NULL, 0) == -1) {
@@ -1226,7 +1228,7 @@ dispatch_rtmsg(void)
 	if ((n = read(kr_state.fd, &buf, sizeof(buf))) == -1) {
 		if (errno == EAGAIN || errno == EINTR)
 			return (0);
-		log_warn("dispatch_rtmsg: read error");
+		log_warn("%s: read error", __func__);
 		return (-1);
 	}
 
@@ -1359,7 +1361,7 @@ rtmsg_process(char *buf, size_t len)
 			 */
 			if ((kprio = kroute_find_prio(prefix.s_addr,
 			    prefixlen, prio)) == NULL) {
-				log_warnx("dispatch_rtmsg route not found");
+				log_warnx("%s: route not found", __func__);
 				return (-1);
 			}
 			kn = TAILQ_FIRST(&kprio->nexthops);
@@ -1403,7 +1405,7 @@ rtmsg_process(char *buf, size_t len)
 			/* get the correct route */
 			if ((kn = kroute_find_gw(prefix.s_addr, prefixlen,
 			    prio, nexthop)) == NULL) {
-				log_warnx("dispatch_rtmsg route not found");
+				log_warnx("%s: route not found", __func__);
 				return (-1);
 			}
 			if (kroute_remove(&kn->r) == -1)
@@ -1455,7 +1457,7 @@ kmpw_set(struct kpw *kpw)
 
 	kif = kif_find(kpw->ifindex);
 	if (kif == NULL) {
-		log_warn("kmpw_set: failed to find mpw by index (%u)",
+		log_warn("%s: failed to find mpw by index (%u)", __func__,
 		    kpw->ifindex);
 		return;
 	}
@@ -1474,13 +1476,13 @@ kmpw_unset(struct kpw *kpw)
 
 	kif = kif_find(kpw->ifindex);
 	if (kif == NULL) {
-		log_warn("kmpw_unset: failed to find mpw by index (%u)",
+		log_warn("%s: failed to find mpw by index (%u)", __func__,
 		    kpw->ifindex);
 		return;
 	}
 
 	if (kif->kpw == NULL) {
-		log_warn("kmpw_unset: %s is not set", kif->k.ifname);
+		log_warn("%s: %s is not set", __func__, kif->k.ifname);
 		return;
 	}
 
@@ -1506,7 +1508,7 @@ kmpw_install(const char *ifname, struct kpw *kpw)
 		break;
 
 	default:
-		log_warn("kmpw_install: unhandled pseudowire type (%#X)",
+		log_warn("%s: unhandled pseudowire type (%#X)", __func__,
 		    kpw->pw_type);
 	}
 

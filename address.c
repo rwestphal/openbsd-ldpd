@@ -46,10 +46,10 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 	struct ibuf	*buf;
 	uint16_t	 size, iface_count = 0;
 
-	log_debug("send_address: neighbor ID %s", inet_ntoa(nbr->id));
+	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal("send_address");
+		fatal(__func__);
 
 	if (if_addr == NULL)
 		LIST_FOREACH(if_addr, &global.addr_list, entry)
@@ -83,7 +83,7 @@ recv_address(struct nbr *nbr, char *buf, uint16_t len)
 	enum imsg_type		type;
 
 	memcpy(&addr, buf, sizeof(addr));
-	log_debug("recv_address: neighbor ID %s%s", inet_ntoa(nbr->id),
+	log_debug("%s: neighbor ID %s%s", __func__, inet_ntoa(nbr->id),
 	    ntohs(addr.type) == MSG_TYPE_ADDR ? "" : " address withdraw");
 	if (ntohs(addr.type) == MSG_TYPE_ADDR)
 		type = IMSG_ADDRESS_ADD;
@@ -164,10 +164,10 @@ send_address_withdraw(struct nbr *nbr, struct if_addr *if_addr)
 	struct ibuf	*buf;
 	uint16_t	 size;
 
-	log_debug("send_address_withdraw: neighbor ID %s", inet_ntoa(nbr->id));
+	log_debug("%s: neighbor ID %s", __func__, inet_ntoa(nbr->id));
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal("send_address_withdraw");
+		fatal(__func__);
 
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) +
 	    sizeof(struct address_list_tlv) + sizeof(struct in_addr);

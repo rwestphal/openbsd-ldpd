@@ -400,8 +400,8 @@ log_rtmsg(unsigned char rtm_type)
 
 	if (rtm_type > 0 &&
 	    rtm_type < sizeof(msgtypes)/sizeof(msgtypes[0]))
-		log_debug("rtmsg_process: %s", msgtypes[rtm_type]);
+		log_debug("kernel message: %s", msgtypes[rtm_type]);
 	else
-		log_debug("rtmsg_process: rtm_type %d out of range",
+		log_debug("kernel message: rtm_type %d out of range",
 		    rtm_type);
 }

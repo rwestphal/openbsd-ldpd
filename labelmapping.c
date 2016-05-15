@@ -67,7 +67,7 @@ send_labelmessage(struct nbr *nbr, uint16_t type, struct mapping_head *mh)
 		/* generate pdu */
 		if (first) {
 			if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-				fatal("send_labelmapping");
+				fatal(__func__);
 
 			/* real size will be set up later */
 			gen_ldp_hdr(buf, 0);
