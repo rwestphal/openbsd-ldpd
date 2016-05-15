@@ -346,6 +346,7 @@ struct ldpd_global {
 	int			 ldp_edisc_socket;
 	int			 ldp_session_socket;
 	struct if_addr_head	 addr_list;
+	TAILQ_HEAD(, pending_conn) pending_conns;
 };
 
 extern struct ldpd_global global;

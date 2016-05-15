@@ -100,6 +100,7 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 		fatalx("control socket setup failed");
 
 	LIST_INIT(&global.addr_list);
+	TAILQ_INIT(&global.pending_conns);
 	global.pfkeysock = pfkey_init(&sysdep);
 
 	/* create the discovery UDP socket */

@@ -59,7 +59,7 @@ struct tcp_conn {
 };
 
 struct nbr {
-	RB_ENTRY(nbr)		 id_tree, pid_tree;
+	RB_ENTRY(nbr)		 id_tree, addr_tree, pid_tree;
 	struct tcp_conn		*tcp;
 	LIST_HEAD(, adj)	 adj_list;	/* adjacencies */
 	struct event		 ev_connect;
@@ -94,6 +94,14 @@ struct nbr {
 		char			md5key[TCP_MD5_KEY_LEN];
 	} auth;
 };
+
+struct pending_conn {
+	TAILQ_ENTRY(pending_conn)	 entry;
+	int				 fd;
+	struct in_addr			 addr;
+	struct event			 ev_timeout;
+};
+#define PENDING_CONN_TIMEOUT	5
 
 struct mapping_entry {
 	TAILQ_ENTRY(mapping_entry)	entry;
@@ -205,6 +213,7 @@ void		 nbr_del(struct nbr *);
 void		 nbr_update_peerid(struct nbr *);
 
 struct nbr	*nbr_find_ldpid(uint32_t);
+struct nbr	*nbr_find_addr(struct in_addr);
 struct nbr	*nbr_find_peerid(uint32_t);
 
 int	 nbr_fsm(struct nbr *, enum nbr_event);
@@ -231,6 +240,8 @@ struct ctl_nbr	*nbr_to_ctl(struct nbr *);
 
 extern struct nbr_id_head	nbrs_by_id;
 RB_PROTOTYPE(nbr_id_head, nbr, id_tree, nbr_id_compare)
+extern struct nbr_addr_head	nbrs_by_addr;
+RB_PROTOTYPE(nbr_addr_head, nbr, addr_tree, nbr_addr_compare)
 extern struct nbr_pid_head	nbrs_by_pid;
 RB_PROTOTYPE(nbr_pid_head, nbr, pid_tree, nbr_pid_compare)
 
@@ -240,14 +251,18 @@ int	 gen_msg_hdr(struct ibuf *, uint32_t, uint16_t);
 int	 send_packet(int, struct iface *, void *, size_t, struct sockaddr_in *);
 void	 disc_recv_packet(int, short, void *);
 void	 session_accept(int, short, void *);
-
-struct tcp_conn *tcp_new(int, struct nbr *);
-void		 tcp_close(struct tcp_conn *);
-
+void	 session_accept_nbr(struct nbr *, int);
 void	 session_read(int, short, void *);
 void	 session_write(int, short, void *);
 void	 session_close(struct nbr *);
 void	 session_shutdown(struct nbr *, uint32_t, uint32_t, uint32_t);
+
+struct tcp_conn		*tcp_new(int, struct nbr *);
+void			 tcp_close(struct tcp_conn *);
+struct pending_conn	*pending_conn_new(int, struct in_addr);
+void			 pending_conn_del(struct pending_conn *);
+struct pending_conn	*pending_conn_find(struct in_addr);
+void			 pending_conn_timeout(int, short, void *);
 
 char	*pkt_ptr;	/* packet buffer */
 
