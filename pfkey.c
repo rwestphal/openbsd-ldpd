@@ -62,7 +62,7 @@ addr2sa(struct in_addr *addr)
 	memset(&ss, 0, sizeof(ss));
 	sa_in->sin_family = AF_INET;
 	sa_in->sin_len = sizeof(struct sockaddr_in);
-	sa_in->sin_addr.s_addr = addr->s_addr;
+	sa_in->sin_addr = *addr;
 	sa_in->sin_port = htons(0);
 
 	return ((struct sockaddr *)&ss);
@@ -263,7 +263,7 @@ pfkey_read(int sd, struct sadb_msg *h)
 	if (hdr.sadb_msg_seq == sadb_msg_seq &&
 	    hdr.sadb_msg_pid == pid) {
 		if (h)
-			memcpy(h, &hdr, sizeof(hdr));
+			*h = hdr;
 		return (0);
 	}
 
