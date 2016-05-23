@@ -508,6 +508,7 @@ void	evbuf_clear(struct evbuf *);
 int		 ldp_create_socket(enum socket_type);
 void		 sock_set_recvbuf(int);
 int		 sock_set_reuse(int, int);
+int		 sock_set_bindany(int, int);
 int		 sock_set_ipv4_mcast_ttl(int, uint8_t);
 int		 sock_set_ipv4_tos(int, int);
 int		 sock_set_ipv4_recvif(int, int);
