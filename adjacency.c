@@ -210,12 +210,12 @@ tnbr_check(struct tnbr *tnbr)
 }
 
 void
-tnbr_init(struct ldpd_conf *xconf, struct tnbr *tnbr)
+tnbr_init(struct tnbr *tnbr)
 {
 	/* set event handlers for targeted neighbor */
 	evtimer_set(&tnbr->hello_timer, tnbr_hello_timer, tnbr);
 
-	tnbr->discovery_fd = xconf->ldp_ediscovery_socket;
+	send_hello(HELLO_TARGETED, NULL, tnbr);
 	tnbr_start_hello_timer(tnbr);
 }
 
@@ -227,7 +227,6 @@ tnbr_hello_timer(int fd, short event, void *arg)
 {
 	struct tnbr	*tnbr = arg;
 
-	tnbr->discovery_fd = global.ldp_edisc_socket;
 	send_hello(HELLO_TARGETED, NULL, tnbr);
 	tnbr_start_hello_timer(tnbr);
 }

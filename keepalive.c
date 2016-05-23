@@ -40,7 +40,7 @@ void
 send_keepalive(struct nbr *nbr)
 {
 	struct ibuf	*buf;
-	u_int16_t	 size;
+	uint16_t	 size;
 
 	size = LDP_HDR_SIZE + LDP_MSG_SIZE;
 	if ((buf = ibuf_open(size)) == NULL)
@@ -54,13 +54,12 @@ send_keepalive(struct nbr *nbr)
 }
 
 int
-recv_keepalive(struct nbr *nbr, char *buf, u_int16_t len)
+recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 {
 	struct ldp_msg ka;
 
-	bcopy(buf, &ka, sizeof(ka));
-
-	if (len != LDP_MSG_LEN) {
+	memcpy(&ka, buf, sizeof(ka));
+	if (len != LDP_MSG_SIZE) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, ka.msgid, ka.type);
 		return (-1);
 	}
