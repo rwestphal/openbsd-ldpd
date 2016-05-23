@@ -441,6 +441,7 @@ void		 kif_redistribute(void);
 int		 kr_init(int);
 int		 kr_change(struct kroute *);
 int		 kr_delete(struct kroute *);
+void		 kif_clear(void);
 void		 kr_shutdown(void);
 void		 kr_fib_couple(void);
 void		 kr_fib_decouple(void);
