@@ -277,7 +277,7 @@ nbr_del(struct nbr *nbr)
 	nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
 	pfkey_remove(nbr);
 
-	if (event_pending(&nbr->ev_connect, EV_WRITE, NULL))
+	if (nbr_pending_connect(nbr))
 		event_del(&nbr->ev_connect);
 	nbr_stop_ktimer(nbr);
 	nbr_stop_ktimeout(nbr);
