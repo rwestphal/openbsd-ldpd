@@ -44,10 +44,6 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 	struct ibuf	*buf;
 	u_int16_t	 size;
 
-	if (tcp->nbr)
-		log_debug("%s: nbr ID %s, status %s", __func__,
-		    inet_ntoa(tcp->nbr->id), notification_name(nm->status));
-
 	/* calculate size */
 	size = LDP_HDR_SIZE + LDP_MSG_SIZE + STATUS_SIZE;
 	if (nm->flags & F_NOTIF_PW_STATUS)
@@ -98,6 +94,9 @@ void
 send_notification_nbr(struct nbr *nbr, u_int32_t status, u_int32_t msgid,
     u_int32_t type)
 {
+	log_debug("%s: nbr ID %s, status %s", __func__, inet_ntoa(nbr->id),
+	     notification_name(status));
+
 	send_notification(status, nbr->tcp, msgid, type);
 	nbr_fsm(nbr, NBR_EVT_PDU_SENT);
 }
