@@ -90,8 +90,8 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 	else
 		type = IMSG_ADDRESS_DEL;
 
-	buf += sizeof(struct ldp_msg);
-	len -= sizeof(struct ldp_msg);
+	buf += LDP_MSG_SIZE;
+	len -= LDP_MSG_SIZE;
 
 	if (len < sizeof(alt)) {
 		session_shutdown(nbr, S_BAD_MSG_LEN, addr.msgid, addr.type);
@@ -132,7 +132,7 @@ recv_address(struct nbr *nbr, char *buf, u_int16_t len)
 		return (-1);
 	}
 
-	return (ntohs(addr.length));
+	return (0);
 }
 
 void
