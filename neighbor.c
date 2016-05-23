@@ -512,11 +512,13 @@ nbr_establish_connection(struct nbr *nbr)
 	if (nbrp && nbrp->auth.method == AUTH_MD5SIG) {
 		if (sysdep.no_pfkey || sysdep.no_md5sig) {
 			log_warnx("md5sig configured but not available");
+			close(nbr->fd);
 			return (-1);
 		}
 		if (setsockopt(nbr->fd, IPPROTO_TCP, TCP_MD5SIG,
 		    &opt, sizeof(opt)) == -1) {
 			log_warn("setsockopt md5sig");
+			close(nbr->fd);
 			return (-1);
 		}
 	}
