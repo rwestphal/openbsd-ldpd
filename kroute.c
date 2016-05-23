@@ -1505,10 +1505,10 @@ kmpw_install(const char *ifname, struct kpw *kpw)
 	case PW_TYPE_ETHERNET_TAGGED:
 		imr.imr_type = IMR_TYPE_ETHERNET_TAGGED;
 		break;
-
 	default:
 		log_warn("%s: unhandled pseudowire type (%#X)", __func__,
 		    kpw->pw_type);
+		return;
 	}
 
 	if (kpw->flags & F_PW_CONTROLWORD)
