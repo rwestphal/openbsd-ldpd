@@ -63,6 +63,10 @@ send_labelmessage(struct nbr *nbr, u_int16_t type, struct mapping_head *mh)
 	u_int16_t		 tlv_size, size = 0;
 	int			 first = 1;
 
+	/* nothing to send */
+	if (TAILQ_EMPTY(mh))
+		return;
+
 	while ((me = TAILQ_FIRST(mh)) != NULL) {
 		/* generate pdu */
 		if (first) {

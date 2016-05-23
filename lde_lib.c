@@ -197,7 +197,6 @@ fec_snap(struct lde_nbr *ln)
 {
 	struct fec	*f;
 	struct fec_node	*fn;
-	int		 count = 0;
 
 	RB_FOREACH(f, fec_tree, &ft) {
 		fn = (struct fec_node *)f;
@@ -205,11 +204,9 @@ fec_snap(struct lde_nbr *ln)
 			continue;
 
 		lde_send_labelmapping(ln, fn, 0);
-		count++;
 	}
-	if (count > 0)
-		lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END,
-		    ln->peerid, 0, NULL, 0);
+
+	lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END, ln->peerid, 0, NULL, 0);
 }
 
 void

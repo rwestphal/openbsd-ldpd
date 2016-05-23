@@ -1058,7 +1058,6 @@ lde_change_egress_label(int was_implicit)
 	struct lde_nbr	*ln;
 	struct fec	*f;
 	struct fec_node	*fn;
-	int		 count = 0;
 
 	/* explicit withdraw */
 	if (was_implicit)
@@ -1075,11 +1074,10 @@ lde_change_egress_label(int was_implicit)
 
 			fn->local_label = egress_label(fn->fec.type);
 			lde_send_labelmapping(ln, fn, 0);
-			count++;
 		}
-		if (count > 0)
-			lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END,
-			    ln->peerid, 0, NULL, 0);
+
+		lde_imsg_compose_ldpe(IMSG_MAPPING_ADD_END, ln->peerid, 0,
+		    NULL, 0);
 	}
 }
 
