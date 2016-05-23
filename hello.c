@@ -60,7 +60,7 @@ send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 		inet_aton(AllRouters, &dst.sin_addr);
 		holdtime = iface->hello_holdtime;
 		flags = 0;
-		fd = iface->discovery_fd;
+		fd = global.ldp_disc_socket;
 		break;
 	case HELLO_TARGETED:
 		dst.sin_addr.s_addr = tnbr->addr.s_addr;
@@ -68,7 +68,7 @@ send_hello(enum hello_type type, struct iface *iface, struct tnbr *tnbr)
 		flags = TARGETED_HELLO;
 		if ((tnbr->flags & F_TNBR_CONFIGURED) || tnbr->pw_count)
 			flags |= REQUEST_TARG_HELLO;
-		fd = tnbr->discovery_fd;
+		fd = global.ldp_edisc_socket;
 		break;
 	}
 

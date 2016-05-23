@@ -223,7 +223,6 @@ struct iface {
 
 	time_t			 uptime;
 	unsigned int		 ifindex;
-	int			 discovery_fd;
 	int			 state;
 	u_int16_t		 hello_holdtime;
 	u_int16_t		 hello_interval;
@@ -237,7 +236,6 @@ struct iface {
 struct tnbr {
 	LIST_ENTRY(tnbr)	 entry;
 	struct event		 hello_timer;
-	int			 discovery_fd;
 	struct adj		*adj;
 	struct in_addr		 addr;
 

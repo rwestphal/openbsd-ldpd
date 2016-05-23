@@ -227,6 +227,7 @@ tnbr_hello_timer(int fd, short event, void *arg)
 {
 	struct tnbr	*tnbr = arg;
 
+	tnbr->discovery_fd = global.ldp_edisc_socket;
 	send_hello(HELLO_TARGETED, NULL, tnbr);
 	tnbr_start_hello_timer(tnbr);
 }

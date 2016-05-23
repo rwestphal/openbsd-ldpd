@@ -485,7 +485,7 @@ if_set_mcast(struct iface *iface)
 
 	if_addr = LIST_FIRST(&iface->addr_list);
 
-	if (setsockopt(iface->discovery_fd, IPPROTO_IP, IP_MULTICAST_IF,
+	if (setsockopt(global.ldp_disc_socket, IPPROTO_IP, IP_MULTICAST_IF,
 	    &if_addr->addr.s_addr, sizeof(if_addr->addr.s_addr)) < 0) {
 		log_debug("%s: error setting IP_MULTICAST_IF, interface %s",
 		    __func__, iface->name);
