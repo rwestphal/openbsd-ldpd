@@ -144,7 +144,6 @@ struct hello_prms_opt4_tlv {
 	u_int32_t	value;
 };
 
-#define HELLO_PRMS_SIZE		8
 
 #define	S_SUCCESS	0x00000000
 #define	S_BAD_LDP_ID	0x80000001
