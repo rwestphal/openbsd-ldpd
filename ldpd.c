@@ -635,7 +635,7 @@ merge_global(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	conf->keepalive = xconf->keepalive;
 	conf->thello_holdtime = xconf->thello_holdtime;
 	conf->thello_interval = xconf->thello_interval;
-	conf->trans_addr.s_addr = xconf->trans_addr.s_addr;
+	conf->trans_addr = xconf->trans_addr;
 
 	/* update flags */
 	if ((conf->flags & F_LDPD_EXPNULL) !=
@@ -955,7 +955,7 @@ config_clear(struct ldpd_conf *conf)
 
 	/* merge current config with an empty config */
 	xconf = malloc(sizeof(*xconf));
-	memcpy(xconf, conf, sizeof(*xconf));
+	*xconf = *conf;
 	LIST_INIT(&xconf->iface_list);
 	LIST_INIT(&xconf->tnbr_list);
 	LIST_INIT(&xconf->nbrp_list);
