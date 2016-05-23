@@ -51,7 +51,7 @@ if_new(struct kif *kif)
 	struct iface		*iface;
 
 	if ((iface = calloc(1, sizeof(*iface))) == NULL)
-		err(1, "if_new: calloc");
+		fatal("if_new: calloc");
 
 	iface->state = IF_STA_DOWN;
 

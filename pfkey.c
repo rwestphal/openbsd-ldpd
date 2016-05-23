@@ -458,7 +458,7 @@ pfkey_init(struct ldpd_sysdep *sysdep)
 	if ((fd = socket(PF_KEY, SOCK_RAW | SOCK_CLOEXEC | SOCK_NONBLOCK,
 	    PF_KEY_V2)) == -1) {
 		if (errno == EPROTONOSUPPORT) {
-			log_warnx("PF_KEY not available, disabling ipsec");
+			log_warnx("PF_KEY not available");
 			sysdep->no_pfkey = 1;
 			return (-1);
 		} else

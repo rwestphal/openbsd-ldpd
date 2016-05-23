@@ -190,7 +190,7 @@ nbr_state_name(int state)
 	case NBR_STA_OPER:
 		return ("OPERATIONAL");
 	default:
-		return ("UNKNW");
+		return ("UNKNOWN");
 	}
 }
 
@@ -203,7 +203,7 @@ if_state_name(int state)
 	case IF_STA_ACTIVE:
 		return ("ACTIVE");
 	default:
-		return ("UNKNW");
+		return ("UNKNOWN");
 	}
 }
 
