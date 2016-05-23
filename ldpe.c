@@ -261,7 +261,7 @@ ldpe(struct ldpd_conf *xconf, int pipe_parent2ldpe[2], int pipe_ldpe2lde[2],
 	control_listen();
 
 	if ((pkt_ptr = calloc(1, IBUF_READ_SIZE)) == NULL)
-		fatal("ldpe");
+		fatal(__func__);
 
 	/* initialize interfaces */
 	LIST_FOREACH(iface, &leconf->iface_list, entry)
@@ -687,7 +687,7 @@ mapping_list_add(struct mapping_head *mh, struct map *map)
 
 	me = calloc(1, sizeof(*me));
 	if (me == NULL)
-		fatal("mapping_list_add");
+		fatal(__func__);
 	me->map = *map;
 
 	TAILQ_INSERT_TAIL(mh, me, entry);

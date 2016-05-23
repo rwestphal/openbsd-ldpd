@@ -43,7 +43,7 @@ send_keepalive(struct nbr *nbr)
 	u_int16_t	 size;
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal("send_keepalive");
+		fatal(__func__);
 
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg);
 

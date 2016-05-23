@@ -372,7 +372,7 @@ main_dispatch_ldpe(int fd, short event, void *bula)
 			log_verbose(verbose);
 			break;
 		default:
-			log_debug("main_dispatch_ldpe: error handling imsg %d",
+			log_debug("%s: error handling imsg %d", __func__,
 			    imsg.hdr.type);
 			break;
 		}
@@ -424,16 +424,14 @@ main_dispatch_lde(int fd, short event, void *bula)
 			    sizeof(struct kroute))
 				fatalx("invalid size of IMSG_KLABEL_CHANGE");
 			if (kr_change(imsg.data))
-				log_warn("main_dispatch_lde: error changing "
-				    "route");
+				log_warn("%s: error changing route", __func__);
 			break;
 		case IMSG_KLABEL_DELETE:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
 			    sizeof(struct kroute))
 				fatalx("invalid size of IMSG_KLABEL_DELETE");
 			if (kr_delete(imsg.data))
-				log_warn("main_dispatch_lde: error deleting "
-				    "route");
+				log_warn("%s: error deleting route", __func__);
 			break;
 		case IMSG_KPWLABEL_CHANGE:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
@@ -452,7 +450,7 @@ main_dispatch_lde(int fd, short event, void *bula)
 			kmpw_unset(kpw);
 			break;
 		default:
-			log_debug("main_dispatch_lde: error handling imsg %d",
+			log_debug("%s: error handling imsg %d", __func__,
 			    imsg.hdr.type);
 			break;
 		}

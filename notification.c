@@ -45,11 +45,11 @@ send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 	u_int16_t	 size;
 
 	if (tcp->nbr)
-		log_debug("send_notification_full: nbr ID %s, status %s",
+		log_debug("%s: nbr ID %s, status %s", __func__,
 		    inet_ntoa(tcp->nbr->id), notification_name(nm->status));
 
 	if ((buf = ibuf_open(LDP_MAX_LEN)) == NULL)
-		fatal("send_notification");
+		fatal(__func__);
 
 	/* calculate size */
 	size = LDP_HDR_SIZE + sizeof(struct ldp_msg) + STATUS_SIZE;
