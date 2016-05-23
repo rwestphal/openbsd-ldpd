@@ -1287,6 +1287,10 @@ rtmsg_process(char *buf, size_t len)
 			if (rtm->rtm_tableid != 0)
 				continue;
 
+			if (rtm->rtm_type == RTM_GET &&
+			    rtm->rtm_pid != kr_state.pid)
+				continue;
+
 			if ((sa = rti_info[RTAX_DST]) == NULL)
 				continue;
 
