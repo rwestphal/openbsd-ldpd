@@ -428,7 +428,6 @@ session_read(int fd, short event, void *arg)
 					return;
 				}
 				break;
-			case MSG_TYPE_NOTIFICATION:
 			case MSG_TYPE_ADDR:
 			case MSG_TYPE_ADDRWITHDRAW:
 			case MSG_TYPE_LABELMAPPING:
@@ -436,13 +435,14 @@ session_read(int fd, short event, void *arg)
 			case MSG_TYPE_LABELWITHDRAW:
 			case MSG_TYPE_LABELRELEASE:
 			case MSG_TYPE_LABELABORTREQ:
-			default:
 				if (nbr->state != NBR_STA_OPER) {
 					session_shutdown(nbr, S_SHUTDOWN,
 					    ldp_msg->msgid, ldp_msg->type);
 					free(buf);
 					return;
 				}
+				break;
+			default:
 				break;
 			}
 
