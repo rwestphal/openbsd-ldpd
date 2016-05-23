@@ -678,3 +678,19 @@ nbr_to_ctl(struct nbr *nbr)
 
 	return (&nctl);
 }
+
+void
+nbr_clear_ctl(struct ctl_nbr *nctl)
+{
+	struct nbr		*nbr;
+
+	RB_FOREACH(nbr, nbr_addr_head, &nbrs_by_addr) {
+		if (ldp_addrisset(nctl->af, &nctl->raddr) &&
+		    ldp_addrcmp(nctl->af, &nctl->raddr, &nbr->raddr))
+			continue;
+
+		log_debug("%s: neighbor %s manually cleared", __func__,
+		    log_addr(nbr->af, &nbr->raddr));
+		session_shutdown(nbr, S_SHUTDOWN, 0, 0);
+	}
+}

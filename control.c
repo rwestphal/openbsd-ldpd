@@ -263,6 +263,13 @@ control_dispatch_imsg(int fd, short event, void *bula)
 		case IMSG_CTL_SHOW_NBR:
 			ldpe_nbr_ctl(c);
 			break;
+		case IMSG_CTL_CLEAR_NBR:
+			if (imsg.hdr.len != IMSG_HEADER_SIZE +
+			    sizeof(struct ctl_nbr))
+				break;
+
+			nbr_clear_ctl(imsg.data);
+			break;
 		case IMSG_CTL_LOG_VERBOSE:
 			if (imsg.hdr.len != IMSG_HEADER_SIZE +
 			    sizeof(verbose))
