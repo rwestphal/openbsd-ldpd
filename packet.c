@@ -339,8 +339,17 @@ session_read(int fd, short event, void *arg)
 		}
 
 		pdu_len = ntohs(ldp_hdr->length);
+		/*
+	 	 * RFC 5036 - Section 3.5.3:
+		 * "Prior to completion of the negotiation, the maximum
+		 * allowable length is 4096 bytes".
+		 */
+		if (nbr->state == NBR_STA_OPER)
+			max_pdu_len = nbr->max_pdu_len;
+		else
+			max_pdu_len = LDP_MAX_LEN;
 		if (pdu_len < (LDP_HDR_PDU_LEN + LDP_MSG_LEN) ||
-		    pdu_len > LDP_MAX_LEN) {
+		    pdu_len > max_pdu_len) {
 			if (nbr)
 				session_shutdown(nbr, S_BAD_PDU_LEN, 0, 0);
 			else {
