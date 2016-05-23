@@ -100,6 +100,8 @@ control_listen(void)
 void
 control_cleanup(void)
 {
+	accept_del(control_fd);
+	close(control_fd);
 	unlink(LDPD_SOCKET);
 }
 
