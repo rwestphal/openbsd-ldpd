@@ -126,6 +126,11 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 		    inet_ntoa(lsr_id));
 		return;
 	}
+	if (holdtime != 0 && holdtime < MIN_HOLDTIME) {
+		log_debug("%s: neighbor %s: invalid hello holdtime (%u)",
+		    __func__, inet_ntoa(lsr_id), holdtime);
+		return;
+	}
 
 	bzero(&source, sizeof(source));
 	if (flags & TARGETED_HELLO) {
