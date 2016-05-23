@@ -194,7 +194,7 @@ control_dispatch_imsg(int fd, short event, void *bula)
 {
 	struct ctl_conn	*c;
 	struct imsg	 imsg;
-	int		 n;
+	ssize_t		 n;
 	unsigned int	 ifidx;
 	int		 verbose;
 
