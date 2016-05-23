@@ -125,15 +125,15 @@ struct ldp_msg {
 #define	UNKNOWN_FLAG		0x8000
 #define	FORWARD_FLAG		0xc000
 
-#define TARGETED_HELLO		0x8000
-#define REQUEST_TARG_HELLO	0x4000
-
 struct hello_prms_tlv {
 	u_int16_t	type;
 	u_int16_t	length;
 	u_int16_t	holdtime;
 	u_int16_t	flags;
 };
+
+#define TARGETED_HELLO		0x8000
+#define REQUEST_TARG_HELLO	0x4000
 
 struct hello_prms_opt4_tlv {
 	u_int16_t	type;

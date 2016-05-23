@@ -479,6 +479,16 @@ main_imsg_compose_lde(int type, pid_t pid, void *data, u_int16_t datalen)
 	imsg_compose_event(iev_lde, type, 0, pid, -1, data, datalen);
 }
 
+int
+ldp_sendboth(enum imsg_type type, void *buf, uint16_t len)
+{
+	if (imsg_compose_event(iev_ldpe, type, 0, 0, -1, buf, len) == -1)
+		return (-1);
+	if (imsg_compose_event(iev_lde, type, 0, 0, -1, buf, len) == -1)
+		return (-1);
+	return (0);
+}
+
 void
 imsg_event_add(struct imsgev *iev)
 {
