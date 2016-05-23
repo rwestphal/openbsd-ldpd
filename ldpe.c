@@ -624,6 +624,30 @@ ldpe_close_sockets(void)
 }
 
 void
+ldpe_remove_dynamic_tnbrs(void)
+{
+	struct tnbr		*tnbr, *safe;
+
+	LIST_FOREACH_SAFE(tnbr, &leconf->tnbr_list, entry, safe) {
+		tnbr->flags &= ~F_TNBR_DYNAMIC;
+		tnbr_check(tnbr);
+	}
+}
+
+void
+ldpe_stop_init_backoff(void)
+{
+	struct nbr		*nbr;
+
+	RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id) {
+		if (nbr_pending_idtimer(nbr)) {
+			nbr_stop_idtimer(nbr);
+			nbr_establish_connection(nbr);
+		}
+	}
+}
+
+void
 ldpe_iface_ctl(struct ctl_conn *c, unsigned int idx)
 {
 	struct iface		*iface;

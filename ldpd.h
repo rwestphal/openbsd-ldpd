@@ -462,7 +462,7 @@ int			 cmdline_symset(char *);
 
 /* kroute.c */
 int		 kif_init(void);
-void		 kif_redistribute(void);
+void		 kif_redistribute(const char *);
 int		 kr_init(int);
 int		 kr_change(struct kroute *);
 int		 kr_delete(struct kroute *);
