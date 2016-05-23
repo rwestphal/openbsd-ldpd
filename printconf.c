@@ -51,6 +51,7 @@ print_mainconf(struct ldpd_conf *conf)
 		printf("targeted-hello-accept no\n");
 
 	printf("keepalive %u\n", conf->keepalive);
+	printf("transport-address %s\n", inet_ntoa(conf->trans_addr));
 }
 
 void

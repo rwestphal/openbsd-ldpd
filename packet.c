@@ -59,7 +59,7 @@ gen_ldp_hdr(struct ibuf *buf, u_int16_t size)
 	size -= TLV_HDR_LEN;
 
 	ldp_hdr.length = htons(size);
-	ldp_hdr.lsr_id = ldpe_router_id();
+	ldp_hdr.lsr_id = leconf->rtr_id.s_addr;
 	ldp_hdr.lspace_id = 0;
 
 	return (ibuf_add(buf, &ldp_hdr, LDP_HDR_SIZE));

@@ -618,6 +618,7 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	conf->keepalive = xconf->keepalive;
 	conf->thello_holdtime = xconf->thello_holdtime;
 	conf->thello_interval = xconf->thello_interval;
+	conf->trans_addr.s_addr = xconf->trans_addr.s_addr;
 
 	/* merge interfaces */
 	LIST_FOREACH_SAFE(iface, &conf->iface_list, entry, itmp) {

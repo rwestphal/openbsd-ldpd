@@ -73,8 +73,9 @@ struct nbr {
 	struct mapping_head	 release_list;
 	struct mapping_head	 abortreq_list;
 
-	struct in_addr		 addr;
-	struct in_addr		 id;
+	struct in_addr		 laddr;		/* local address */
+	struct in_addr		 raddr;		/* remote address */
+	struct in_addr		 id;		/* lsr id */
 
 	time_t			 uptime;
 	u_int32_t		 peerid;	/* unique ID in DB */
