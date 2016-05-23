@@ -166,8 +166,8 @@ tlv_decode_opt_init_prms(char *buf, u_int16_t len)
 		}
 		buf += TLV_HDR_LEN + tlv_len;
 		len -= TLV_HDR_LEN + tlv_len;
-		cons += TLV_HDR_LEN + tlv_len;
+		total += TLV_HDR_LEN + tlv_len;
 	}
 
-	return (cons);
+	return (total);
 }

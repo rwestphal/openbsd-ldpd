@@ -156,7 +156,7 @@ recv_hello(struct iface *iface, struct in_addr src, char *buf, u_int16_t len)
 
 		if (!tnbr) {
 			if (!((flags & REQUEST_TARG_HELLO) &&
-			    leconf->flags & LDPD_FLAG_TH_ACCEPT))
+			    leconf->flags & F_LDPD_TH_ACCEPT))
 				return;
 
 			tnbr = tnbr_new(leconf, src);
@@ -320,8 +320,8 @@ tlv_decode_opt_hello_prms(char *buf, u_int16_t len, struct in_addr *addr,
 		}
 		buf += TLV_HDR_LEN + tlv_len;
 		len -= TLV_HDR_LEN + tlv_len;
-		cons += TLV_HDR_LEN + tlv_len;
+		total += TLV_HDR_LEN + tlv_len;
 	}
 
-	return (cons);
+	return (total);
 }

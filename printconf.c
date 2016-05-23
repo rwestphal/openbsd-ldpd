@@ -117,7 +117,7 @@ print_pw(struct l2vpn_pw *pw)
 		printf("\t\tstatus-tlv yes\n");
 	else
 		printf("\t\tstatus-tlv no\n");
-	if (pw->flags & F_PW_CONTROLWORD_CONF)
+	if (pw->flags & F_PW_CWORD_CONF)
 		printf("\t\tcontrol-word yes\n");
 	else
 		printf("\t\tcontrol-word no\n");

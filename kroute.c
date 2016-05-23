@@ -1515,7 +1515,7 @@ kmpw_install(const char *ifname, struct kpw *kpw)
 		return;
 	}
 
-	if (kpw->flags & F_PW_CONTROLWORD)
+	if (kpw->flags & F_PW_CWORD)
 		imr.imr_flags |= IMR_FLAG_CONTROLWORD;
 
 	sin = (struct sockaddr_in *) &imr.imr_nexthop;

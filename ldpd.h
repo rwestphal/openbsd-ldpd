@@ -288,8 +288,8 @@ struct l2vpn_pw {
 };
 #define F_PW_STATUSTLV_CONF	0x01	/* status tlv configured */
 #define F_PW_STATUSTLV		0x02	/* status tlv negotiated */
-#define F_PW_CONTROLWORD_CONF	0x04	/* control word configured */
-#define F_PW_CONTROLWORD	0x08	/* control word negotiated */
+#define F_PW_CWORD_CONF		0x04	/* control word configured */
+#define F_PW_CWORD		0x08	/* control word negotiated */
 #define F_PW_STATUS_UP		0x10	/* pseudowire is operational */
 
 struct l2vpn {

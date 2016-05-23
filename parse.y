@@ -331,11 +331,11 @@ pw_defaults	: STATUSTLV yesno {
 		}
 		| CONTROLWORD yesno {
 			if ($2 == 1) {
-				defs->pwflags |= F_PW_CONTROLWORD_CONF;
-				defs->pwflags |= F_PW_CONTROLWORD;
+				defs->pwflags |= F_PW_CWORD_CONF;
+				defs->pwflags |= F_PW_CWORD;
 			} else {
-				defs->pwflags &= ~F_PW_CONTROLWORD_CONF;
-				defs->pwflags &= ~F_PW_CONTROLWORD;
+				defs->pwflags &= ~F_PW_CWORD_CONF;
+				defs->pwflags &= ~F_PW_CWORD;
 			}
 		}
 		;
@@ -1050,8 +1050,8 @@ parse_config(char *filename, int opts)
 	conf->thello_interval = DEFAULT_HELLO_INTERVAL;
 	defs->pwflags |= F_PW_STATUSTLV_CONF;
 	defs->pwflags |= F_PW_STATUSTLV;
-	defs->pwflags |= F_PW_CONTROLWORD_CONF;
-	defs->pwflags |= F_PW_CONTROLWORD;
+	defs->pwflags |= F_PW_CWORD_CONF;
+	defs->pwflags |= F_PW_CWORD;
 
 	if ((file = pushfile(filename, !(conf->opts & LDPD_OPT_NOACTION))) == NULL) {
 		free(conf);

@@ -72,9 +72,9 @@ struct lde_wdraw {
 };
 
 /* Addresses belonging to neighbor */
-struct lde_nbr_address {
-	TAILQ_ENTRY(lde_nbr_address)	entry;
-	struct in_addr			addr;
+struct lde_addr {
+	TAILQ_ENTRY(lde_addr)	 entry;
+	struct in_addr		 addr;
 };
 
 /* just the info LDE needs */
@@ -87,7 +87,7 @@ struct lde_nbr {
 	struct fec_tree			 recv_map;
 	struct fec_tree			 sent_map;
 	struct fec_tree			 sent_wdraw;
-	TAILQ_HEAD(, lde_nbr_address)	 addr_list;
+	TAILQ_HEAD(, lde_addr)		 addr_list;
 
 	u_int32_t			 peerid;
 };
@@ -134,7 +134,7 @@ void		  lde_wdraw_del(struct lde_nbr *, struct lde_wdraw *);
 struct lde_nbr *lde_find_address(struct in_addr);
 
 int			 lde_address_add(struct lde_nbr *, struct in_addr *);
-struct lde_nbr_address	*lde_address_find(struct lde_nbr *, struct in_addr *);
+struct lde_addr		*lde_address_find(struct lde_nbr *, struct in_addr *);
 int			 lde_address_del(struct lde_nbr *, struct in_addr *);
 
 /* lde_lib.c */
