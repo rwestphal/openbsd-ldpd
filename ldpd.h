@@ -315,6 +315,12 @@ enum {
 	PROC_LDE_ENGINE
 } ldpd_process;
 
+enum socket_type {
+	LDP_SOCKET_DISC,
+	LDP_SOCKET_EDISC,
+	LDP_SOCKET_SESSION
+};
+
 enum hello_type {
 	HELLO_LINK,
 	HELLO_TARGETED
@@ -490,6 +496,7 @@ void	evbuf_init(struct evbuf *, int, void (*)(int, short, void *), void *);
 void	evbuf_clear(struct evbuf *);
 
 /* socket.c */
+int		 ldp_create_socket(enum socket_type);
 void		 sock_set_recvbuf(int);
 int		 sock_set_reuse(int, int);
 int		 sock_set_ipv4_mcast_ttl(int, uint8_t);
