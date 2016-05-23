@@ -104,7 +104,7 @@ recv_init(struct nbr *nbr, char *buf, uint16_t len)
 		return (-1);
 	}
 
-	nbr->keepalive = min(nbr_get_keepalive(nbr->raddr),
+	nbr->keepalive = min(nbr_get_keepalive(nbr->af, nbr->id),
 	    ntohs(sess.keepalive_time));
 
 	max_pdu_len = ntohs(sess.max_pdu_len);
@@ -131,7 +131,7 @@ gen_init_prms_tlv(struct ibuf *buf, struct nbr *nbr, uint16_t size)
 	parms.type = htons(TLV_TYPE_COMMONSESSION);
 	parms.length = htons(size - TLV_HDR_LEN);
 	parms.proto_version = htons(LDP_VERSION);
-	parms.keepalive_time = htons(nbr_get_keepalive(nbr->raddr));
+	parms.keepalive_time = htons(nbr_get_keepalive(nbr->af, nbr->id));
 	parms.reserved = 0;
 	parms.pvlim = 0;
 	parms.max_pdu_len = 0;
