@@ -220,10 +220,11 @@ struct address_list_tlv {
 #define FEC_ELM_WCARD_LEN	1
 #define FEC_ELM_PREFIX_MIN_LEN	4
 #define FEC_PWID_ELM_MIN_LEN	8
-#define	FEC_WILDCARD		0x01
-#define	FEC_PREFIX		0x02
-#define	FEC_PWID		0x80
-#define	FEC_GENPWID		0x81
+
+#define	MAP_TYPE_WILDCARD	0x01
+#define	MAP_TYPE_PREFIX		0x02
+#define	MAP_TYPE_PWID		0x80
+#define	MAP_TYPE_GENPWID	0x81
 
 #define CONTROL_WORD_FLAG	0x8000
 #define PW_TYPE_ETHERNET_TAGGED	0x0004
