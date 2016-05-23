@@ -75,7 +75,7 @@ print_tnbr(struct tnbr *tnbr)
 void
 print_nbrp(struct nbr_params *nbrp)
 {
-	printf("\nneighbor %s {\n", inet_ntoa(nbrp->addr));
+	printf("\nneighbor %s {\n", inet_ntoa(nbrp->lsr_id));
 	if (nbrp->flags & F_NBRP_KEEPALIVE)
 		printf("\tkeepalive %u\n", nbrp->keepalive);
 	if (nbrp->auth.method == AUTH_MD5SIG)

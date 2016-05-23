@@ -318,7 +318,7 @@ session_accept_nbr(struct nbr *nbr, int fd)
 	int			 opt;
 	socklen_t		 len;
 
-	nbrp = nbr_params_find(leconf, nbr->raddr);
+	nbrp = nbr_params_find(leconf, nbr->id);
 	if (nbrp && nbrp->auth.method == AUTH_MD5SIG) {
 		if (sysdep.no_pfkey || sysdep.no_md5sig) {
 			log_warnx("md5sig configured but not available");
