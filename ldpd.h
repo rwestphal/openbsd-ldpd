@@ -113,6 +113,10 @@ enum imsg_type {
 	IMSG_NEIGHBOR_DOWN,
 	IMSG_NETWORK_ADD,
 	IMSG_NETWORK_DEL,
+	IMSG_SOCKET_NET,
+	IMSG_CLOSE_SOCKETS,
+	IMSG_REQUEST_SOCKETS,
+	IMSG_SETUP_SOCKETS,
 	IMSG_RECONF_CONF,
 	IMSG_RECONF_IFACE,
 	IMSG_RECONF_TNBR,
@@ -126,6 +130,10 @@ enum imsg_type {
 /* interface states */
 #define	IF_STA_DOWN		0x01
 #define	IF_STA_ACTIVE		0x02
+
+/* targeted neighbor states */
+#define	TNBR_STA_DOWN		0x01
+#define	TNBR_STA_ACTIVE		0x02
 
 /* interface types */
 enum iface_type {
@@ -240,6 +248,7 @@ struct tnbr {
 	struct adj		*adj;
 	struct in_addr		 addr;
 
+	int			 state;
 	uint16_t		 hello_holdtime;
 	uint16_t		 hello_interval;
 	uint16_t		 pw_count;

@@ -31,6 +31,7 @@ void	log_info(const char *, ...);
 void	log_debug(const char *, ...);
 void	fatal(const char *) __dead;
 void	fatalx(const char *) __dead;
+const char *socket_name(int);
 const char *pw_type_name(uint16_t);
 const char *log_map(struct map *);
 struct fec;

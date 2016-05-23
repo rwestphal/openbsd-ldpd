@@ -176,6 +176,21 @@ fatalx(const char *emsg)
 
 /* names */
 const char *
+socket_name(int type)
+{
+	switch (type) {
+	case LDP_SOCKET_DISC:
+		return ("discovery");
+	case LDP_SOCKET_EDISC:
+		return ("extended discovery");
+	case LDP_SOCKET_SESSION:
+		return ("session");
+	default:
+		return ("UNKNOWN");
+	}
+}
+
+const char *
 nbr_state_name(int state)
 {
 	switch (state) {
