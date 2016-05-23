@@ -229,6 +229,7 @@ struct address_list_tlv {
 #define CONTROL_WORD_FLAG	0x8000
 #define PW_TYPE_ETHERNET_TAGGED	0x0004
 #define PW_TYPE_ETHERNET	0x0005
+#define DEFAULT_PW_TYPE		PW_TYPE_ETHERNET
 
 /* RFC 4447 Sub-TLV record */
 struct subtlv {
