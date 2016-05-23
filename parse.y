@@ -106,8 +106,6 @@ struct config_defaults	 tnbrdefs;
 struct config_defaults	 pwdefs;
 struct config_defaults	*defs;
 
-int			 bad_ip_addr(struct in_addr);
-
 struct iface		*conf_get_if(struct kif *);
 struct tnbr		*conf_get_tnbr(struct in_addr);
 struct nbr_params	*conf_get_nbrp(struct in_addr);
