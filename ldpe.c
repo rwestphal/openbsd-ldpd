@@ -19,25 +19,14 @@
  */
 
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/queue.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <arpa/inet.h>
-#include <net/if_types.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
-#include <fcntl.h>
 #include <pwd.h>
 #include <unistd.h>
-#include <event.h>
 #include <arpa/inet.h>
-#include <err.h>
 #include <errno.h>
-#include <stdio.h>
 
-#include "ldp.h"
 #include "ldpd.h"
 #include "ldpe.h"
 #include "lde.h"

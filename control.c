@@ -18,16 +18,13 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/socket.h>
 #include <sys/un.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "ldpd.h"
-#include "ldp.h"
 #include "ldpe.h"
 #include "log.h"
 #include "control.h"

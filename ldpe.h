@@ -19,14 +19,15 @@
 #ifndef _LDPE_H_
 #define _LDPE_H_
 
+#include <sys/types.h>
+#include <sys/queue.h>
+#include <sys/tree.h>
+#include <net/pfkeyv2.h>
+
+#include "ldpd.h"
+
 #define min(x,y) ((x) <= (y) ? (x) : (y))
 #define max(x,y) ((x) > (y) ? (x) : (y))
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <net/pfkeyv2.h>
 
 struct hello_source {
 	enum hello_type		 type;

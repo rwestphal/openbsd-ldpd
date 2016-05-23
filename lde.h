@@ -20,11 +20,8 @@
 #define _LDE_H_
 
 #include <sys/types.h>
-#include <sys/time.h>
-#include <sys/tree.h>
 #include <sys/queue.h>
-#include <event.h>
-#include <limits.h>
+#include <sys/tree.h>
 
 enum fec_type {
 	FEC_TYPE_IPV4,
