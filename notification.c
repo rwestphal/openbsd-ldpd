@@ -199,7 +199,6 @@ recv_notification(struct nbr *nbr, char *buf, u_int16_t len)
 
 		switch (nm.fec.type) {
 		case MAP_TYPE_PWID:
-		case MAP_TYPE_GENPWID:
 			break;
 		default:
 			send_notification_nbr(nbr, S_BAD_TLV_VAL,

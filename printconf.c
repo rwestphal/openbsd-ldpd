@@ -109,7 +109,7 @@ void
 print_pw(struct l2vpn_pw *pw)
 {
 	printf("\tpseudowire %s {\n", pw->ifname);
-	printf("\t\tneighbor %s\n", inet_ntoa(pw->addr));
+	printf("\t\tneighbor %s\n", inet_ntoa(pw->lsr_id));
 	printf("\t\tpw-id %u\n", pw->pwid);
 	if (pw->flags & F_PW_STATUSTLV_CONF)
 		printf("\t\tstatus-tlv yes\n");
