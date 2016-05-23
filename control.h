@@ -27,6 +27,9 @@ struct ctl_conn {
 	TAILQ_ENTRY(ctl_conn)	entry;
 	struct imsgev		iev;
 };
+TAILQ_HEAD(ctl_conns, ctl_conn);
+
+extern struct ctl_conns ctl_conns;
 
 int	control_init(void);
 int	control_listen(void);

@@ -351,7 +351,7 @@ log_hello_src(const struct hello_source *src)
 }
 
 const char *
-log_map(struct map *map)
+log_map(const struct map *map)
 {
 	static char	buf[64];
 	char		pstr[64];
@@ -381,7 +381,7 @@ log_map(struct map *map)
 }
 
 const char *
-log_fec(struct fec *fec)
+log_fec(const struct fec *fec)
 {
 	static char	buf[64];
 	char		pstr[32];
