@@ -667,7 +667,19 @@ merge_global(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 	struct nbr_params	*nbrp;
 	int			 egress_label_changed = 0;
 
-	/* change of rtr_id needs a restart */
+	/* change of router-id requires resetting all neighborships */
+	if (conf->rtr_id.s_addr != xconf->rtr_id.s_addr) {
+		if (ldpd_process == PROC_LDP_ENGINE) {
+			ldpe_reset_nbrs();
+			if (conf->rtr_id.s_addr == INADDR_ANY ||
+			    xconf->rtr_id.s_addr == INADDR_ANY) {
+				if_update_all();
+				tnbr_update_all();
+			}
+		}
+		conf->rtr_id = xconf->rtr_id;
+	}
+
 	if (conf->keepalive != xconf->keepalive) {
 		conf->keepalive = xconf->keepalive;
 		if (ldpd_process == PROC_LDP_ENGINE)

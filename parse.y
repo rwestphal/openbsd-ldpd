@@ -1330,8 +1330,10 @@ get_rtr_id(void)
 
 	localnet = htonl(INADDR_LOOPBACK & IN_CLASSA_NET);
 
-	if (getifaddrs(&ifap) == -1)
-		fatal("getifaddrs");
+	if (getifaddrs(&ifap) == -1) {
+		log_warn("getifaddrs");
+		return (0);
+	}
 
 	for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
 		if (strncmp(ifa->ifa_name, "carp", 4) == 0)
@@ -1345,9 +1347,6 @@ get_rtr_id(void)
 			ip = cur;
 	}
 	freeifaddrs(ifap);
-
-	if (ip == 0)
-		fatal("router-id is 0.0.0.0");
 
 	return (ip);
 }

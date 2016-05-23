@@ -624,6 +624,15 @@ ldpe_close_sockets(void)
 }
 
 void
+ldpe_reset_nbrs(void)
+{
+	struct nbr		*nbr;
+
+	RB_FOREACH(nbr, nbr_id_head, &nbrs_by_id)
+		session_shutdown(nbr, S_SHUTDOWN, 0, 0);
+}
+
+void
 ldpe_remove_dynamic_tnbrs(void)
 {
 	struct tnbr		*tnbr, *safe;
