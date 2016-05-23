@@ -323,7 +323,7 @@ log_map(struct map *map)
 
 	switch (map->type) {
 	case FEC_WILDCARD:
-		if (snprintf(buf, sizeof(buf), "wildcard"))
+		if (snprintf(buf, sizeof(buf), "wildcard") < 0)
 			return ("???");
 		break;
 	case FEC_PREFIX:
