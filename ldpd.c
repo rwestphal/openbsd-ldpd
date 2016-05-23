@@ -719,6 +719,7 @@ merge_config(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 		}
 
 		/* update existing nbrps */
+		nbrp->keepalive = xn->keepalive;
 		nbrp->auth.method = xn->auth.method;
 		strlcpy(nbrp->auth.md5key, xn->auth.md5key,
 		    sizeof(nbrp->auth.md5key));

@@ -598,6 +598,18 @@ nbr_params_find(struct ldpd_conf *xconf, struct in_addr addr)
 	return (NULL);
 }
 
+uint16_t
+nbr_get_keepalive(struct in_addr addr)
+{
+	struct nbr_params	*nbrp;
+
+	nbrp = nbr_params_find(leconf, addr);
+	if (nbrp && (nbrp->flags & F_NBRP_KEEPALIVE))
+		return (nbrp->keepalive);
+
+	return (leconf->keepalive);
+}
+
 struct ctl_nbr *
 nbr_to_ctl(struct nbr *nbr)
 {
