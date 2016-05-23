@@ -182,8 +182,8 @@ control_close(int fd)
 
 	event_del(&c->iev.ev);
 	close(c->iev.ibuf.fd);
-	free(c);
 	accept_unpause();
+	free(c);
 }
 
 /* ARGSUSED */

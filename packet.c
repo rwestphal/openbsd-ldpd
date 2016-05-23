@@ -258,6 +258,7 @@ tcp_close(struct tcp_conn *tcp)
 	evbuf_clear(&tcp->wbuf);
 	event_del(&tcp->rev);
 	close(tcp->fd);
+	accept_unpause();
 	free(tcp->rbuf);
 	free(tcp);
 }
@@ -567,8 +568,6 @@ session_close(struct nbr *nbr)
 
 	nbr_stop_ktimer(nbr);
 	nbr_stop_ktimeout(nbr);
-
-	accept_unpause();
 }
 
 ssize_t
