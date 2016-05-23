@@ -33,9 +33,7 @@ extern struct ctl_conns ctl_conns;
 
 int	control_init(void);
 int	control_listen(void);
-void	control_accept(int, short, void *);
-void	control_dispatch_imsg(int, short, void *);
-int	control_imsg_relay(struct imsg *);
 void	control_cleanup(void);
+int	control_imsg_relay(struct imsg *);
 
 #endif	/* _CONTROL_H_ */

@@ -31,9 +31,6 @@
 #include "ldpe.h"
 #include "log.h"
 
-extern struct ldpd_conf		*ldpd_conf;
-extern struct ldpd_sysdep	 sysdep;
-
 int
 ldp_create_socket(int af, enum socket_type type)
 {
