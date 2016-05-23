@@ -65,7 +65,7 @@ send_address(struct nbr *nbr, struct if_addr *if_addr)
 
 	size -= LDP_HDR_SIZE;
 
-	gen_msg_tlv(buf, MSG_TYPE_ADDR, size);
+	gen_msg_tlv(buf, msg_type, size);
 
 	size -= sizeof(struct ldp_msg);
 
