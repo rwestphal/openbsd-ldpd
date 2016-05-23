@@ -350,11 +350,18 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		int imsg_type = IMSG_NONE;
 
 		me->map.flags |= flags;
+		if (me->map.type == MAP_TYPE_PWID) {
+			if (label <= MPLS_LABEL_RESERVED_MAX) {
+				session_shutdown(nbr, S_BAD_TLV_VAL, lm.msgid,
+				    lm.type);
+				goto err;
+			}
+			if (me->map.flags & F_MAP_PW_STATUS)
+				me->map.pw_status = pw_status;
+		}
 		me->map.label = label;
 		if (me->map.flags & F_MAP_REQ_ID)
 			me->map.requestid = reqid;
-		if (me->map.flags & F_MAP_PW_STATUS)
-			me->map.pw_status = pw_status;
 
 		switch (type) {
 		case MSG_TYPE_LABELMAPPING:
