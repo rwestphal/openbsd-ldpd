@@ -619,17 +619,27 @@ void
 session_shutdown(struct nbr *nbr, uint32_t status, uint32_t msgid,
     uint32_t type)
 {
-	if (nbr->tcp == NULL)
-		return;
+	switch (nbr->state) {
+	case NBR_STA_PRESENT:
+		if (nbr_pending_connect(nbr))
+			event_del(&nbr->ev_connect);
+		break;
+	case NBR_STA_INITIAL:
+	case NBR_STA_OPENREC:
+	case NBR_STA_OPENSENT:
+	case NBR_STA_OPER:	
+		log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
 
-	log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
+		send_notification_nbr(nbr, status, msgid, type);
 
-	send_notification_nbr(nbr, status, msgid, type);
+		/* try to flush write buffer, if it fails tough shit */
+		msgbuf_write(&nbr->tcp->wbuf.wbuf);
 
-	/* try to flush write buffer, if it fails tough shit */
-	msgbuf_write(&nbr->tcp->wbuf.wbuf);
-
-	nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
+		nbr_fsm(nbr, NBR_EVT_CLOSE_SESSION);
+		break;
+	default:
+		fatalx("session_shutdown: unknown neighbor state");
+	}
 }
 
 void
