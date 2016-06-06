@@ -410,7 +410,7 @@ main_dispatch_ldpe(int fd, short event, void *bula)
 
 		switch (imsg.hdr.type) {
 		case IMSG_REQUEST_SOCKETS:
-			af = imsg.hdr.peerid;
+			af = imsg.hdr.pid;
 			main_imsg_send_net_sockets(af);
 			break;
 		case IMSG_CTL_RELOAD:

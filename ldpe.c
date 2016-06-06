@@ -311,7 +311,7 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			disc_socket = -1;
 			edisc_socket = -1;
 			session_socket = -1;
-			ldpe_imsg_compose_parent(IMSG_REQUEST_SOCKETS, 0,
+			ldpe_imsg_compose_parent(IMSG_REQUEST_SOCKETS, af,
 			    NULL, 0);
 			break;
 		case IMSG_SOCKET_NET:
