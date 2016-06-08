@@ -478,7 +478,9 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, int *tlvs_rcvd, int af,
 		case TLV_TYPE_IPV4TRANSADDR:
 			if (tlv_len != sizeof(addr->v4))
 				return (-1);
-			if (af != AF_INET || ldp_addrisset(AF_INET, addr))
+			if (af != AF_INET)
+				return (-1);
+			if (*tlvs_rcvd & F_HELLO_TLV_RCVD_ADDR)
 				break;
 			memcpy(&addr->v4, buf + TLV_HDR_LEN, sizeof(addr->v4));
 			*tlvs_rcvd |= F_HELLO_TLV_RCVD_ADDR;
@@ -486,7 +488,9 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, int *tlvs_rcvd, int af,
 		case TLV_TYPE_IPV6TRANSADDR:
 			if (tlv_len != sizeof(addr->v6))
 				return (-1);
-			if (af != AF_INET6 || ldp_addrisset(AF_INET6, addr))
+			if (af != AF_INET6)
+				return (-1);
+			if (*tlvs_rcvd & F_HELLO_TLV_RCVD_ADDR)
 				break;
 			memcpy(&addr->v6, buf + TLV_HDR_LEN, sizeof(addr->v6));
 			*tlvs_rcvd |= F_HELLO_TLV_RCVD_ADDR;
