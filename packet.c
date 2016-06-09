@@ -66,8 +66,7 @@ gen_msg_hdr(struct ibuf *buf, uint32_t type, uint16_t size)
 	msg.type = htons(type);
 	/* exclude the 'Type' and 'Length' fields from the total */
 	msg.length = htons(size - LDP_MSG_DEAD_LEN);
-	if (type != MSG_TYPE_HELLO)
-		msg.msgid = htonl(++msgcnt);
+	msg.msgid = htonl(++msgcnt);
 
 	return (ibuf_add(buf, &msg, sizeof(msg)));
 }
