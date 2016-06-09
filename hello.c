@@ -279,7 +279,7 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, int af,
 			session_shutdown(nbr, S_TRANS_MISMTCH, lm->msgid,
 			    lm->type);
 		if (adj)
-			adj_del(adj);
+			adj_del(adj, 0, 0);
 		return;
 	}
 

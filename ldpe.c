@@ -179,7 +179,7 @@ ldpe_shutdown(void)
 		free(if_addr);
 	}
 	while ((adj = LIST_FIRST(&global.adj_list)) != NULL)
-		adj_del(adj);
+		adj_del(adj, 1, S_SHUTDOWN);
 
 	/* clean up */
 	msgbuf_write(&iev_lde->ibuf.w);
