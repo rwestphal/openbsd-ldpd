@@ -559,15 +559,13 @@ session_read(int fd, short event, void *arg)
 				    type);
 				break;
 			default:
-				log_debug("%s: unknown LDP packet from nbr %s",
+				log_debug("%s: unknown LDP message from nbr %s",
 				    __func__, inet_ntoa(nbr->id));
-				if (!(ntohs(ldp_msg->type) & UNKNOWN_FLAG)) {
-					session_shutdown(nbr, S_UNKNOWN_MSG,
-					    ldp_msg->msgid, ldp_msg->type);
-					free(buf);
-					return;
-				}
-				/* unknown flag is set, ignore the message */
+				if (!(ntohs(ldp_msg->type) & UNKNOWN_FLAG))
+					send_notification_nbr(nbr,
+					    S_UNKNOWN_MSG, ldp_msg->msgid,
+					    ldp_msg->type);
+				/* ignore the message */
 				ret = 0;
 				break;
 			}
