@@ -130,11 +130,6 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 		}
 
 		memcpy(&tlv, buf, sizeof(tlv));
-		if (ntohs(tlv.length) > len - TLV_HDR_LEN) {
-			session_shutdown(nbr, S_BAD_TLV_LEN, not.msgid,
-			    not.type);
-			return (-1);
-		}
 		buf += TLV_HDR_LEN;
 		len -= TLV_HDR_LEN;
 
