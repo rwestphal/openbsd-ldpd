@@ -552,7 +552,7 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 	/* LRq.8: record label request */
 	lre = lde_req_add(ln, &fn->fec, 0);
 	if (lre != NULL)
-		lre->msgid = map->messageid;
+		lre->msgid = ntohl(map->messageid);
 
 	/* LRq.9: perform LSR label distribution */
 	lde_send_labelmapping(ln, fn, 1);
