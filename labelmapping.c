@@ -241,11 +241,6 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		}
 
 		memcpy(&tlv, buf, sizeof(tlv));
-		if (ntohs(tlv.length) != len - TLV_HDR_LEN) {
-			session_shutdown(nbr, S_BAD_TLV_LEN, lm.msgid,
-			    lm.type);
-			goto err;
-		}
 		buf += TLV_HDR_LEN;
 		len -= TLV_HDR_LEN;
 
