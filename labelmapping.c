@@ -244,7 +244,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		buf += TLV_HDR_LEN;
 		len -= TLV_HDR_LEN;
 
-		switch (ntohs(tlv.type) & ~UNKNOWN_FLAG) {
+		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_LABELREQUEST:
 			switch (type) {
 			case MSG_TYPE_LABELMAPPING:
