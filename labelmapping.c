@@ -193,7 +193,7 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 			case MSG_TYPE_LABELMAPPING:
 			case MSG_TYPE_LABELREQUEST:
 			case MSG_TYPE_LABELABORTREQ:
-				session_shutdown(nbr, S_BAD_TLV_VAL, lm.msgid,
+				session_shutdown(nbr, S_UNKNOWN_FEC, lm.msgid,
 				    lm.type);
 				goto err;
 			default:
