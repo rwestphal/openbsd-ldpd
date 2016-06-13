@@ -319,8 +319,10 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 			disc_socket = -1;
 			edisc_socket = -1;
 			session_socket = -1;
-			ldpe_imsg_compose_parent(IMSG_REQUEST_SOCKETS, af,
-			    NULL, 0);
+			if ((ldp_af_conf_get(leconf, af))->flags &
+			    F_LDPD_AF_ENABLED)
+				ldpe_imsg_compose_parent(IMSG_REQUEST_SOCKETS,
+				    af, NULL, 0);
 			break;
 		case IMSG_SOCKET_NET:
 			if (imsg.hdr.len != IMSG_HEADER_SIZE +
