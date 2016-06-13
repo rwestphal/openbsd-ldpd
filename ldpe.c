@@ -438,6 +438,7 @@ ldpe_dispatch_main(int fd, short event, void *bula)
 		case IMSG_RECONF_END:
 			merge_config(leconf, nconf);
 			nconf = NULL;
+			global.conf_seqnum++;
 			break;
 		case IMSG_CTL_KROUTE:
 		case IMSG_CTL_KROUTE_ADDR:
