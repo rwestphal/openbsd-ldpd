@@ -68,6 +68,7 @@ struct nbr {
 	struct event		 ev_connect;
 	struct event		 keepalive_timer;
 	struct event		 keepalive_timeout;
+	struct event		 init_timeout;
 	struct event		 initdelay_timer;
 
 	struct mapping_head	 mapping_list;
@@ -228,6 +229,7 @@ int			 nbr_adj_count(struct nbr *, int);
 int			 nbr_session_active_role(struct nbr *);
 void			 nbr_stop_ktimer(struct nbr *);
 void			 nbr_stop_ktimeout(struct nbr *);
+void			 nbr_stop_itimeout(struct nbr *);
 void			 nbr_start_idtimer(struct nbr *);
 void			 nbr_stop_idtimer(struct nbr *);
 int			 nbr_pending_idtimer(struct nbr *);
