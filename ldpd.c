@@ -275,8 +275,10 @@ main(int argc, char *argv[])
 	if (kr_init(!(ldpd_conf->flags & F_LDPD_NO_FIB_UPDATE)) == -1)
 		fatalx("kr_init failed");
 
-	main_imsg_send_net_sockets(AF_INET);
-	main_imsg_send_net_sockets(AF_INET6);
+	if (ldpd_conf->ipv4.flags & F_LDPD_AF_ENABLED)
+		main_imsg_send_net_sockets(AF_INET);
+	if (ldpd_conf->ipv6.flags & F_LDPD_AF_ENABLED)
+		main_imsg_send_net_sockets(AF_INET6);
 
 	/* remove unneded stuff from config */
 		/* ... */
