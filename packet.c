@@ -648,6 +648,7 @@ session_close(struct nbr *nbr)
 	tcp_close(nbr->tcp);
 	nbr_stop_ktimer(nbr);
 	nbr_stop_ktimeout(nbr);
+	nbr_stop_itimeout(nbr);
 }
 
 static ssize_t
