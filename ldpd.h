@@ -396,6 +396,7 @@ struct ldpd_global {
 	time_t			 uptime;
 	struct ldpd_af_global	 ipv4;
 	struct ldpd_af_global	 ipv6;
+	uint32_t		 conf_seqnum;
 	int			 pfkeysock;
 	struct if_addr_head	 addr_list;
 	LIST_HEAD(, adj)	 adj_list;

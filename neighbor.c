@@ -244,6 +244,7 @@ nbr_new(struct in_addr id, int af, int ds_tlv, union ldpd_addr *addr,
 	nbr->laddr = (ldp_af_conf_get(leconf, af))->trans_addr;
 	nbr->raddr = *addr;
 	nbr->raddr_scope = scope_id;
+	nbr->conf_seqnum = 0;
 
 	LIST_FOREACH(adj, &global.adj_list, global_entry) {
 		if (adj->lsr_id.s_addr == nbr->id.s_addr) {

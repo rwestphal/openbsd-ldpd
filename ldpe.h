@@ -89,6 +89,7 @@ struct nbr {
 	time_t			 uptime;
 	int			 fd;
 	int			 state;
+	uint32_t		 conf_seqnum;
 	int			 idtimer_cnt;
 	uint16_t		 keepalive;
 	uint16_t		 max_pdu_len;
