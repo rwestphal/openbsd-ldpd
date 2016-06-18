@@ -232,7 +232,7 @@ kr_change(struct kroute *kr)
 	if (kp == NULL)
 		goto miss;
 
-	kprio = kroute_find_prio(kp, RTP_ANY);
+	kprio = kroute_find_prio(kp, kr->priority);
 	if (kprio == NULL)
 		goto miss;
 
@@ -277,7 +277,7 @@ kr_delete(struct kroute *kr)
 	kp = kroute_find_prefix(kr->af, &kr->prefix, kr->prefixlen);
 	if (kp == NULL)
 		return (0);
-	kprio = kroute_find_prio(kp, RTP_ANY);
+	kprio = kroute_find_prio(kp, kr->priority);
 	if (kprio == NULL)
 		return (0);
 	kn = kroute_find_gw(kprio, &kr->nexthop);
