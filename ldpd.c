@@ -1030,16 +1030,15 @@ merge_l2vpns(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 
 			switch (ldpd_process) {
 			case PROC_LDE_ENGINE:
-				l2vpn_del(l2vpn);
+				l2vpn_exit(l2vpn);
 				break;
 			case PROC_LDP_ENGINE:
 				ldpe_l2vpn_exit(l2vpn);
-				free(l2vpn);
 				break;
 			case PROC_MAIN:
-				free(l2vpn);
 				break;
 			}
+			l2vpn_del(l2vpn);
 		}
 	}
 	LIST_FOREACH_SAFE(xl, &xconf->l2vpn_list, entry, ltmp) {

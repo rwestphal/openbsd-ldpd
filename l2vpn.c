@@ -91,6 +91,15 @@ l2vpn_init(struct l2vpn *l2vpn)
 		l2vpn_pw_init(pw);
 }
 
+void
+l2vpn_exit(struct l2vpn *l2vpn)
+{
+	struct l2vpn_pw		*pw;
+
+	LIST_FOREACH(pw, &l2vpn->pw_list, entry)
+		l2vpn_pw_exit(pw);
+}
+
 struct l2vpn_if *
 l2vpn_if_new(struct l2vpn *l2vpn, struct kif *kif)
 {
