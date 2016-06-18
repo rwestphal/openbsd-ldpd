@@ -278,7 +278,7 @@ if_reset(struct iface *iface, int af)
 	if_stop_hello_timer(ia);
 
 	while ((adj = LIST_FIRST(&ia->adj_list)) != NULL)
-		adj_del(adj, 1, S_SHUTDOWN);
+		adj_del(adj, S_SHUTDOWN);
 
 	/* try to cleanup */
 	switch (af) {
