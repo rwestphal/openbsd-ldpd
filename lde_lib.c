@@ -436,8 +436,8 @@ lde_check_mapping(struct map *map, struct lde_nbr *ln)
 		return;
 
 	/*
-	 * LMp.3 - LMp.8: Loop detection LMp.3 - unecessary for frame-mode
-	 * mpls networks
+	 * LMp.3 - LMp.8: loop detection - unnecessary for frame-mode
+	 * mpls networks.
 	 */
 
 	/* LMp.9 */
@@ -522,12 +522,13 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 	struct fec_node	*fn;
 	struct fec_nh	*fnh;
 
-	/* TODO LRq.1: loop detection */
+	/* LRq.1: skip loop detection (not necessary) */
 
 	/* LRq.2: is there a next hop for fec? */
 	lde_map2fec(map, ln->id, &fec);
 	fn = (struct fec_node *)fec_find(&ft, &fec);
 	if (fn == NULL || LIST_EMPTY(&fn->nexthops)) {
+		/* LRq.5: send No Route notification */
 		lde_send_notification(ln->peerid, S_NO_ROUTE, map->messageid,
 		    htons(MSG_TYPE_LABELREQUEST));
 		return;
@@ -541,6 +542,7 @@ lde_check_request(struct map *map, struct lde_nbr *ln)
 			if (!lde_address_find(ln, fnh->af, &fnh->nexthop))
 				continue;
 
+			/* LRq.4: send Loop Detected notification */
 			lde_send_notification(ln->peerid, S_LOOP_DETECTED,
 			    map->messageid, htons(MSG_TYPE_LABELREQUEST));
 			return;
