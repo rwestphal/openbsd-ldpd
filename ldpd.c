@@ -496,21 +496,21 @@ main_dispatch_lde(int fd, short event, void *bula)
 			    sizeof(struct kroute))
 				fatalx("invalid size of IMSG_KLABEL_CHANGE");
 			if (kr_change(imsg.data))
-				log_warn("%s: error changing route", __func__);
+				log_warnx("%s: error changing route", __func__);
 			break;
 		case IMSG_KLABEL_DELETE:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
 			    sizeof(struct kroute))
 				fatalx("invalid size of IMSG_KLABEL_DELETE");
 			if (kr_delete(imsg.data))
-				log_warn("%s: error deleting route", __func__);
+				log_warnx("%s: error deleting route", __func__);
 			break;
 		case IMSG_KPWLABEL_CHANGE:
 			if (imsg.hdr.len - IMSG_HEADER_SIZE !=
 			    sizeof(struct kpw))
 				fatalx("invalid size of IMSG_KPWLABEL_CHANGE");
 			if (kmpw_set(imsg.data))
-				log_warn("%s: error changing pseudowire",
+				log_warnx("%s: error changing pseudowire",
 				    __func__);
 			break;
 		case IMSG_KPWLABEL_DELETE:
@@ -518,7 +518,7 @@ main_dispatch_lde(int fd, short event, void *bula)
 			    sizeof(struct kpw))
 				fatalx("invalid size of IMSG_KPWLABEL_DELETE");
 			if (kmpw_unset(imsg.data))
-				log_warn("%s: error unsetting pseudowire",
+				log_warnx("%s: error unsetting pseudowire",
 				    __func__);
 			break;
 		default:
