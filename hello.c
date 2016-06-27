@@ -359,8 +359,8 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, int af,
 	 * to start an LDP session.
 	 */
 	if (nbr == NULL && (!ds_tlv ||
-	    ((trans_pref == DUAL_STACK_LDPOV4 && af != AF_INET) ||
-	    (trans_pref == DUAL_STACK_LDPOV6 && af != AF_INET6))))
+	    ((trans_pref == DUAL_STACK_LDPOV4 && af == AF_INET) ||
+	    (trans_pref == DUAL_STACK_LDPOV6 && af == AF_INET6))))
 		nbr = nbr_new(lsr_id, af, ds_tlv, &trans_addr, scope_id);
 
 	/* update neighbor's configuration sequence number */
