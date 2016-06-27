@@ -74,7 +74,6 @@ l2vpn_del(struct l2vpn *l2vpn)
 		free(lif);
 	}
 	while ((pw = LIST_FIRST(&l2vpn->pw_list)) != NULL) {
-		l2vpn_pw_exit(pw);
 		LIST_REMOVE(pw, entry);
 		free(pw);
 	}
