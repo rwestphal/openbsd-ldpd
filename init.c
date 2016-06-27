@@ -32,6 +32,7 @@ send_init(struct nbr *nbr)
 {
 	struct ibuf		*buf;
 	uint16_t		 size;
+	int			 err = 0;
 
 	log_debug("%s: lsr-id %s", __func__, inet_ntoa(nbr->id));
 
@@ -39,11 +40,15 @@ send_init(struct nbr *nbr)
 	if ((buf = ibuf_open(size)) == NULL)
 		fatal(__func__);
 
-	gen_ldp_hdr(buf, size);
+	err |= gen_ldp_hdr(buf, size);
 	size -= LDP_HDR_SIZE;
-	gen_msg_hdr(buf, MSG_TYPE_INIT, size);
+	err |= gen_msg_hdr(buf, MSG_TYPE_INIT, size);
 	size -= LDP_MSG_SIZE;
-	gen_init_prms_tlv(buf, nbr, size);
+	err |= gen_init_prms_tlv(buf, nbr, size);
+	if (err) {
+		ibuf_free(buf);
+		return;
+	}
 
 	evbuf_enqueue(&nbr->tcp->wbuf, buf);
 }

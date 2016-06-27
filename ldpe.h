@@ -169,8 +169,8 @@ int	 recv_address(struct nbr *, char *, uint16_t);
 #define PREFIX_SIZE(x)	(((x) + 7) / 8)
 void	 send_labelmessage(struct nbr *, uint16_t, struct mapping_head *);
 int	 recv_labelmessage(struct nbr *, char *, uint16_t, uint16_t);
-void	 gen_pw_status_tlv(struct ibuf *, uint32_t);
-void	 gen_fec_tlv(struct ibuf *, struct map *);
+int	 gen_pw_status_tlv(struct ibuf *, uint32_t);
+int	 gen_fec_tlv(struct ibuf *, struct map *);
 int	 tlv_decode_fec_elm(struct nbr *, struct ldp_msg *, char *,
 	    uint16_t, struct map *);
 
