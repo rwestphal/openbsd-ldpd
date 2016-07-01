@@ -258,6 +258,7 @@ int
 l2vpn_pw_negotiate(struct lde_nbr *ln, struct fec_node *fn, struct map *map)
 {
 	struct l2vpn_pw		*pw;
+	struct status_tlv	 status;
 
 	/* NOTE: thanks martini & friends for all this mess */
 
@@ -277,8 +278,11 @@ l2vpn_pw_negotiate(struct lde_nbr *ln, struct fec_node *fn, struct map *map)
 			return (1);
 		} else if (!(map->flags & F_MAP_PW_CWORD) &&
 		    (pw->flags & F_PW_CWORD_CONF)) {
-			/* TODO append a "Wrong C-bit" status code */
-			lde_send_labelwithdraw(ln, fn, NO_LABEL);
+			/* append a "Wrong C-bit" status code */
+			status.status_code = S_WRONG_CBIT;
+			status.msg_id = map->messageid;
+			status.msg_type = htons(MSG_TYPE_LABELMAPPING);
+			lde_send_labelwithdraw(ln, fn, NO_LABEL, &status);
 
 			pw->flags &= ~F_PW_CWORD;
 			lde_send_labelmapping(ln, fn, 1);

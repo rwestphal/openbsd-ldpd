@@ -25,8 +25,6 @@
 #include "log.h"
 #include "ldpe.h"
 
-static int	 gen_status_tlv(struct ibuf *, uint32_t, uint32_t, uint16_t);
-
 void
 send_notification_full(struct tcp_conn *tcp, struct notify_msg *nm)
 {
@@ -221,7 +219,7 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 	return (0);
 }
 
-static int
+int
 gen_status_tlv(struct ibuf *buf, uint32_t status, uint32_t msgid, uint16_t type)
 {
 	struct status_tlv	st;

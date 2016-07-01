@@ -134,7 +134,7 @@ void		 lde_map2fec(struct map *, struct in_addr, struct fec *);
 void		 lde_send_labelmapping(struct lde_nbr *, struct fec_node *,
 		    int);
 void		 lde_send_labelwithdraw(struct lde_nbr *, struct fec_node *,
-		    uint32_t);
+		    uint32_t, struct status_tlv *);
 void		 lde_send_labelwithdraw_all(struct fec_node *, uint32_t);
 void		 lde_send_labelrelease(struct lde_nbr *, struct fec_node *,
 		    uint32_t);

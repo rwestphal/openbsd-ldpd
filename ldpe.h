@@ -163,6 +163,7 @@ void	 send_notification(uint32_t, struct tcp_conn *, uint32_t,
 	    uint16_t);
 void	 send_notification_nbr(struct nbr *, uint32_t, uint32_t, uint16_t);
 int	 recv_notification(struct nbr *, char *, uint16_t);
+int	 gen_status_tlv(struct ibuf *, uint32_t, uint32_t, uint16_t);
 
 /* address.c */
 void	 send_address(struct nbr *, int, struct if_addr *, int);
