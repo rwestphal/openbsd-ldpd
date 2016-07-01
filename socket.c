@@ -382,7 +382,7 @@ sock_set_ipv6_mcast_loop(int fd)
 	unsigned int	loop = 0;
 
 	if (setsockopt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP,
-	    (unsigned int *)&loop, sizeof(loop)) < 0) {
+	    &loop, sizeof(loop)) < 0) {
 		log_warn("%s: error setting IPV6_MULTICAST_LOOP", __func__);
 		return (-1);
 	}

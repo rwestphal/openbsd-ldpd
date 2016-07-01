@@ -880,9 +880,8 @@ merge_ifaces(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 		if ((xi = if_lookup(xconf, iface->ifindex)) == NULL) {
 			LIST_REMOVE(iface, entry);
 			if (ldpd_process == PROC_LDP_ENGINE)
-				if_del(iface);
-			else
-				free(iface);
+				if_exit(iface);
+			free(iface);
 		}
 	}
 	LIST_FOREACH_SAFE(xi, &xconf->iface_list, entry, itmp) {

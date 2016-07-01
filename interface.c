@@ -82,8 +82,20 @@ if_new(struct kif *kif)
 	return (iface);
 }
 
+struct iface *
+if_lookup(struct ldpd_conf *xconf, unsigned short ifindex)
+{
+	struct iface *iface;
+
+	LIST_FOREACH(iface, &xconf->iface_list, entry)
+		if (iface->ifindex == ifindex)
+			return (iface);
+
+	return (NULL);
+}
+
 void
-if_del(struct iface *iface)
+if_exit(struct iface *iface)
 {
 	struct if_addr		*if_addr;
 
@@ -98,20 +110,6 @@ if_del(struct iface *iface)
 		LIST_REMOVE(if_addr, entry);
 		free(if_addr);
 	}
-
-	free(iface);
-}
-
-struct iface *
-if_lookup(struct ldpd_conf *xconf, unsigned short ifindex)
-{
-	struct iface *iface;
-
-	LIST_FOREACH(iface, &xconf->iface_list, entry)
-		if (iface->ifindex == ifindex)
-			return (iface);
-
-	return (NULL);
 }
 
 struct iface_af *

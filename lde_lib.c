@@ -309,18 +309,18 @@ egress_label(enum fec_type fec_type)
 {
 	switch (fec_type) {
 	case FEC_TYPE_IPV4:
-		if (!(ldeconf->ipv4.flags & F_LDPD_AF_EXPNULL))
-			return (MPLS_LABEL_IMPLNULL);
-		return (MPLS_LABEL_IPV4NULL);
+		if (ldeconf->ipv4.flags & F_LDPD_AF_EXPNULL)
+			return (MPLS_LABEL_IPV4NULL);
+		break;
 	case FEC_TYPE_IPV6:
-		if (!(ldeconf->ipv6.flags & F_LDPD_AF_EXPNULL))
-			return (MPLS_LABEL_IMPLNULL);
-		return (MPLS_LABEL_IPV6NULL);
+		if (ldeconf->ipv6.flags & F_LDPD_AF_EXPNULL)
+			return (MPLS_LABEL_IPV6NULL);
+		break;
 	default:
-		log_warnx("%s: unexpected fec type", __func__);
+		fatalx("egress_label: unexpected fec type");
 	}
 
-	return (NO_LABEL);
+	return (MPLS_LABEL_IMPLNULL);
 }
 
 void

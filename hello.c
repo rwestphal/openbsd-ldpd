@@ -233,7 +233,7 @@ recv_hello(struct in_addr lsr_id, struct ldp_msg *lm, int af,
 		/*
 	 	 * RFC 7552 - Section 5.2:
 		* "The link-local IPv6 addresses MUST NOT be used as the
-		* targeted LDP Hello packet's source or destination addresses.
+		* targeted LDP Hello packet's source or destination addresses".
 		*/
 		if (af == AF_INET6 && IN6_IS_SCOPE_EMBED(&src->v6)) {
 			log_debug("%s: lsr-id %s: targeted hello with "

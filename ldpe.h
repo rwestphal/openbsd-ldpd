@@ -196,7 +196,7 @@ void		 mapping_list_clr(struct mapping_head *);
 
 /* interface.c */
 struct iface	*if_new(struct kif *);
-void		 if_del(struct iface *);
+void		 if_exit(struct iface *);
 struct iface	*if_lookup(struct ldpd_conf *, unsigned short);
 struct iface_af *iface_af_get(struct iface *, int);
 void		 if_addr_add(struct kaddr *);
