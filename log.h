@@ -44,7 +44,7 @@ const char	*socket_name(int);
 const char	*nbr_state_name(int);
 const char	*if_state_name(int);
 const char	*if_type_name(enum iface_type);
-const char	*notification_name(uint32_t);
+const char	*status_code_name(uint32_t);
 const char	*pw_type_name(uint16_t);
 char		*log_hello_src(const struct hello_source *);
 const char	*log_map(const struct map *);

@@ -318,7 +318,7 @@ if_type_name(enum iface_type type)
 }
 
 const char *
-notification_name(uint32_t status)
+status_code_name(uint32_t status)
 {
 	static char buf[16];
 

@@ -55,8 +55,8 @@ RB_PROTOTYPE(fec_tree, fec, entry, fec_compare)
 
 /* request entries */
 struct lde_req {
-	struct fec		fec;
-	uint32_t		msgid;
+	struct fec		 fec;
+	uint32_t		 msg_id;
 };
 
 /* mapping entries */

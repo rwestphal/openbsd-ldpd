@@ -43,11 +43,11 @@ send_keepalive(struct nbr *nbr)
 int
 recv_keepalive(struct nbr *nbr, char *buf, uint16_t len)
 {
-	struct ldp_msg ka;
+	struct ldp_msg msg;
 
-	memcpy(&ka, buf, sizeof(ka));
+	memcpy(&msg, buf, sizeof(msg));
 	if (len != LDP_MSG_SIZE) {
-		session_shutdown(nbr, S_BAD_MSG_LEN, ka.msgid, ka.type);
+		session_shutdown(nbr, S_BAD_MSG_LEN, msg.id, msg.type);
 		return (-1);
 	}
 
