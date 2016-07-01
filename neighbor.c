@@ -459,7 +459,7 @@ nbr_start_itimeout(struct nbr *nbr)
 	struct timeval	 tv;
 
 	timerclear(&tv);
-	tv.tv_sec = DEFAULT_KEEPALIVE;
+	tv.tv_sec = INIT_FSM_TIMEOUT;
 	if (evtimer_add(&nbr->init_timeout, &tv) == -1)
 		fatal(__func__);
 }
