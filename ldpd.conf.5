@@ -287,11 +287,11 @@ l2vpn name type vpls {
         interface em1
         pseudowire mpw1 {
                 pw-id 100
-                neighbor 192.168.1.10
+                neighbor-id 192.168.1.10
         }
         pseudowire mpw2 {
                 pw-id 200
-                neighbor 10.0.1.5
+                neighbor-id 10.0.1.5
         }
 }
 .Ed
@@ -330,7 +330,7 @@ A pseudowire interface is specified by its name.
 .Bd -literal -offset indent
 pseudowire mpw5 {
 	pw-id 5000
-	neighbor 172.16.1.50
+	neighbor-id 172.16.1.50
 }
 .Ed
 .Pp
