@@ -297,6 +297,6 @@ struct pw_status_tlv {
 #define PW_PSN_RX_FAULT		(1 << 3)
 #define PW_PSN_TX_FAULT		(1 << 4)
 
-#define	NO_LABEL		UINT_MAX
+#define	NO_LABEL		UINT32_MAX
 
 #endif /* !_LDP_H_ */

@@ -394,8 +394,8 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		switch (type) {
 		case MSG_TYPE_LABELMAPPING:
 			log_debug("label mapping from lsr-id %s, FEC %s, "
-			    "label %u", inet_ntoa(nbr->id),
-			    log_map(&me->map), me->map.label);
+			    "label %s", inet_ntoa(nbr->id),
+			    log_map(&me->map), log_label(me->map.label));
 			imsg_type = IMSG_LABEL_MAPPING;
 			break;
 		case MSG_TYPE_LABELREQUEST:
