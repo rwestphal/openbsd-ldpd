@@ -1011,6 +1011,8 @@ merge_nbrps(struct ldpd_conf *conf, struct ldpd_conf *xconf)
 			nbrp_changed = 0;
 
 		nbrp->keepalive = xn->keepalive;
+		nbrp->gtsm_enabled = xn->gtsm_enabled;
+		nbrp->gtsm_hops = xn->gtsm_hops;
 		nbrp->auth.method = xn->auth.method;
 		strlcpy(nbrp->auth.md5key, xn->auth.md5key,
 		    sizeof(nbrp->auth.md5key));
