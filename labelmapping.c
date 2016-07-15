@@ -270,6 +270,10 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 				break;
 			}
 			break;
+		case TLV_TYPE_HOPCOUNT:
+		case TLV_TYPE_PATHVECTOR:
+			/* ignore */
+			break;
 		case TLV_TYPE_GENERICLABEL:
 			switch (type) {
 			case MSG_TYPE_LABELWITHDRAW:
