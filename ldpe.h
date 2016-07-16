@@ -251,7 +251,7 @@ void			 nbr_clear_ctl(struct ctl_nbr *);
 
 /* packet.c */
 int			 gen_ldp_hdr(struct ibuf *, uint16_t);
-int			 gen_msg_hdr(struct ibuf *, uint32_t, uint16_t);
+int			 gen_msg_hdr(struct ibuf *, uint16_t, uint16_t);
 int			 send_packet(int, int, union ldpd_addr *,
 			    struct iface_af *, void *, size_t);
 void			 disc_recv_packet(int, short, void *);

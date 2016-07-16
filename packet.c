@@ -57,7 +57,7 @@ gen_ldp_hdr(struct ibuf *buf, uint16_t size)
 }
 
 int
-gen_msg_hdr(struct ibuf *buf, uint32_t type, uint16_t size)
+gen_msg_hdr(struct ibuf *buf, uint16_t type, uint16_t size)
 {
 	static int	msgcnt = 0;
 	struct ldp_msg	msg;
@@ -488,13 +488,14 @@ session_read(int fd, short event, void *arg)
 			msg = (struct ldp_msg *)pdu;
 			type = ntohs(msg->type);
 			msg_len = ntohs(msg->length);
-			msg_size = msg_len + LDP_MSG_DEAD_LEN;
-			if (msg_len < LDP_MSG_LEN || msg_size > pdu_len) {
+			if (msg_len < LDP_MSG_LEN ||
+			    (msg_len + LDP_MSG_DEAD_LEN) > pdu_len) {
 				session_shutdown(nbr, S_BAD_TLV_LEN, msg->id,
 				    msg->type);
 				free(buf);
 				return;
 			}
+			msg_size = msg_len + LDP_MSG_DEAD_LEN;
 			pdu_len -= msg_size;
 
 			/* check for error conditions earlier */

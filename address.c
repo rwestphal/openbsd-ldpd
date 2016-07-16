@@ -32,7 +32,7 @@ void
 send_address(struct nbr *nbr, int af, struct if_addr *if_addr, int withdraw)
 {
 	struct ibuf	*buf;
-	uint32_t	 msg_type;
+	uint16_t	 msg_type;
 	uint16_t	 size;
 	int		 iface_count = 0;
 	int		 err = 0;
