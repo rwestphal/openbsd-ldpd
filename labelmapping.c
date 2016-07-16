@@ -246,9 +246,13 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 		}
 
 		memcpy(&tlv, buf, TLV_HDR_SIZE);
+		tlv_len = ntohs(tlv.length);
+		if (tlv_len + TLV_HDR_SIZE > len) {
+			session_shutdown(nbr, S_BAD_TLV_LEN, msg.id, msg.type);
+			goto err;
+		}
 		buf += TLV_HDR_SIZE;
 		len -= TLV_HDR_SIZE;
-		tlv_len = ntohs(tlv.length);
 
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_LABELREQUEST:
@@ -334,10 +338,9 @@ recv_labelmessage(struct nbr *nbr, char *buf, uint16_t len, uint16_t type)
 			}
 			break;
 		default:
-			if (!(ntohs(tlv.type) & UNKNOWN_FLAG)) {
+			if (!(ntohs(tlv.type) & UNKNOWN_FLAG))
 				send_notification_nbr(nbr, S_UNKNOWN_TLV,
 				    msg.id, msg.type);
-			}
 			/* ignore unknown tlv */
 			break;
 		}
@@ -708,6 +711,12 @@ tlv_decode_fec_elm(struct nbr *nbr, struct ldp_msg *msg, char *buf,
 			}
 
 			memcpy(&stlv, buf + off, sizeof(stlv));
+			if (stlv.length > pw_len) {
+				session_shutdown(nbr, S_BAD_TLV_LEN, msg->id,
+				    msg->type);
+				return (-1);
+			}
+
 			switch (stlv.type) {
 			case SUBTLV_IFMTU:
 				if (stlv.length != FEC_SUBTLV_IFMTU_SIZE) {

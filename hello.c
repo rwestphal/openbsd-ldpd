@@ -503,10 +503,12 @@ tlv_decode_opt_hello_prms(char *buf, uint16_t len, int *tlvs_rcvd, int af,
 	 */
 	while (len >= sizeof(tlv)) {
 		memcpy(&tlv, buf, TLV_HDR_SIZE);
+		tlv_len = ntohs(tlv.length);
+		if (tlv_len + TLV_HDR_SIZE > len)
+			return (-1);
 		buf += TLV_HDR_SIZE;
 		len -= TLV_HDR_SIZE;
 		total += TLV_HDR_SIZE;
-		tlv_len = ntohs(tlv.length);
 
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_IPV4TRANSADDR:

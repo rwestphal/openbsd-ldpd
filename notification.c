@@ -128,15 +128,18 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 		uint16_t	tlv_len;
 
 		if (len < sizeof(tlv)) {
-			session_shutdown(nbr, S_BAD_TLV_LEN, msg.id,
-			    msg.type);
+			session_shutdown(nbr, S_BAD_TLV_LEN, msg.id, msg.type);
 			return (-1);
 		}
 
 		memcpy(&tlv, buf, TLV_HDR_SIZE);
+		tlv_len = ntohs(tlv.length);
+		if (tlv_len + TLV_HDR_SIZE > len) {
+			session_shutdown(nbr, S_BAD_TLV_LEN, msg.id, msg.type);
+			return (-1);
+		}
 		buf += TLV_HDR_SIZE;
 		len -= TLV_HDR_SIZE;
-		tlv_len = ntohs(tlv.length);
 
 		switch (ntohs(tlv.type)) {
 		case TLV_TYPE_EXTSTATUS:
@@ -167,10 +170,9 @@ recv_notification(struct nbr *nbr, char *buf, uint16_t len)
 			nm.flags |= F_NOTIF_FEC;
 			break;
 		default:
-			if (!(ntohs(tlv.type) & UNKNOWN_FLAG)) {
+			if (!(ntohs(tlv.type) & UNKNOWN_FLAG))
 				send_notification_nbr(nbr, S_UNKNOWN_TLV,
 				    msg.id, msg.type);
-			}
 			/* ignore unknown tlv */
 			break;
 		}
