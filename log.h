@@ -28,13 +28,20 @@ struct fec;
 
 void		 log_init(int);
 void		 log_verbose(int);
-void		 logit(int, const char *, ...);
-void		 log_warn(const char *, ...);
-void		 log_warnx(const char *, ...);
-void		 log_info(const char *, ...);
-void		 log_debug(const char *, ...);
-void		 fatal(const char *) __dead;
-void		 fatalx(const char *) __dead;
+void		 logit(int, const char *, ...)
+			__attribute__((__format__ (printf, 2, 3)));
+void		 log_warn(const char *, ...)
+			__attribute__((__format__ (printf, 1, 2)));
+void		 log_warnx(const char *, ...)
+			__attribute__((__format__ (printf, 1, 2)));
+void		 log_info(const char *, ...)
+			__attribute__((__format__ (printf, 1, 2)));
+void		 log_debug(const char *, ...)
+			__attribute__((__format__ (printf, 1, 2)));
+void		 fatal(const char *) __dead
+			__attribute__((__format__ (printf, 1, 0)));
+void		 fatalx(const char *) __dead
+			__attribute__((__format__ (printf, 1, 0)));
 const char	*log_sockaddr(void *);
 const char	*log_in6addr(const struct in6_addr *);
 const char	*log_in6addr_scope(const struct in6_addr *, unsigned int);

@@ -1134,7 +1134,7 @@ lde_req_add(struct lde_nbr *ln, struct fec *fec, int sent)
 		lre->fec = *fec;
 
 		if (fec_insert(t, &lre->fec)) {
-			log_warnx("failed to add %s/%u to %s req",
+			log_warnx("failed to add %s to %s req",
 			    log_fec(&lre->fec), sent ? "sent" : "recv");
 			free(lre);
 			return (NULL);
