@@ -191,7 +191,7 @@ ldpe_shutdown(void)
 	free(pkt_ptr);
 
 	log_info("ldp engine exiting");
-	_exit(0);
+	exit(0);
 }
 
 /* imesg */

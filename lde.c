@@ -163,7 +163,7 @@ lde_shutdown(void)
 	free(iev_main);
 
 	log_info("label decision engine exiting");
-	_exit(0);
+	exit(0);
 }
 
 /* imesg */
