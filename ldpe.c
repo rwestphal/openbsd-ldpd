@@ -65,7 +65,7 @@ ldpe_sig_handler(int sig, short event, void *bula)
 }
 
 /* label distribution protocol engine */
-pid_t
+void
 ldpe(int debug, int verbose)
 {
 	struct passwd		*pw;
@@ -153,8 +153,6 @@ ldpe(int debug, int verbose)
 	event_dispatch();
 
 	ldpe_shutdown();
-	/* NOTREACHED */
-	return (0);
 }
 
 static __dead void

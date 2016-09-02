@@ -84,7 +84,7 @@ lde_sig_handler(int sig, short event, void *arg)
 }
 
 /* label decision engine */
-pid_t
+void
 lde(int debug, int verbose)
 {
 	struct event		 ev_sigint, ev_sigterm;
@@ -145,9 +145,6 @@ lde(int debug, int verbose)
 	event_dispatch();
 
 	lde_shutdown();
-	/* NOTREACHED */
-
-	return (0);
 }
 
 static __dead void
