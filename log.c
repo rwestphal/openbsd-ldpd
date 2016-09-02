@@ -433,6 +433,39 @@ if_type_name(enum iface_type type)
 }
 
 const char *
+msg_name(uint16_t msg)
+{
+	static char buf[16];
+
+	switch (msg) {
+	case MSG_TYPE_NOTIFICATION:
+		return ("notification");
+	case MSG_TYPE_HELLO:
+		return ("hello");
+	case MSG_TYPE_INIT:
+		return ("initialization");
+	case MSG_TYPE_KEEPALIVE:
+		return ("keepalive");
+	case MSG_TYPE_ADDR:
+		return ("address");
+	case MSG_TYPE_ADDRWITHDRAW:
+		return ("address withdraw");
+	case MSG_TYPE_LABELMAPPING:
+		return ("label mapping");
+	case MSG_TYPE_LABELREQUEST:
+		return ("label request");
+	case MSG_TYPE_LABELWITHDRAW:
+		return ("label withdraw");
+	case MSG_TYPE_LABELRELEASE:
+		return ("label release");
+	case MSG_TYPE_LABELABORTREQ:
+	default:
+		snprintf(buf, sizeof(buf), "[%08x]", msg);
+		return (buf);
+	}
+}
+
+const char *
 status_code_name(uint32_t status)
 {
 	static char buf[16];
