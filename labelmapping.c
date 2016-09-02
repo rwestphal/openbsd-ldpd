@@ -123,6 +123,7 @@ send_labelmessage(struct nbr *nbr, uint16_t type, struct mapping_head *mh)
 			    me->map.st.msg_id, me->map.st.msg_type);
 		if (err) {
 			ibuf_free(buf);
+			mapping_list_clr(mh);
 			return;
 		}
 
