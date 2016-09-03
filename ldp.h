@@ -239,6 +239,8 @@ struct address_list_tlv {
 	/* address entries */
 } __packed;
 
+#define ADDR_LIST_SIZE		6
+
 #define FEC_ELM_WCARD_LEN	1
 #define FEC_ELM_PREFIX_MIN_LEN	4
 #define FEC_PWID_ELM_MIN_LEN	8

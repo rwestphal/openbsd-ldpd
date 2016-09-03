@@ -185,9 +185,9 @@ nbr_fsm(struct nbr *nbr, enum nbr_event event)
 		nbr_start_ktimer(nbr);
 		nbr_start_ktimeout(nbr);
 		if (nbr->v4_enabled)
-			send_address(nbr, AF_INET, NULL, 0);
+			send_address_all(nbr, AF_INET);
 		if (nbr->v6_enabled)
-			send_address(nbr, AF_INET6, NULL, 0);
+			send_address_all(nbr, AF_INET6);
 		nbr_send_labelmappings(nbr);
 		break;
 	case NBR_ACT_CONNECT_SETUP:

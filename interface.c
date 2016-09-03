@@ -175,7 +175,7 @@ if_addr_add(struct kaddr *ka)
 			if (if_addr->af == AF_INET6 && !nbr->v6_enabled)
 				continue;
 
-			send_address(nbr, if_addr->af, if_addr, 0);
+			send_address_single(nbr, if_addr, 0);
 		}
 	}
 
@@ -222,7 +222,7 @@ if_addr_del(struct kaddr *ka)
 				continue;
 			if (if_addr->af == AF_INET6 && !nbr->v6_enabled)
 				continue;
-			send_address(nbr, if_addr->af, if_addr, 1);
+			send_address_single(nbr, if_addr, 1);
 		}
 		LIST_REMOVE(if_addr, entry);
 		free(if_addr);
